@@ -1,11 +1,12 @@
 --====================================================================--
--- Christmas Corner
+-- Insured App
 --====================================================================--
 local myApp = require( "myapp" ) 
 ------------------------------------------------------
 print("main: Program Start") 
 ------------------------------------------------------
 local parse = require( "parse" )
+parse.parseGetConfig()
 
 local composer = require( "composer" )
 composer.isDebug = myApp.debugMode
@@ -17,10 +18,8 @@ widget.setTheme(myApp.theme)
 print ("main: After Main Requires")
 ------------------------------------------------------
 
-parse.parseGetConfig()
-
 --------------------------------------------------
--- Home screen
+-- Show screen
 --------------------------------------------------
 function myApp.showScreen(parms)
     print ("goto " .. parms.key)
@@ -38,8 +37,6 @@ end
 
 require( myApp.utilsfld .. "tabandtop" )   -- set the top and bottom sections
 
-
-
 ---------------------------------------------------
 --  Sort everything in the correct z-index order
 ----------------------------------------------------
@@ -48,7 +45,6 @@ stage:insert( myApp.backGroup )
 stage:insert( composer.stage )
 stage:insert( myApp.TitleGroup )
 stage:insert( myApp.tabBar )
-
 
 require( myApp.utilsfld .. "splash" )      -- transtion from the initial image and launch the first page
 

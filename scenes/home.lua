@@ -14,7 +14,7 @@ print ("In " .. currScene .. " Scene")
 function scene:create(event)
     print ("Create  " .. currScene)
 	local group = self.view
-	local background = common.SceneBackground()
+    local background = common.SceneBackground()
     group:insert(background)
 
     -- local aline = display.newLine( 0, myApp.sceneStartTop,myApp.cW, myApp.sceneStartTop )

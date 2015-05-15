@@ -14,13 +14,13 @@ myApp.backGroup = display.newGroup( )
 
 local background = common.SceneBackground()
 
-local backlogo = display.newImageRect("salogo.jpg",305,170)
-backlogo.x = myApp.cCx
-backlogo.y = myApp.cCy
-backlogo.alpha = .1
+--local backlogo = display.newImageRect("salogo.jpg",305,170)
+--backlogo.x = myApp.cCx
+--backlogo.y = myApp.cCy
+--backlogo.alpha = .1 
 
 myApp.backGroup:insert(background)
-myApp.backGroup:insert(backlogo)
+--myApp.backGroup:insert(backlogo)
 
 ----------------------------------------------------------
 --    Top Title Bar stuff
@@ -43,6 +43,7 @@ myApp.TitleGroup:insert(statusBarBackground)
 local titleBar = display.newImageRect(myApp.topBarBg, myApp.cW, myApp.titleBarHeight)
 titleBar.x = myApp.cCx
 titleBar.y = (myApp.titleBarHeight * 0.5 )+ myApp.tSbch
+titleBar:setFillColor( myApp.titleGradient )
 myApp.TitleGroup:insert(titleBar)
 
 ----------------------------------------------------------
@@ -132,7 +133,8 @@ if myApp.isTall then
     myApp.scenemaskFile = myApp.imgfld .. "mask-320x448.png"
 end
 
-
-
+------------------------------------------------------
+print ("tabandtop: OUT")
+------------------------------------------------------
 
 

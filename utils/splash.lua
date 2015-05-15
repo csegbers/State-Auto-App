@@ -25,6 +25,7 @@ local function closeSplash()
                 local function removeBack()
                     display.remove(background)
                     background = nil
+                    print ("splash: OUT")
                     myApp.showScreen({key=myApp.tabs.launchkey,notitlefade=true})
                 end
                 transition.to( background, {time=1500, alpha=0 , onComplete=removeBack } )
@@ -32,10 +33,8 @@ local function closeSplash()
     end
     local function closeSplash1()
             transition.to( logo, {time=1500, alpha=0, x=(myApp.cW+50), y=(myApp.cH-500), onComplete=closeSplashFinal } )
-
-   end
-
-
+    end
+    --https://coronalabs.com/blog/2013/10/31/tutorial-2-5d-perspective-in-graphics-2-0/     .path property for 2.5 D
     transition.to( logo.path, { time=1500, x2=20, y2=-20, x4=-40, y4=40 , onComplete=closeSplash1 } )
 end
 
