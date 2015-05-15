@@ -4,7 +4,7 @@
 -------------------------------------------------------
 local M = { 
             debugMode = true,
-            appName = "Christmas Corner Initial" ,
+            appName = "Insured App Initial" ,
             cW = display.contentWidth,
             cH = display.contentHeight,
             cCx = display.contentCenterX,
@@ -42,7 +42,7 @@ local M = {
                         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "home",
                         btns = {
                             home = {
-                                        label="Home",lua="home",title="Christmas Corner",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"
+                                        label="Home",lua="home",title="State Auto",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"
                                     },
                             video = {
                                         label="Video",lua="video",title="Video",time=250, effect="slideRight",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
