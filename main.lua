@@ -7,6 +7,12 @@ print("main: Program Start")
 ------------------------------------------------------
 local parse = require( "parse" )
 parse.parseGetConfig()
+parse.parseAppOpened()
+
+--// testing below come events
+parse.parseLogEvent("MyCustomEvent",{x=3,y="ccc"})
+parse.parseLogEvent("Error",{code=124,desc="ccedc"})
+--// testing above come events
 
 local composer = require( "composer" )
 composer.isDebug = myApp.debugMode

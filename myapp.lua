@@ -46,8 +46,18 @@ local M = {
                                                      endpoint = "/config",
                                                      verb = "GET",
                                                   },
-                                  },
+                                 
+                                        appopened  = {
+                                                     endpoint = "/events/AppOpened",
+                                                     verb = "POST",
+                                                  },
+                                        customevent  = {
+                                                     endpoint = "/events",    -- pass in actual eventname
+                                                     verb = "POST",
+                                                  },
 
+
+                                  },
                     },
             tabs = {
                         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "home",
