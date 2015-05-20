@@ -26,9 +26,9 @@ local function closeSplash()
                     display.remove(background)
                     background = nil
                     print ("splash: OUT")
-                    myApp.showScreen({key=myApp.tabs.launchkey,notitlefade=true})
                 end
-                transition.to( background, {time=1500, alpha=0 , onComplete=removeBack } )
+                transition.to( background, {time=800, alpha=0 , onComplete=removeBack } )
+                myApp.showScreen({key=myApp.tabs.launchkey,firsttime=true})
 
     end
     local function closeSplash1()

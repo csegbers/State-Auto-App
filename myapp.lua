@@ -19,6 +19,7 @@ local M = {
             isGraphics2 = true,
             is_iPad = false,
             titleBarHeight = 50,
+            titleBarEdge = 10,
             imgfld = "images/",
             scenesfld = "",
             utilsfld = "utils.",
@@ -63,7 +64,7 @@ local M = {
                         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "home",
                         btns = {
                             home = {
-                                        label="Home",lua="scenes.home",title="State Auto",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"
+                                        label="Home",lua="scenes.home",title="State Auto",time=250, effect="crossFade",def="images/saicon.png",over="images/saicon-down.png"
                                     },
                             video = {
                                         label="Video",lua="scenes.video",title="Video",time=250, effect="slideRight",def="images/tabbaricon.png",over="images/tabbaricon-down.png",

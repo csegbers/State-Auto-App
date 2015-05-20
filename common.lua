@@ -22,4 +22,12 @@ function M.testNetworkConnection()
     return true
 end
 
+function M.fitImage( displayObject, fitWidth, enlarge )
+    --
+    -- first determine which edge is out of bounds
+    --
+    local scaleFactor = fitWidth / displayObject.width 
+    displayObject:scale( scaleFactor, scaleFactor )
+end
+
 return M

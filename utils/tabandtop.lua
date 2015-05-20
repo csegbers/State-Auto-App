@@ -49,7 +49,8 @@ myApp.TitleGroup:insert(titleBar)
 ----------------------------------------------------------
 --   text in the Titlebar
 ----------------------------------------------------------
-local titleText = display.newText(myApp.tabs.btns[myApp.tabs.launchkey].title, 0, 0, myApp.fontBold, 20 )
+--local titleText = display.newText(myApp.tabs.btns[myApp.tabs.launchkey].title, 0, 0, myApp.fontBold, 20 )
+local titleText = display.newText("", 0, 0, myApp.fontBold, 20 )
 if myApp.isGraphics2 then
     titleText:setFillColor(1, 1, 1)
 else
@@ -58,8 +59,12 @@ end
 titleText.x = myApp.cCx
 titleText.y = titleBar.height * 0.5 + myApp.tSbch 
 myApp.TitleGroup.titleText = titleText
-myApp.TitleGroup:insert(myApp.TitleGroup.titleText)
+myApp.TitleGroup:insert(myApp.TitleGroup.titleText) 
 
+
+----------------------------------------------------------
+--   the icon is added in the showscreen
+----------------------------------------------------------
 
 
 ----------------------------------------------------------
