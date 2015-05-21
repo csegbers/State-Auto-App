@@ -1,0 +1,19 @@
+
+
+
+
+
+
+    local container2 = display.newContainer( 300, 300)
+
+-- Create an image
+local bkgd = display.newImage( "salogo.jpg" )
+-- Insert the image into the container
+container2:insert( bkgd, true )
+-- Center the container in the display area
+container2:translate( display.contentWidth*0.5, display.contentHeight*0.5 )
+
+-- Transition (rotate) the container
+transition.to( container2, { rotation=360, transition=easing.inOutExpo} )
+scrollView:insert(container2)
+--container:insert(scrollView)

@@ -67,7 +67,7 @@ local M = {
                                         label="Home",lua="scenes.home",title="State Auto",time=250, effect="crossFade",def="images/saicon.png",over="images/saicon-down.png"
                                     },
                             video = {
-                                        label="Video",lua="scenes.video",title="Video",time=250, effect="slideRight",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                        label="Agent",lua="scenes.video",title="My Agent",time=250, effect="slideRight",def="images/agent.png",over="images/agent-down.png",
                                         options = {
                                                 feedName = "video.rss",
                                                 --feedURL = "http://gdata.youtube.com/feeds/mobile/users/CoronaLabs/uploads?max-results=20&alt=rss&orderby=published&format=1",

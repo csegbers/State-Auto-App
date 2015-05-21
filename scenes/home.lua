@@ -14,18 +14,58 @@ print ("In " .. currScene .. " Scene")
 function scene:create(event)
     print ("Create  " .. currScene)
 	local group = self.view
-    local background = common.SceneBackground()
-    group:insert(background)
+    local container = common.SceneContainer()
+    group:insert(container)
 
-    -- local aline = display.newLine( 0, myApp.sceneStartTop,myApp.cW, myApp.sceneStartTop )
-    -- aline:setStrokeColor( 1, 0, 0, 1 )
-    -- aline.strokeWidth = 1
-    -- group:insert(aline)
 
-    -- local aline = display.newLine(0, myApp.sceneHeight+ myApp.sceneStartTop,myApp.cW, myApp.sceneHeight+ myApp.sceneStartTop )
-    -- aline:setStrokeColor( 1, 0, 0, 1 )
-    -- aline.strokeWidth = 1
-    -- group:insert(aline)
+
+
+    local function scrollListener( event )
+
+            local phase = event.phase
+            if ( phase == "began" ) then print( "Scroll view was touched" )
+            elseif ( phase == "moved" ) then print( "Scroll view was moved" )
+            elseif ( phase == "ended" ) then print( "Scroll view was released" )
+            end
+
+            -- In the event a scroll limit is reached...
+            if ( event.limitReached ) then
+                if ( event.direction == "up" ) then print( "Reached top limit" )
+                elseif ( event.direction == "down" ) then print( "Reached bottom limit" )
+                elseif ( event.direction == "left" ) then print( "Reached left limit" )
+                elseif ( event.direction == "right" ) then print( "Reached right limit" )
+                end
+            end
+
+            return true
+    end
+
+    local scrollView = widget.newScrollView
+        {
+            x = 0  ,
+            y = 0,
+            width = myApp.sceneWidth, 
+            height =  myApp.sceneHeight,
+            listener = scrollListener,
+            horizontalScrollDisabled = true,
+        }
+    container:insert(scrollView)
+
+ 
+    local aline = display.newLine( 0, 0,myApp.sceneWidth, 0)
+     aline:setStrokeColor( 1, 0, 0, 1 )
+     aline.strokeWidth = 1
+     scrollView:insert(aline)
+
+
+    local aline2 = display.newLine( 0, 0 + aline.height + 500 ,myApp.sceneWidth, 0+ aline.height + 500)
+     aline2:setStrokeColor( 7, 0, 9, 10 )
+     aline2.strokeWidth = 2
+     scrollView:insert(aline2)
+
+ 
+-- Create the widget
+
 
 end
 
