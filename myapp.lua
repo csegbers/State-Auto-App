@@ -22,7 +22,7 @@ local M = {
             titleBarHeight = 50,
             titleBarEdge = 10,
             imgfld = "images/",
-            scenesfld = "",
+            scenesfld = "scenes.",
             utilsfld = "utils.",
             classfld = "classes.",
             theme = "widget_theme_ios7",
@@ -33,8 +33,16 @@ local M = {
             sceneStartTop = 0,     -- set elsewhere
             sceneHeight = 0,     -- set elsewhere
             sceneWidth = 0,     -- set elsewhere
+            sceneBackground = { r=235/255, g=235/255, b=225/255, a=1 },
             login = {
                         loggedin = false,
+                        lua="login",
+                        options = {
+                                      isModal = true,
+                                      effect = "fromTop",
+                                      time = 2000,
+                                      params = { }
+                                   },
                     },
             scenemaskFile = "",
             composerrecycleOnSceneChange = false,
@@ -66,14 +74,20 @@ local M = {
 
                                   },
                     },
+            homepage = {
+                          items = {
+                                      findgas = {title = "Find Gas", pic="images/gas.png",text="Find Gas Prices Near You"},
+                                      roasast = {title = "RoadSide Assistance", pic="images/truck.png",text="Flat tire, out of gas ? We can help"},
+                                   },
+                       },
             tabs = {
                         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "home", transitiontime = 200,
                         btns = {
                             home = {
-                                        label="Home",lua="scenes.home",title="State Auto",time=250, effect="crossFade",def="images/saicon.png",over="images/saicon-down.png"
+                                        label="Home",lua="home",title="State Auto",time=250, effect="crossFade",def="images/saicon.png",over="images/saicon-down.png"
                                     },
                             video = {
-                                        label="My Agent",lua="scenes.video",title="My Agent",time=250, effect="slideRight",def="images/agent.png",over="images/agent-down.png",
+                                        label="My Agent",lua="video",title="My Agent",time=250, effect="slideRight",def="images/agent.png",over="images/agent-down.png",
                                         options = {
                                                 feedName = "video.rss",
                                                 --feedURL = "http://gdata.youtube.com/feeds/mobile/users/CoronaLabs/uploads?max-results=20&alt=rss&orderby=published&format=1",
@@ -84,10 +98,10 @@ local M = {
                                                    }                                
                                     },
                             menu = {
-                                        label="Menu",lua="scenes.menu",title="Menu",time=250, effect="slideDown",def="images/tabbaricon.png",over="images/tabbaricon-down.png"
+                                        label="Menu",lua="menu",title="Menu",time=250, effect="slideDown",def="images/tabbaricon.png",over="images/tabbaricon-down.png"
                                     },
                             blogs = {
-                                      label="Blogs",lua="scenes.feed",title="Blog",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                      label="Blogs",lua="feed",title="Blog",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
                                       options = {
                                             feedName = "corona.rss",
                                             feedURL = "http://www.coronalabs.com/feed/",
@@ -96,14 +110,14 @@ local M = {
                                             pageTitle = "Corona Labs"
                                                  }
                                       },
-                           pics = {label="Pics",lua="scenes.photogallery",title="Pics",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
+                           pics = {label="Pics",lua="photogallery",title="Pics",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
                            maps = {
-                                        label="Maps",lua="scenes.mapscene",title="Maps",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                        label="Maps",lua="mapscene",title="Maps",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
                                         options = {
                                                 pageTitle = "Corona Headquarters"
                                                  }                              
                                     },
-                          debug = {label="Debug",lua="scenes.debugapp",title="debug",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
+                          debug = {label="Debug",lua="debugapp",title="debug",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
 
                                 }
                    },

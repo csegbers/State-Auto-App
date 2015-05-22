@@ -52,8 +52,12 @@ function scene:create(event)
             height =  myApp.sceneHeight,
             listener = scrollListener,
             horizontalScrollDisabled = true,
+            hideBackground = true,
         }
     container:insert(scrollView)
+
+
+
  
     -- local aline = display.newLine( 0, 0,myApp.sceneWidth, 0)
     --  aline:setStrokeColor( 1, 0, 0, 1 )
@@ -85,7 +89,20 @@ function scene:create(event)
      aline.strokeWidth = 1
      primGroup:insert(aline)
 
-     scrollView:insert(primGroup)
+     local x = 1
+     for k,v in pairs(myApp.homepage.items) do 
+         print ("home page item " .. k)
+             local itemGrp = display.newGroup(  )
+             local myRoundedRect = display.newRoundedRect( 100*x, 100, 90, 50, 1 )
+             myRoundedRect.strokeWidth = 1
+                myRoundedRect:setFillColor(89/255, 116/255, 152/255, 1  )
+                myRoundedRect:setStrokeColor( 1, 0, 0 )
+            itemGrp:insert(myRoundedRect)
+             primGroup:insert(itemGrp)
+             x = x+1
+     end
+
+   scrollView:insert(primGroup)
 
      
 
@@ -109,12 +126,8 @@ function scene:show( event )
         -- Example: start timers, begin animation, play audio, etc.
 
      if myApp.login.loggedin == false then
- 
-        self.login = login.new({ 
-                                 id=1,
-                            })
-  
-         self.login:UI()
+       myApp.Login()
+
      end
     end
 	

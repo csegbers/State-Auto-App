@@ -203,6 +203,11 @@ function myApp.showScreen(parms)
     return true
 end
 
+function myApp.Login(parms)
+    composer.showOverlay(myApp.scenesfld .. myApp.login.lua, myApp.login.options)
+    return true
+end
+
 ------------------------------------------------------
 print ("tabandtop: OUT")
 ------------------------------------------------------
