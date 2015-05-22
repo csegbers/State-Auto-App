@@ -51,10 +51,10 @@ function login:UI()
 
 		    elseif event.phase == "editing" then
 
-		        print( event.newCharacters )
-		        print( event.oldText )
-		        print( event.startPosition )
-		        print( event.text )
+		        print( event.newCharacters or "" )
+		        print( event.oldText or "" )
+		        print( event.startPosition  or "")
+		        print( event.text or "")
 
 		    end
     end
@@ -62,15 +62,18 @@ function login:UI()
     local Screen = self.view
 	local textField = common.newTextField({
 		    width = 250,
-		    height = 30,
+		    height = 20,
 		    text = "Hello World",
 		    fontSize = 18,
 		    font = "HelveticaNeue-Light",
+		    cornerRadius = 0,
 		    listener = textFieldHandler,
+		    placeholder = "(hello)"
 		})
 
 textField.x = display.contentCenterX
 textField.y = 100
+--Screen:insert(textField)
 	return Screen 
 end
 

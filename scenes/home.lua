@@ -89,14 +89,6 @@ function scene:create(event)
 
      
 
-     if myApp.login.loggedin == false then
-        scrollView:translate(0,50)
-     self.login = login.new({ 
-                                 id=1,
-                            })
-  
-     scrollView:insert(self.login:UI())
-     end
 
 
 
@@ -115,6 +107,15 @@ function scene:show( event )
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
+
+     if myApp.login.loggedin == false then
+ 
+        self.login = login.new({ 
+                                 id=1,
+                            })
+  
+         self.login:UI()
+     end
     end
 	
 

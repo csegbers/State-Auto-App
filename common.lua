@@ -59,17 +59,26 @@ function M.newTextField(options)
     opt.height = customOptions.height or 20
     opt.id = customOptions.id
     opt.listener = customOptions.listener or nil
-    opt.text = customOptions.text or ""
+    opt.text = customOptions.text or nil
     opt.inputType = customOptions.inputType or "default"
+    --Possible string values are:
+--"default" — the default keyboard, supporting general text, numbers and punctuation.
+--"--number" — a numeric keypad.
+--"decimal" — a keypad for entering decimal values.
+--"phone" — a keypad for entering phone numbers.
+--"url" — a keyboard for entering website URLs.
+--"email" — a keyboard for entering email addresses.
     opt.font = customOptions.font or native.systemFont
     opt.fontSize = customOptions.fontSize or opt.height * 0.67
+    opt.placeholder = customOptions.placeholder or nil
+    opt.isSecure = customOptions.isSecure  or false 
 
     -- Vector options
     opt.strokeWidth = customOptions.strokeWidth or 2
     opt.cornerRadius = customOptions.cornerRadius or opt.height * 0.33 or 10
     opt.strokeColor = customOptions.strokeColor or {0, 0, 0}
     opt.backgroundColor = customOptions.backgroundColor or {1, 1, 1}
-
+ 
     --
     -- Create the display portion of the widget and position it.
     --
@@ -101,6 +110,8 @@ function M.newTextField(options)
     field.textField.hasBackground = false
     field.textField.inputType = opt.inputType
     field.textField.text = opt.text
+    field.textField.placeholder = opt.placeholder
+    field.textField.isSecure = opt.isSecure
 
     if opt.listener and type(opt.listener) == "function" then
         field.textField:addEventListener("userInput", opt.listener)
@@ -110,10 +121,11 @@ function M.newTextField(options)
     -- Handle setting the text parameters for the native field.
     --
 
-    local deviceScale = (display.pixelWidth / display.contentWidth) * 0.5
+   -- local deviceScale = (display.pixelWidth / display.contentWidth) * 0.5
     
-    field.textField.font = native.newFont( opt.font )
-    field.textField.size = opt.fontSize * deviceScale
+   -- field.textField.font = native.newFont( opt.font )
+    --field.textField.size = opt.fontSize * deviceScale
+    field.textField:resizeFontToFitHeight()
 
     --
     -- Sync the position of the native object and the display object.
