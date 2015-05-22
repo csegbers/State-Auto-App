@@ -12,7 +12,6 @@ local composer = require( "composer" )
 ----------------------------------------------------------
 myApp.backGroup = display.newGroup( )
 
-
 local background = common.SceneBackground()
 
 --local backlogo = display.newImageRect("salogo.jpg",305,170)
@@ -41,14 +40,35 @@ myApp.TitleGroup:insert(statusBarBackground)
 ----------------------------------------------------------
 --   This is the title bar
 ----------------------------------------------------------
-local titleBar = display.newImageRect(myApp.topBarBg, myApp.cW, myApp.titleBarHeight)
-titleBar.x = myApp.cCx
-titleBar.y = (myApp.titleBarHeight * 0.5 )+ myApp.tSbch
-titleBar:setFillColor( myApp.titleGradient )
-myApp.TitleGroup:insert(titleBar)
+
+--myApp.statusBarType = display.TranslucentStatusBar
+-- local titleBar = display.newImageRect(myApp.topBarBg, myApp.cW, myApp.titleBarHeight + sbAdjust)
+-- titleBar.x = myApp.cCx
+-- titleBar.y = (myApp.titleBarHeight * 0.5 )+ myApp.tSbch - sbAdjust
+-- titleBar:setFillColor( myApp.titleGradient )
+-- myApp.TitleGroup:insert(titleBar)
+
+local tbry = myApp.titleBarHeight / 2
+local tbrheight = myApp.titleBarHeight
+
+-------------------------------------------------
+-- translucent status bar - adjust our background rect size and position.
+-- bascially we want the whole rect to be gradient and status on top
+-------------------------------------------------
+if myApp.statusBarType == display.TranslucentStatusBar then 
+   tbrheight = tbrheight + myApp.tSbch
+   tbry = tbry + (myApp.tSbch /2)
+else
+   tbry = tbry + myApp.tSbch 
+end
+
+local titleBarRect = display.newRect(myApp.cW/2,tbry, myApp.cW, tbrheight )
+titleBarRect.strokeWidth = 0
+titleBarRect:setFillColor(  myApp.titleGradient )
+myApp.TitleGroup:insert(titleBarRect)
 
 ----------------------------------------------------------
---   text in the Titlebar
+--   text in the Titlebar Set to blank initially
 ----------------------------------------------------------
 --local titleText = display.newText(myApp.tabs.btns[myApp.tabs.launchkey].title, 0, 0, myApp.fontBold, 20 )
 local titleText = display.newText("", 0, 0, myApp.fontBold, 20 )
@@ -58,7 +78,7 @@ else
     titleText:setTextColor( 255, 255, 255 )
 end
 titleText.x = myApp.cCx
-titleText.y = titleBar.height * 0.5 + myApp.tSbch 
+titleText.y = myApp.titleBarHeight * 0.5 + myApp.tSbch  
 myApp.TitleGroup.titleText = titleText
 myApp.TitleGroup:insert(myApp.TitleGroup.titleText) 
 
@@ -125,12 +145,16 @@ myApp.tabBar = widget.newTabBar{
 }
 
 ----------------------------------------------------------
---   Common info fot the screens
+--   Common info for the screens
 ----------------------------------------------------------
-myApp.sceneStartTop = titleBar.height + myApp.tSbch
+myApp.sceneStartTop = myApp.titleBarHeight + myApp.tSbch  
 myApp.sceneHeight = myApp.cH - myApp.sceneStartTop - myApp.tabBar.height
 myApp.sceneWidth = myApp.cW
 
+
+----------------------------------------------------------
+--   following may not be needed
+----------------------------------------------------------
 myApp.scenemaskFile = myApp.imgfld .. "mask-320x380.png"
 if myApp.is_iPad then
     myApp.scenemaskFile = myApp.imgfld .. "mask-360x380.png"
@@ -141,34 +165,39 @@ end
 
 
 --------------------------------------------------
--- Show screen
+-- Show screen. Add function
 --------------------------------------------------
 function myApp.showScreen(parms)
+
     local function showScreenIcon()
         ----------------------------------------------------------
         --   This is the title bar icon
         ----------------------------------------------------------
         display.remove(myApp.TitleGroup.titleIcon)    -- may not exist first time, this wont hurt
-        local titleIcon = display.newImageRect(myApp.tabs.btns[parms.key].over,myApp.tabs.tabbtnh,myApp.tabs.tabbtnw)
-        common.fitImage( titleIcon, myApp.titleBarHeight - myApp.titleBarEdge, false )
-        titleIcon.x = myApp.titleBarEdge + (titleIcon.width * 0.5 )
-        titleIcon.y = (myApp.titleBarHeight * 0.5 )+ myApp.tSbch
-        print ("icon scale " .. titleIcon.xScale)
-        titleIcon.alpha = 0
-        myApp.TitleGroup.titleIcon = titleIcon
+        myApp.TitleGroup.titleIcon = nil
+        myApp.TitleGroup.titleIcon = display.newImageRect(myApp.tabs.btns[parms.key].over,myApp.tabs.tabbtnh,myApp.tabs.tabbtnw)
+        common.fitImage( myApp.TitleGroup.titleIcon, myApp.titleBarHeight - myApp.titleBarEdge, false )
+        myApp.TitleGroup.titleIcon.x = myApp.titleBarEdge + (myApp.TitleGroup.titleIcon.width * 0.5 )
+        myApp.TitleGroup.titleIcon.y = (myApp.titleBarHeight * 0.5 )+ myApp.tSbch
+        print ("icon scale " .. myApp.TitleGroup.titleIcon.xScale)
+        myApp.TitleGroup.titleIcon.alpha = 0
         myApp.TitleGroup:insert(myApp.TitleGroup.titleIcon)
-        transition.to( myApp.TitleGroup.titleIcon, { time=100, alpha=1 })
+        transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=1 })
     end
+
     print ("goto " .. parms.key)
+    ----------------------------------------------------------
+    --   Change the title in the status bar and launch new screen
+    ----------------------------------------------------------
     local tnt = myApp.tabs.btns[parms.key]
     myApp.tabBar:setSelected(tnt.sel)
-    --myApp.TitleGroup.titleText.text = tnt.label
+
     if parms.firsttime  then
         myApp.TitleGroup.titleText.text = tnt.title
         showScreenIcon()
     else
-        transition.to( myApp.TitleGroup.titleText, { time=200, alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=200}) end } )
-        transition.to( myApp.TitleGroup.titleIcon, { time=200, alpha=0 ,onComplete=showScreenIcon})
+        transition.to( myApp.TitleGroup.titleText, { time=myApp.tabs.transitiontime, alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=myApp.tabs.transitiontime}) end } )
+        transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=showScreenIcon})
     end
     composer.gotoScene(myApp.scenesfld .. tnt.lua, {time=tnt.time, effect=tnt.effect, params = tnt.options})
     return true

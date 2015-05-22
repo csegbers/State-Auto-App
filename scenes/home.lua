@@ -8,17 +8,21 @@ local widget = require( "widget" )
 local myApp = require( "myapp" )
 local common = require( "common" )
 
-local currScene = (composer.getSceneName( "current" ) or "unknown")
-print ("In " .. currScene .. " Scene")
+local login = require( myApp.classfld .. "classlogin" )
 
+local currScene = (composer.getSceneName( "current" ) or "unknown")
+print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
+
+------------------------------------------------------
+-- Called first time. May not be called again if we dont recyle
+--
+-- self.view -> Container -> SCrollvew
+------------------------------------------------------
 function scene:create(event)
     print ("Create  " .. currScene)
 	local group = self.view
     local container = common.SceneContainer()
     group:insert(container)
-
-
-
 
     local function scrollListener( event )
 
@@ -42,7 +46,7 @@ function scene:create(event)
 
     local scrollView = widget.newScrollView
         {
-            x = 0  ,
+            x = 0,
             y = 0,
             width = myApp.sceneWidth, 
             height =  myApp.sceneHeight,
@@ -50,21 +54,51 @@ function scene:create(event)
             horizontalScrollDisabled = true,
         }
     container:insert(scrollView)
-
  
-    local aline = display.newLine( 0, 0,myApp.sceneWidth, 0)
+    -- local aline = display.newLine( 0, 0,myApp.sceneWidth, 0)
+    --  aline:setStrokeColor( 1, 0, 0, 1 )
+    --  aline.strokeWidth = 1
+    --  scrollView:insert(aline)
+
+
+    -- local aline2 = display.newLine( 0, myApp.sceneHeight ,myApp.sceneWidth, myApp.sceneHeight)
+    --  aline2:setStrokeColor( 7, 0, 9, 10 )
+    --  aline2.strokeWidth = 2
+    --  scrollView:insert(aline2)
+
+
+
+     -- local container2 = display.newContainer( 100, 100)
+     -- local bkgd = display.newImage( "salogo.jpg" )
+     -- container2:insert( bkgd, true )
+     -- scrollView:insert(container2)
+     -- container2:translate( scrollView.width*0.5, scrollView.height*.5 )
+     -- transition.to( container2, { rotation=360, transition=easing.inOutExpo} )
+
+--container:insert(scrollView)
+-- Create the widget
+
+
+     local primGroup = display.newGroup(  )
+     local aline = display.newLine( 0, 0,myApp.sceneWidth, 0)
      aline:setStrokeColor( 1, 0, 0, 1 )
      aline.strokeWidth = 1
-     scrollView:insert(aline)
+     primGroup:insert(aline)
+
+     scrollView:insert(primGroup)
+
+     
+
+     if myApp.login.loggedin == false then
+        scrollView:translate(0,50)
+     self.login = login.new({ 
+                                 id=1,
+                            })
+  
+     scrollView:insert(self.login:UI())
+     end
 
 
-    local aline2 = display.newLine( 0, 0 + aline.height + 500 ,myApp.sceneWidth, 0+ aline.height + 500)
-     aline2:setStrokeColor( 7, 0, 9, 10 )
-     aline2.strokeWidth = 2
-     scrollView:insert(aline2)
-
- 
--- Create the widget
 
 
 end

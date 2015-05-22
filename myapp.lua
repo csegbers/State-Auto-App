@@ -10,6 +10,7 @@ local M = {
             cCx = display.contentCenterX,
             cCy = display.contentCenterY,
             tSbch = display.topStatusBarContentHeight,
+            statusBarType = display.TranslucentStatusBar,       "display.DefaultStatusBar",    "display.DarkStatusBar",    "display.TranslucentStatusBar",
             splashDelay = 150,    -- milliseconds
             saColor = { },
             saColorTrans = { },
@@ -23,6 +24,7 @@ local M = {
             imgfld = "images/",
             scenesfld = "",
             utilsfld = "utils.",
+            classfld = "classes.",
             theme = "widget_theme_ios7",
             font = "HelveticaNeue-Light",
             fontBold = "HelveticaNeue",
@@ -31,7 +33,11 @@ local M = {
             sceneStartTop = 0,     -- set elsewhere
             sceneHeight = 0,     -- set elsewhere
             sceneWidth = 0,     -- set elsewhere
+            login = {
+                        loggedin = false,
+                    },
             scenemaskFile = "",
+            composerrecycleOnSceneChange = false,
             titleGradient = {
                     type = 'gradient',
                     color1 = { 189/255, 203/255, 220/255, 1 }, 
@@ -61,13 +67,13 @@ local M = {
                                   },
                     },
             tabs = {
-                        tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "home",
+                        tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "home", transitiontime = 200,
                         btns = {
                             home = {
                                         label="Home",lua="scenes.home",title="State Auto",time=250, effect="crossFade",def="images/saicon.png",over="images/saicon-down.png"
                                     },
                             video = {
-                                        label="Agent",lua="scenes.video",title="My Agent",time=250, effect="slideRight",def="images/agent.png",over="images/agent-down.png",
+                                        label="My Agent",lua="scenes.video",title="My Agent",time=250, effect="slideRight",def="images/agent.png",over="images/agent-down.png",
                                         options = {
                                                 feedName = "video.rss",
                                                 --feedURL = "http://gdata.youtube.com/feeds/mobile/users/CoronaLabs/uploads?max-results=20&alt=rss&orderby=published&format=1",
@@ -104,70 +110,7 @@ local M = {
 
         }
 
--------------------------------------------------------
--- Override print function make global
--------------------------------------------------------
-reallyPrint = print
-function print(...)
-    if M.debugMode then
-        reallyPrint("<-==============================================->") 
-        reallyPrint(M.appName .. "-> " .. unpack(arg))
-    end
-end
-print "In myapp.lua"
-
--------------------------------------------------------
--- Seed random generator in case we use
--------------------------------------------------------
-math.randomseed( os.time() )
-
--------------------------------------------------------
--- Set app variables
--------------------------------------------------------
-if (display.pixelHeight/display.pixelWidth) > 1.5 then
-    M.isTall = true
-end
-
-if display.contentWidth > 320 then M.is_iPad = true end
-
---
--- Handle Graphics 2.0 changes
-if tonumber( system.getInfo("build") ) < 2013.2000 then
-    -- we are a Graphics 1.0 build
-    M.colorDivisor = 1
-    M.isGraphics2 = false
-end
-
-M.saColor = { 0/M.colorDivisor, 104/M.colorDivisor, 167/M.colorDivisor } 
-M.saColorTrans = { 0/M.colorDivisor, 104/M.colorDivisor, 167/M.colorDivisor, .75 }
-M.colorGray = { 83/M.colorDivisor, 83/M.colorDivisor, 83/M.colorDivisor }
-
-if system.getInfo("platformName") == "Android" then
-    myApp.theme = "widget_theme_android"
-    myApp.font = "Droid Sans"
-    myApp.fontBold = "Droid Sans Bold"
-    myApp.fontItalic = "Droid Sans"
-    myApp.fontBoldItalic = "Droid Sans Bold"
-    myApp.topBarBg = M.imgfld .. "topBarBg7.png"
-else
-    local coronaBuild = system.getInfo("build")
-    if tonumber(coronaBuild:sub(6,12)) < 1206 then myApp.theme = "widget_theme_ios" end
-end
-
-local iconInfo = {
-    width = 40,
-    height = 40,
-    numFrames = 20,
-    sheetContentWidth = 200,
-    sheetContentHeight = 160
-}
-
-M.icons = graphics.newImageSheet(M.imgfld.. "ios7icons.png", iconInfo)
-
 return M
-
-
-
 -- The following string values are supported for the effect key of the options table:
 
 -- "fade"
