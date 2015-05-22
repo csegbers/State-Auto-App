@@ -1,6 +1,7 @@
 local myApp = require( "myapp" ) 
 
 myApp.login.loggedin = false
+myApp.justLaunched = true
 
 -------------------------------------------------------
 -- Override print function make global

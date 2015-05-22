@@ -33,7 +33,7 @@ local M = {
             sceneStartTop = 0,     -- set elsewhere
             sceneHeight = 0,     -- set elsewhere
             sceneWidth = 0,     -- set elsewhere
-            sceneBackground = { r=235/255, g=235/255, b=225/255, a=1 },
+            sceneBackground = { r=241/255, g=242/255, b=243/255, a=1 },
             login = {
                         loggedin = false,
                         lua="login",

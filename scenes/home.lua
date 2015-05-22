@@ -125,8 +125,9 @@ function scene:show( event )
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
 
-     if myApp.login.loggedin == false then
-       myApp.Login()
+     if myApp.login.loggedin == false and myApp.justLaunched == true then
+        myApp.justLaunched = false
+        myApp.Login()
 
      end
     end
