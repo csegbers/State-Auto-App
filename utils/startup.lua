@@ -1,3 +1,8 @@
+
+-------------------------------------------------------
+-- OLoaded once in main, used to override variables and create some common functions
+-------------------------------------------------------
+
 local myApp = require( "myapp" ) 
 
 myApp.login.loggedin = false
@@ -59,15 +64,10 @@ else
     if tonumber(coronaBuild:sub(6,12)) < 1206 then myApp.theme = "widget_theme_ios" end
 end
 
-local iconInfo = {
-    width = 40,
-    height = 40,
-    numFrames = 20,
-    sheetContentWidth = 200,
-    sheetContentHeight = 160
-}
-
-myApp.icons = graphics.newImageSheet(myApp.imgfld.. "ios7icons.png", iconInfo)
+-------------------------------------------------------
+-- Icon sheet
+-------------------------------------------------------
+myApp.icons = graphics.newImageSheet(myApp.imgfld.. myApp.iconinfo.sheet,myApp.iconinfo.icondimensions)
 
 
 

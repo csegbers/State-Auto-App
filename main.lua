@@ -3,12 +3,12 @@
 --====================================================================--
 local myApp = require( "myapp" ) 
 local startup = require( myApp.utilsfld .. "startup" ) 
-local common = require( "common" )
+local common = require( myApp.utilsfld .. "common" )  
 
 ------------------------------------------------------
 print("main: Program Start") 
 ------------------------------------------------------
-local parse = require( "parse" )
+local parse = require( myApp.utilsfld .. "parse" )
 parse.parseGetConfig()
 parse.parseAppOpened()
 
@@ -25,7 +25,6 @@ composer.recycleOnSceneChange = myApp.composerrecycleOnSceneChange
 
 local widget = require( "widget" )
 widget.setTheme(myApp.theme)
-
 
 ------------------------------------------------------
 print ("main: After Main Requires")

@@ -34,6 +34,7 @@ local M = {
             sceneHeight = 0,     -- set elsewhere
             sceneWidth = 0,     -- set elsewhere
             sceneBackground = { r=241/255, g=242/255, b=243/255, a=1 },
+            scenemaskFile = "",
             login = {
                         loggedin = false,
                         lua="login",
@@ -44,7 +45,7 @@ local M = {
                                       params = { }
                                    },
                     },
-            scenemaskFile = "",
+
             composerrecycleOnSceneChange = false,
             titleGradient = {
                     type = 'gradient',
@@ -52,6 +53,18 @@ local M = {
                     color2 = { 89/255, 116/255, 152/255, 1 },
                     direction = "down"
              },
+            icons = "",
+            iconinfo = 
+               {
+                       icondimensions = {
+                              width = 40,
+                              height = 40,
+                              numFrames = 20,
+                              sheetContentWidth = 200,
+                              sheetContentHeight = 160
+                              },
+                        sheet = "ios7icons.png",
+                },
             parse = {
                         appId = 'nShcc7IgtlMjqroizNXtlVwjtwjfJgLsiRVgvUfA',
                         restApikey = 'DeOzYBpk6bBSha0SJ9cRUc36EbWUmuseajSyBrlF',
@@ -75,18 +88,35 @@ local M = {
                                   },
                     },
             homepage = {
+                          groupwidth = 140,
+                          groupheight = 180,
+                          groupheaderheight = 20,
+                          groupbetween = 10,
+                          groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
+                          headercolor = { r=255/255, g=255/255, b=255/255, a=1 },                         
                           items = {
-                                      findgas = {title = "Find Gas", pic="images/gas.png",text="Find Gas Prices Near You"},
-                                      roasast = {title = "RoadSide Assistance", pic="images/truck.png",text="Flat tire, out of gas ? We can help"},
-                                   },
+                                      afindgas = {
+                                           title = "Find Gas111", 
+                                           pic="images/gas.png",
+                                           text="Find Gas Prices Near You",
+                                           groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
+                                               },
+                                       broasast = {title = "RoadSide Asance222", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=156/255, g=42/255, b=57/255, a=1 },},
+                                        css = {title = "RoadSide Assi333e", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
+                                       dtt = {title = "RoadSide 444", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
+                                        et3t = {title = "RoadSide Asance555", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
+                                       fttt = {title = "RoadSide Assice666", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=2/255, g=149/255, b=255/255, a=1 },},
+                                       g1tyt = {title = "RoadSide Ass777", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=60/255, b=255/255, a=1 },},
+                                      g2yy = {title = "RoadSide e888", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
+                                 },
                        },
             tabs = {
-                        tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "home", transitiontime = 200,
+                        tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "ahome", transitiontime = 200,
                         btns = {
-                            home = {
+                            ahome = {
                                         label="Home",lua="home",title="State Auto",time=250, effect="crossFade",def="images/saicon.png",over="images/saicon-down.png"
                                     },
-                            video = {
+                            bvideo = {
                                         label="My Agent",lua="video",title="My Agent",time=250, effect="slideRight",def="images/agent.png",over="images/agent-down.png",
                                         options = {
                                                 feedName = "video.rss",
@@ -97,10 +127,10 @@ local M = {
                                                 pageTitle = "Corona Videos"
                                                    }                                
                                     },
-                            menu = {
+                            cmenu = {
                                         label="Menu",lua="menu",title="Menu",time=250, effect="slideDown",def="images/tabbaricon.png",over="images/tabbaricon-down.png"
                                     },
-                            blogs = {
+                            dblogs = {
                                       label="Blogs",lua="feed",title="Blog",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
                                       options = {
                                             feedName = "corona.rss",
@@ -110,14 +140,14 @@ local M = {
                                             pageTitle = "Corona Labs"
                                                  }
                                       },
-                           pics = {label="Pics",lua="photogallery",title="Pics",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
-                           maps = {
+                           epics = {label="Pics",lua="photogallery",title="Pics",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
+                           fmaps = {
                                         label="Maps",lua="mapscene",title="Maps",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
                                         options = {
                                                 pageTitle = "Corona Headquarters"
                                                  }                              
                                     },
-                          debug = {label="Debug",lua="debugapp",title="debug",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
+                          gdebug = {label="Debug",lua="debugapp",title="debug",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
 
                                 }
                    },

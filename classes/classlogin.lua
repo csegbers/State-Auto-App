@@ -3,8 +3,8 @@
 -- classlogin.lua class 
 --
 -------------------------------------------------
-
-local common = require( "common" )
+local myApp = require( "myapp" ) 
+local common = require( myApp.utilsfld .. "common" )
 
 local login = {}
 local login_mt = { __index = login }	-- metatable

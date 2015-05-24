@@ -38,8 +38,10 @@ DEALINGS IN THE SOFTWARE.
 --local scene = storyboard.newScene()
 local composer = require( "composer" )
 local scene = composer.newScene()
+
 local widget = require( "widget" )
-local myApp = require( "myapp" )
+local myApp = require( "myapp" ) 
+local common = require( myApp.utilsfld .. "common" )
 
 widget.setTheme(myApp.theme)
 

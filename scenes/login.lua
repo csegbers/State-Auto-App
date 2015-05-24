@@ -5,8 +5,8 @@ local composer = require( "composer" )
 local scene = composer.newScene()
 
 local widget = require( "widget" )
-local myApp = require( "myapp" )
-local common = require( "common" )
+local myApp = require( "myapp" ) 
+local common = require( myApp.utilsfld .. "common" )
 
 local login = require( myApp.classfld .. "classlogin" )
 

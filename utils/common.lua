@@ -1,10 +1,9 @@
 local myApp = require( "myapp" )
 local socket = require( "socket" )
 -------------------------------------------------------
--- Store variables used across the app
+-- common functions used in any app
 -------------------------------------------------------
 local M = { }
-
 
 function M.SceneBackground()
     
@@ -15,7 +14,6 @@ function M.SceneBackground()
     background.y = myApp.cH / 2
     return background
 end
-
 
 function M.SceneContainer()
     local container = display.newContainer(myApp.sceneWidth,myApp.sceneHeight)

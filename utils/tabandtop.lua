@@ -2,9 +2,10 @@
 print ("tabandtop: IN")
 ------------------------------------------------------
 
-local myApp = require( "myapp" ) 
+local myApp = require( "myapp" )  
+local common = require( myApp.utilsfld .. "common" )
+
 local widget = require( "widget" )
-local common = require( "common" )
 local composer = require( "composer" )
 
 ----------------------------------------------------------
@@ -115,19 +116,25 @@ local function addtabBtn(tkey)
         }
     table.insert(tabButtons, tabitem)
 end
-
+------------------------------------------------
+-- have to sort first
+------------------------------------------------
+ local a = {}
+ for n in pairs(myApp.tabs.btns) do table.insert(a, n) end
+ table.sort(a)
+ for i,k in ipairs(a) do addtabBtn(k) end
 ---- following wors just puts them in random order
 -- for k,v in pairs(myApp.tabs.btns) do 
 --     addtabBtn(k)
 -- end
 
-addtabBtn("home")
-addtabBtn("video")
-addtabBtn("menu")
-addtabBtn("blogs")
-addtabBtn("pics")
-addtabBtn("maps")
-addtabBtn("debug")
+-- addtabBtn("home")
+-- addtabBtn("video")
+-- addtabBtn("menu")
+-- addtabBtn("blogs")
+-- addtabBtn("pics")
+-- addtabBtn("maps")
+-- addtabBtn("debug")
 
 myApp.tabBar = widget.newTabBar{
     top =  myApp.cH - myApp.tabs.tabBarHeight ,
@@ -199,6 +206,7 @@ function myApp.showScreen(parms)
         transition.to( myApp.TitleGroup.titleText, { time=myApp.tabs.transitiontime, alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=myApp.tabs.transitiontime}) end } )
         transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=showScreenIcon})
     end
+    print ("askljjksfjksfhjksdhjksdh" ..  myApp.scenesfld .. tnt.lua)
     composer.gotoScene(myApp.scenesfld .. tnt.lua, {time=tnt.time, effect=tnt.effect, params = tnt.options})
     return true
 end

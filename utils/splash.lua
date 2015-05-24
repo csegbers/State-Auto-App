@@ -4,7 +4,7 @@ print ("splash: IN")
 ------------------------------------------------------
 
 local myApp = require( "myapp" ) 
-local composer = require( "composer" )
+local common = require( myApp.utilsfld .. "common" )
 
 local background = display.newRect(0,0, myApp.cW,myApp.cH)
 background:setFillColor(255/myApp.colorDivisor,255/myApp.colorDivisor,255/myApp.colorDivisor)
@@ -28,6 +28,9 @@ local function closeSplash()
                     print ("splash: OUT")
                 end
                 transition.to( background, {time=800, alpha=0 , onComplete=removeBack } )
+                ----------------------------------------------------------
+                -- Launch the first screen
+                ----------------------------------------------------------
                 myApp.showScreen({key=myApp.tabs.launchkey,firsttime=true})
 
     end

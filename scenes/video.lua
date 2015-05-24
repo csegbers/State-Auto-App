@@ -10,8 +10,8 @@ local widget = require( "widget" )
 -- if you have an Atom feed uncomment this and comment out the line after it.
 -- local rss = require("atom")
 local rss = require( "rss" )
-local myApp = require( "myapp" )
-local common = require( "common" )
+local myApp = require( "myapp" ) 
+local common = require( myApp.utilsfld .. "common" )
 
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("In " .. currScene .. " Scene")
