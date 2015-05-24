@@ -90,17 +90,32 @@ function scene:create(event)
      -- aline.strokeWidth = 1
      -- primGroup:insert(aline)
 
+     local groupwidth = myApp.homepage.groupwidth                                -- starting width of the selection box
+     local workingScreenWidth = myApp.sceneWidth - myApp.homepage.groupbetween   -- screen widh - the left edge (since each box would have 1 right edge)
+     local workingGroupWidth = groupwidth + myApp.homepage.groupbetween          -- group width plus the right edge
+     local groupsPerRow = math.floor(workingScreenWidth / workingGroupWidth )    --how many across can we fit
+     local leftWidth = myApp.sceneWidth - (workingGroupWidth*groupsPerRow )      -- width of the left edige
+     local leftY = (leftWidth) / 2 + (myApp.homepage.groupbetween / 2 )          -- starting point of left box
 
-     local workingScreenWidth = myApp.sceneWidth - myApp.homepage.groupbetween
-     local workingGroupWidth = myApp.homepage.groupwidth + myApp.homepage.groupbetween
-     local groupsPerRow = math.floor(workingScreenWidth / workingGroupWidth )
-     local leftEdge = (myApp.sceneWidth - (workingGroupWidth*groupsPerRow)) / 2 + (myApp.homepage.groupbetween /2)
-     print ("local groupsPerRow " .. groupsPerRow)
-
-
+     -------------------------------------------
+     -- lots of extra edging ? edging > space in between ?
+     -- expand the boxes but not beyond their max size
+     -------------------------------------------
+     if leftWidth > myApp.homepage.groupbetween then
+        local origgroupwidth = groupwidth
+        groupwidth = groupwidth + ((leftWidth - myApp.homepage.groupbetween) / groupsPerRow)   -- calcualte new group width
+        if groupwidth > myApp.homepage.groupmaxwidth then                                      -- gone too far ? push back
+            groupwidth = myApp.homepage.groupmaxwidth 
+            if groupwidth < origgroupwidth then groupwidth = origgroupwidth end                -- just incase someone puts the max > than original
+        end
+        workingGroupWidth = groupwidth +  myApp.homepage.groupbetween                          -- calcualt enew total group width _ spacing
+        leftWidth = myApp.sceneWidth - (workingGroupWidth*groupsPerRow )                       -- recalce leftwdith and left starting point
+        leftY = (leftWidth) / 2 + (myApp.homepage.groupbetween / 2 )
+     end
 
      --------------------------------------------
      -- must sort otherwise order is not honered
+     -- so the KEYS must be in alphabetical order you want !!
      --------------------------------------------
      local a = {}
      for n in pairs(myApp.homepage.items) do table.insert(a, n) end
@@ -110,20 +125,25 @@ function scene:create(event)
      for i,k in ipairs(a) do 
          local v = myApp.homepage.items[k]
          print ("home page item " .. k)
+             --------------------------------------
+             -- need to start a new row ?
+             --------------------------------------
              if col > groupsPerRow then
                   row = row + 1
                   col = 1
              end
+
+             ---------------------------------------------
+             -- lets create the group
+             ---------------------------------------------
              local itemGrp = display.newGroup(  )
-             local startX = workingGroupWidth*(col-1) + leftEdge + myApp.homepage.groupwidth/2
+             local startX = workingGroupWidth*(col-1) + leftY + groupwidth/2
              local startY = (myApp.homepage.groupheight/2 +myApp.homepage.groupbetween*row) + (row-1)*myApp.homepage.groupheight
              
              -------------------------------------------------
              -- Background
              -------------------------------------------------
-             local myRoundedRect = display.newRoundedRect(startX, startY ,myApp.homepage.groupwidth, myApp.homepage.groupheight, 1 )
-             --myRoundedRect.strokeWidth = 2
-             --   myRoundedRect:setStrokeColor( 123/255, 100/255, 100/255, 1 )
+             local myRoundedRect = display.newRoundedRect(startX, startY ,groupwidth, myApp.homepage.groupheight, 1 )
              myRoundedRect:setFillColor(myApp.homepage.groupbackground.r,myApp.homepage.groupbackground.g,myApp.homepage.groupbackground.b,myApp.homepage.groupbackground.a )
              itemGrp:insert(myRoundedRect)
 
@@ -131,7 +151,7 @@ function scene:create(event)
              -- Header Background
              -------------------------------------------------
              local startYother = startY-myApp.homepage.groupheight/2 + myApp.homepage.groupbetween
-             local myRoundedTop = display.newRoundedRect(startX, startYother ,myApp.homepage.groupwidth, myApp.homepage.groupheaderheight, 1 )
+             local myRoundedTop = display.newRoundedRect(startX, startYother ,groupwidth, myApp.homepage.groupheaderheight, 1 )
              myRoundedTop:setFillColor(v.groupheader.r,v.groupheader.g,v.groupheader.b,v.groupheader.a )
              itemGrp:insert(myRoundedTop)
              
@@ -142,6 +162,9 @@ function scene:create(event)
              myText:setFillColor( myApp.homepage.headercolor.r,myApp.homepage.headercolor.g,myApp.homepage.headercolor.b,myApp.homepage.headercolor.a )
              itemGrp:insert(myText)
 
+             -------------------------------------------------
+             -- insert each individual group into the master group
+             -------------------------------------------------
              primGroup:insert(itemGrp)
              col = col+1
      end

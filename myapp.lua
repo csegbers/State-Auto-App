@@ -88,7 +88,8 @@ local M = {
                                   },
                     },
             homepage = {
-                          groupwidth = 140,
+                          groupwidth = 120,
+                          groupmaxwidth = 170,     -- we will allow to grow to fit better if there is extra edging. This would be max however
                           groupheight = 180,
                           groupheaderheight = 20,
                           groupbetween = 10,
