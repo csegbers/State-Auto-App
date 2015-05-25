@@ -26,7 +26,7 @@ function scene:create(event)
     group:insert(container)
 
     local function scrollListener( event )
-
+            
             -- local phase = event.phase
             -- if ( phase == "began" ) then print( "Scroll view was touched" )
             -- elseif ( phase == "moved" ) then print( "Scroll view was moved" )
@@ -113,6 +113,15 @@ function scene:create(event)
         leftY = (leftWidth) / 2 + (myApp.homepage.groupbetween / 2 )
      end
 
+     local function onObjectTouch( event )
+         print( "Tap event began on: " .. event.target.id  )
+       -- print( "Touch event began on: " .. event.target.id .. "  Phase " .. event.phase)
+        -- if event.phase == "began" then
+        --     return false
+        -- end
+        -- return true
+     end
+
      --------------------------------------------
      -- must sort otherwise order is not honered
      -- so the KEYS must be in alphabetical order you want !!
@@ -137,6 +146,7 @@ function scene:create(event)
              -- lets create the group
              ---------------------------------------------
              local itemGrp = display.newGroup(  )
+             itemGrp.id = k
              local startX = workingGroupWidth*(col-1) + leftY + groupwidth/2
              local startY = (myApp.homepage.groupheight/2 +myApp.homepage.groupbetween*row) + (row-1)*myApp.homepage.groupheight
              
@@ -161,6 +171,11 @@ function scene:create(event)
              local myText = display.newText( v.title, startX, startYother,  myApp.fontBold, 12 )
              myText:setFillColor( myApp.homepage.headercolor.r,myApp.homepage.headercolor.g,myApp.homepage.headercolor.b,myApp.homepage.headercolor.a )
              itemGrp:insert(myText)
+
+             -------------------------------------------------
+             -- Add touch event
+             -------------------------------------------------
+             itemGrp:addEventListener( "tap", onObjectTouch )
 
              -------------------------------------------------
              -- insert each individual group into the master group
@@ -202,7 +217,7 @@ function scene:show( event )
 
      if myApp.login.loggedin == false and myApp.justLaunched == true then
         myApp.justLaunched = false
-        myApp.Login()
+        timer.performWithDelay(10, myApp.Login)  --- cant just launch if we recycle composer for some reason
 
      end
     end

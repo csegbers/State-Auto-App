@@ -70,7 +70,34 @@ end
 myApp.icons = graphics.newImageSheet(myApp.imgfld.. myApp.iconinfo.sheet,myApp.iconinfo.icondimensions)
 
 
+-------------------------------------------------------
+-- Runtime Events
+-------------------------------------------------------
+function myApp.locationHandler ( event )
+    myApp.gps.event = event
+    print("locationHandler")
+end
+function myApp.updateGPS()
+    -- Reload GPS location
+    Runtime:removeEventListener( "location", myApp.locationHandler )    
+    Runtime:addEventListener( "location", myApp.locationHandler )    
 
+    -- Update again
+    timer.performWithDelay( myApp.gps.timer, myApp.updateGPS )
+end
+function myApp.onSystemEvent( event )
+   if event.type == "applicationStart" then
+        print("onSystemEvent start")
+    elseif event.type == "applicationExit" then
+        print("onSystemEvent exit")
+    elseif event.type == "applicationSuspend" then
+        print("onSystemEvent suspend")
+    elseif event.type == "applicationResume" then
+        print("onSystemEvent resume")
+    end
+end
 
+myApp.updateGPS()
+Runtime:addEventListener( "system", myApp.onSystemEvent )
 
 

@@ -212,6 +212,7 @@ function myApp.showScreen(parms)
 end
 
 function myApp.Login(parms)
+    print "IN overlay"
     composer.showOverlay(myApp.scenesfld .. myApp.login.lua, myApp.login.options)
     return true
 end

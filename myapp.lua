@@ -35,13 +35,19 @@ local M = {
             sceneWidth = 0,     -- set elsewhere
             sceneBackground = { r=241/255, g=242/255, b=243/255, a=1 },
             scenemaskFile = "",
+            gps = {
+                     timer = 30000,     --30 seconds
+                     event= "",
+                  },
+
+
             login = {
                         loggedin = false,
                         lua="login",
                         options = {
                                       isModal = true,
                                       effect = "fromTop",
-                                      time = 2000,
+                                      time = 1000,
                                       params = { }
                                    },
                     },
@@ -90,7 +96,7 @@ local M = {
             homepage = {
                           groupwidth = 120,
                           groupmaxwidth = 170,     -- we will allow to grow to fit better if there is extra edging. This would be max however
-                          groupheight = 180,
+                          groupheight = 160,
                           groupheaderheight = 20,
                           groupbetween = 10,
                           groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
@@ -148,7 +154,7 @@ local M = {
                                                 pageTitle = "Corona Headquarters"
                                                  }                              
                                     },
-                          gdebug = {label="Debug",lua="debugapp",title="debug",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
+                          gdebug = {label="Debug",lua="debugapp",title="Debug",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
 
                                 }
                    },

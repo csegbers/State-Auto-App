@@ -12,22 +12,25 @@ local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("In " .. currScene .. " Scene")
 
 function scene:create(event)
-    print ("Create  " .. currScene)
-	local group = self.view
-	local background = common.SceneBackground()
-    group:insert(background)
+  print ("Create  " .. currScene)
+    local group = self.view
+    local container = common.SceneContainer()
+    group:insert(container)
+
+
 
     local scrollView = widget.newScrollView
-    {
-        top = myApp.sceneStartTop, 
-        left = 1,
-        width = myApp.sceneWidth, 
-        height = myApp.sceneHeight ,
-        -- scrollWidth = 600,
-        -- scrollHeight = 800,
-        --listener = scrollListener,
-    }
-    group:insert(scrollView)
+        {
+            x = 0,
+            y = 0,
+            width = myApp.sceneWidth, 
+            height =  myApp.sceneHeight,
+            horizontalScrollDisabled = true,
+            hideBackground = true,
+        }
+    container:insert(scrollView)
+
+
 
     local starty = 0
     
@@ -38,6 +41,22 @@ function scene:create(event)
     backlogo.y = starty
     starty = starty + backlogo.height
     scrollView:insert(backlogo)
+
+    local function gpsInfo(whatText)
+        starty = starty + 10
+        local disNt = display.newText( whatText, 100, starty, native.systemFont, 16 )
+        disNt:setFillColor( 1, 0, 0 )
+        scrollView:insert(disNt)
+        starty = starty + disNt.height
+    end
+    gpsInfo("latitude " .. string.format( '%.4f', myApp.gps.event.latitude ))
+    gpsInfo("longitude " .. string.format( '%.4f', myApp.gps.event.longitude ))
+    gpsInfo("altitude " .. string.format( '%.4f', myApp.gps.event.altitude ))
+    gpsInfo("accuracy " .. string.format( '%.4f', myApp.gps.event.accuracy ))
+    gpsInfo("speed " .. string.format( '%.4f', myApp.gps.event.speed ))
+    gpsInfo("direction " .. string.format( '%.4f', myApp.gps.event.direction ))
+    gpsInfo("time " .. string.format( '%.4f', myApp.gps.event.time ))
+
 
 
 
