@@ -2,11 +2,11 @@
 -- @copyright develephant 2013-2015
 -- @author Chris Byerley
 -- @license MIT
--- @version 2.0.1
+-- @version 2.0.2
+-- @site coronium.io
 -- Generate docs with LDoc.
 local json = require("json")
 local url = require("socket.url")
-local myApp = require( "myapp" ) 
 
 ---Parse Class
 -- @type Parse
@@ -874,13 +874,13 @@ function Parse:onResponse( event )
     local requestId = event.requestId
     
     local response, decodedResponse
+    print "CCCCCCCRAIG"
     if status ~= -1 then
       response = event.response
 
-      decodedResponse, err = pcall( json.decode, response )
-      if err then
-        --error( 'JSON error: ' .. err );
-        print( 'JSON decode error:', err );
+      local success, decodedResponse = pcall( json.decode, response ) 
+      if not success then
+        print( 'JSON decode error:', decodedResponse );
       end
 
       if self.showJSON then
@@ -889,12 +889,16 @@ function Parse:onResponse( event )
 
       if self.showStatus then
         if type( decodedResponse ) == 'table' then
+          print ("craig 111")
           Parse:printTable( decodedResponse )
+          print ("craig 222")
         else
           print( decodedResponse )
         end
       end
-        
+           print ("craig 111bbb")
+          Parse:printTable( decodedResponse )
+          print ("craig 222bbb")       
       if self.showAlert then
         local msg = "Net Status: " .. status .. "\n"
         
@@ -910,7 +914,12 @@ function Parse:onResponse( event )
         native.showAlert( "Parsed!", msg , { "OK" } )
       end
     end
-    
+
+    local success 
+    success, decodedResponse = pcall( json.decode, response ) 
+              print ("craig 111ccc")
+          Parse:printTable( decodedResponse )
+          print ("craig 222ccc")
     --find request
     local requestType = Parse.NIL
     local _callback = nil
@@ -924,7 +933,7 @@ function Parse:onResponse( event )
         break
       end
     end
-
+ 
     --broadcast response
     local e = nil
     if status == -1 then --timed out
@@ -937,6 +946,9 @@ function Parse:onResponse( event )
         error = "The request timed out.",
       }
     elseif status >= 200 and status < 400 then
+          print ("craig 333")
+          Parse:printTable( decodedResponse )
+          print ("craig 444")
       e = {
         name = "parseResponse",
         requestId = requestId,

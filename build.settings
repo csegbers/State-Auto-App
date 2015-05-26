@@ -34,6 +34,9 @@ settings =
          "portait", "portraitUpsideDown", 
       },
    },
+   androidPermissions = {
+         "android.permission.INTERNET",
+        },
    android =
    {
         usesPermissions =

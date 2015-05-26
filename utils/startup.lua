@@ -8,6 +8,40 @@ local myApp = require( "myapp" )
 myApp.login.loggedin = false
 myApp.justLaunched = true
 
+function print_r ( t )  
+    local print_r_cache={}
+    local function sub_print_r(t,indent)
+        if (print_r_cache[tostring(t)]) then
+            print(indent.."*"..tostring(t))
+        else
+            print_r_cache[tostring(t)]=true
+            if (type(t)=="table") then
+                for pos,val in pairs(t) do
+                    if (type(val)=="table") then
+                        print(indent.."["..pos.."] => "..tostring(t).." {")
+                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
+                        print(indent..string.rep(" ",string.len(pos)+6).."}")
+                    elseif (type(val)=="string") then
+                        print(indent.."["..pos..'] => "'..val..'"')
+                    else
+                        print(indent.."["..pos.."] => "..tostring(val))
+                    end
+                end
+            else
+                print(indent..tostring(t))
+            end
+        end
+    end
+    if (type(t)=="table") then
+        print(tostring(t).." {")
+        sub_print_r(t,"  ")
+        print("}")
+    else
+        sub_print_r(t,"  ")
+    end
+    print()
+end
+
 -------------------------------------------------------
 -- Override print function make global
 -------------------------------------------------------
@@ -15,7 +49,11 @@ reallyPrint = print
 function print(...)
     if myApp.debugMode then
         reallyPrint("<-==============================================->") 
-        reallyPrint(myApp.appName .. "-> " .. unpack(arg))
+        if type(arg[1]) == "table" then
+            print_r(arg[1])
+        else
+            reallyPrint(myApp.appName .. "-> " .. unpack(arg))
+        end
     end
 end
 print "In startup.lua"
