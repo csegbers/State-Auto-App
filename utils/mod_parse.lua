@@ -85,7 +85,6 @@ local Parse =
 -- end -- segbers
 -- parse:getConfig( "MyClass", "objectId", onGetObject ) -- segbers
 function Parse:getConfig(  _callback  ) -- segbers
-  print ("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
   local uri = Parse:getEndpoint( Parse.CONFIG  ) -- segbers
   return self:sendRequest( uri, {}, Parse.CONFIG, Parse.GET, _callback ) -- segbers
 end-- segbers

@@ -7,11 +7,17 @@ local scene = composer.newScene()
 
 local widget = require( "widget" )
 local myApp = require( "myapp" ) 
+local parse = require( myApp.utilsfld .. "mod_parse" )  
 local common = require( myApp.utilsfld .. "common" )
 local login = require( myApp.classfld .. "classlogin" )
 
 local currScene = (composer.getSceneName( "current" ) or "unknown")
+local params
+
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
+
+parse:logEvent( "MyCustomEvent", { ["x"] = "home" ,["y"] = "ccc"}, function (e) print ("return from  home logevent") print (e.requestType)   end )
+
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -21,9 +27,16 @@ print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 function scene:create(event)
 
     print ("Create  " .. currScene)
+    params = event.params or {}
     local group = self.view
-    local container = common.SceneContainer()
-    group:insert(container)
+    params.container = common.SceneContainer()
+    group:insert(params.container)
+
+    --------------------------------------------------
+    -- save the original settings in case we tranistionout
+    --------------------------------------------------
+    params.containerX = params.container.x
+    params.containerY = params.container.Y
 
     local function scrollListener( event )
             
@@ -55,7 +68,7 @@ function scene:create(event)
             horizontalScrollDisabled = true,
             hideBackground = true,
         }
-    container:insert(scrollView)
+    params.container:insert(scrollView)
 
 
 
@@ -120,6 +133,17 @@ function scene:create(event)
         --     return false
         -- end
         -- return true
+
+        local homepageitem = myApp.homepage.items[event.target.id]
+
+
+        if homepageitem.lua then
+           homepageitem.callBack = function() myApp.showScreen({key=params.key,effectback=homepageitem.effectback}) end
+           transition.to(  params.container, { time=homepageitem.time,  x= params.container.x*-1} )
+
+           myApp.showSubScreen (homepageitem)  --- cant just launch if we recycle composer for some reason
+        end
+        
      end
 
      --------------------------------------------
@@ -210,16 +234,18 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
+       
     elseif ( phase == "did" ) then
-        -- Called when the scene is now on screen.
-        -- Insert code here to make the scene come alive.
-        -- Example: start timers, begin animation, play audio, etc.
+        parse:logEvent( "Scene", { ["name"] = currScene} )
+            -- Called when the scene is now on screen.
+            -- Insert code here to make the scene come alive.
+            -- Example: start timers, begin animation, play audio, etc.
 
-     if myApp.login.loggedin == false and myApp.justLaunched == true then
-        myApp.justLaunched = false
-        timer.performWithDelay(10, myApp.Login)  --- cant just launch if we recycle composer for some reason
+         -- if myApp.login.loggedin == false and myApp.justLaunched == true then
+         --    myApp.justLaunched = false
+         --    timer.performWithDelay(10, myApp.Login)  --- cant just launch if we recycle composer for some reason
 
-     end
+         -- end
     end
 	
 
@@ -235,6 +261,7 @@ function scene:hide( event )
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
     elseif ( phase == "did" ) then
+        transition.to( params.container, { time=200,  x=params.containerX} )     -- put it back for next call
         -- Called immediately after scene goes off screen.
     end
 

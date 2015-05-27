@@ -410,11 +410,11 @@ function scene:show( event )
      
         -- fetch the parameters from the storyboard table for this view
         
-        feedName = params.feedName
-        feedURL = params.feedURL
-        displayMode = params.displayMode
-        pageTitle = params.pageTitle
-        icons = params.icons
+        feedName = params.options.feedName
+        feedURL = params.options.feedURL
+        displayMode = params.options.displayMode
+        pageTitle = params.options.pageTitle
+        icons = params.options.icons
         --
         -- go fetch the feed
         --

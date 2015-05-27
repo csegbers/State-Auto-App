@@ -102,11 +102,15 @@ local M = {
                           groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
                           headercolor = { r=255/255, g=255/255, b=255/255, a=1 },                         
                           items = {
-                                      afindgas = {
-                                           title = "Find Gas111", 
-                                           pic="images/gas.png",
-                                           text="Find Gas Prices Near You",
+                                      alocate = {
+                                           title = "Locate an Agent", 
+                                           pic="images/agent-down.png",
+                                           text="Locate agents nearby",
                                            groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
+                                           lua="locateagent",
+                                           time=250, 
+                                           effect="fromRight",
+                                           effectback="fromLeft",
                                                },
                                        broasast = {title = "RoadSide Asance222", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=156/255, g=42/255, b=57/255, a=1 },},
                                         css = {title = "RoadSide Assi333e", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},

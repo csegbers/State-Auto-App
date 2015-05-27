@@ -146,7 +146,7 @@ function scene:createScene(event)
     -- the viewer is on
 
     -- create embossed text to go above toolbar
-    titleText = display.newText( params.pageTitle, 0, 0, myApp.fontBold, 20 )
+    titleText = display.newText( params.options.pageTitle, 0, 0, myApp.fontBold, 20 )
     if myApp.isGraphics2 then
 	    titleText:setFillColor( 1, 1, 1 )
     else

@@ -2,7 +2,7 @@
 -- Insured App
 --====================================================================--
 local myApp = require( "myapp" )  
-local parse = require( myApp.utilsfld .. "mod_parse" )  
+ 
 local startup = require( myApp.utilsfld .. "startup" ) 
 local common = require( myApp.utilsfld .. "common" )  
 
@@ -18,16 +18,6 @@ print("main: Program Start")
 --parse.parseLogEvent("MyCustomEvent",{x=3,y="ccc"})
 --parse.parseLogEvent("Error",{code=124,desc="ccedc"})
 --// testing above come events
-
-parse:init({ appId = myApp.parse.appId , apiKey = myApp.parse.restApikey,})
-parse.showStatus = myApp.debugMode-- outputs response info in the console
---parse.showAlert = myApp.debugMode -- show a native pop-up with error and result codes
-parse.showJSON = myApp.debugMode -- output the raw JSON response in the console 
---parse.dispatcher:addEventListener( "parseRequest", onParseResponse )
-parse:appOpened(function (e) print ("return from appOpened") print (e.requestType)   end )
-parse:getObject("Agency","9ez6Z2tcaC", function(e) if not e.error then print ("BBBBAAACCCK " .. e.response.agencyName) end end )
-parse:getConfig( function(e) if not e.error then myApp.appName = e.response.params.appName print ("ZZZZZZBBBBAAACCCK " .. e.response.params.appName) end end )
-parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from logevent") print (e.requestType)   end )
 
 local composer = require( "composer" )
 composer.isDebug = myApp.debugMode
