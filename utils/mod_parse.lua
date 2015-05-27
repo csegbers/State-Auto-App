@@ -1,3 +1,14 @@
+
+---------------------------------
+-- segbers added stuff 
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+---------------------------------
+
+
 ---Parse module for Corona SDK
 -- @copyright develephant 2013-2015
 -- @author Chris Byerley
@@ -31,6 +42,7 @@ local Parse =
   ERROR = "ERROR",
   EXPIRED = 101,
   OBJECT = "classes",
+  CONFIG = "config",       -- segbers
   USER = "users",
   LOGIN = "login",
   ANALYTICS = "events",
@@ -58,6 +70,25 @@ local Parse =
   M4V = "video/x-m4v",
   MP4 = "video/mp4"
 }
+
+-- -------------------------------------
+-- Segbers
+----------------------------------------
+---Get a config object. -- segbers
+-- @func[opt] _callback The callback function. -- segbers
+-- @treturn int The network request ID. v-- segbers
+-- @usage -- segbers
+-- local function onGetObject( event ) -- segbers
+--   if not event.error then -- segbers
+--     print( event.response.yourconfigitem ) -- segbers
+--   end -- segbers
+-- end -- segbers
+-- parse:getConfig( "MyClass", "objectId", onGetObject ) -- segbers
+function Parse:getConfig(  _callback  ) -- segbers
+  print ("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+  local uri = Parse:getEndpoint( Parse.CONFIG  ) -- segbers
+  return self:sendRequest( uri, {}, Parse.CONFIG, Parse.GET, _callback ) -- segbers
+end-- segbers
 
 ---Data Objects
 -- @section data-oblects
@@ -874,11 +905,12 @@ function Parse:onResponse( event )
     local requestId = event.requestId
     
     local response, decodedResponse
-    print "CCCCCCCRAIG"
     if status ~= -1 then
       response = event.response
 
-      local success, decodedResponse = pcall( json.decode, response ) 
+      --local success, decodedResponse = pcall( json.decode, response )      -- segbers
+      local success                                                          -- segbers
+      success, decodedResponse = pcall( json.decode, response )              -- segbers 
       if not success then
         print( 'JSON decode error:', decodedResponse );
       end
@@ -889,16 +921,12 @@ function Parse:onResponse( event )
 
       if self.showStatus then
         if type( decodedResponse ) == 'table' then
-          print ("craig 111")
           Parse:printTable( decodedResponse )
-          print ("craig 222")
         else
           print( decodedResponse )
         end
       end
-           print ("craig 111bbb")
-          Parse:printTable( decodedResponse )
-          print ("craig 222bbb")       
+        
       if self.showAlert then
         local msg = "Net Status: " .. status .. "\n"
         
@@ -914,12 +942,7 @@ function Parse:onResponse( event )
         native.showAlert( "Parsed!", msg , { "OK" } )
       end
     end
-
-    local success 
-    success, decodedResponse = pcall( json.decode, response ) 
-              print ("craig 111ccc")
-          Parse:printTable( decodedResponse )
-          print ("craig 222ccc")
+    
     --find request
     local requestType = Parse.NIL
     local _callback = nil
@@ -933,7 +956,7 @@ function Parse:onResponse( event )
         break
       end
     end
- 
+
     --broadcast response
     local e = nil
     if status == -1 then --timed out
@@ -946,9 +969,6 @@ function Parse:onResponse( event )
         error = "The request timed out.",
       }
     elseif status >= 200 and status < 400 then
-          print ("craig 333")
-          Parse:printTable( decodedResponse )
-          print ("craig 444")
       e = {
         name = "parseResponse",
         requestId = requestId,
