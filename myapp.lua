@@ -48,7 +48,7 @@ local M = {
                                       isModal = true,
                                       effect = "fromTop",
                                       time = 1000,
-                                      params = { }
+                                       params = { }
                                    },
                     },
 
@@ -106,13 +106,24 @@ local M = {
                                            title = "Locate an Agent", 
                                            pic="images/agent-down.png",
                                            text="Locate agents nearby",
+                                           backtext = "<",
                                            groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
-                                           lua="locateagent",
-                                           time=250, 
-                                           effect="fromRight",
-                                           effectback="fromLeft",
+                                           composer = {
+                                                       lua="locateagent",
+                                                       time=250, 
+                                                       effect="slideLeft",
+                                                       effectback="slideRight",
+                                                    },
                                                },
-                                       broasast = {title = "RoadSide Asance222", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=156/255, g=42/255, b=57/255, a=1 },},
+                                       broasast = {title = "RoadSide Asance222", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=156/255, g=42/255, b=57/255, a=1 },
+                                                  backtext = "<",
+                                                  composer = {
+                                                       lua="locateagent",
+                                                       time=250, 
+                                                       effect="slideLeft",
+                                                       effectback="slideRight",
+                                                    },
+                                                 },
                                         css = {title = "RoadSide Assi333e", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
                                        dtt = {title = "RoadSide 444", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
                                         et3t = {title = "RoadSide Asance555", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
@@ -125,10 +136,12 @@ local M = {
                         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "ahome", transitiontime = 200,
                         btns = {
                             ahome = {
-                                        label="Home",lua="home",title="State Auto",time=250, effect="crossFade",def="images/saicon.png",over="images/saicon-down.png"
+                                        label="Home", title="State Auto" ,def="images/saicon.png",over="images/saicon-down.png",
+                                        composer = { lua="home" ,time=250, effect="crossFade" },
                                     },
                             bvideo = {
-                                        label="My Agent",lua="video",title="My Agent",time=250, effect="slideRight",def="images/agent.png",over="images/agent-down.png",
+                                        label="My Agent" ,title="My Agent" ,def="images/agent.png",over="images/agent-down.png",
+                                        composer = { lua="video" ,time=250, effect="slideRight" },
                                         options = {
                                                 feedName = "video.rss",
                                                 --feedURL = "http://gdata.youtube.com/feeds/mobile/users/CoronaLabs/uploads?max-results=20&alt=rss&orderby=published&format=1",
@@ -139,10 +152,12 @@ local M = {
                                                    }                                
                                     },
                             cmenu = {
-                                        label="Menu",lua="menu",title="Menu",time=250, effect="slideDown",def="images/tabbaricon.png",over="images/tabbaricon-down.png"
+                                        label="Menu",  title="Menu" ,def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                        composer = { lua="menu" ,time=250, effect="slideDown" },
                                     },
                             dblogs = {
-                                      label="Blogs",lua="feed",title="Blog",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                      label="Blogs" ,title="Blog" ,def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                      composer = { lua="feed" ,time=250, effect="crossFade" },
                                       options = {
                                             feedName = "corona.rss",
                                             feedURL = "http://www.coronalabs.com/feed/",
@@ -151,15 +166,22 @@ local M = {
                                             pageTitle = "Corona Labs"
                                                  }
                                       },
-                           epics = {label="Pics",lua="photogallery",title="Pics",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
+                           epics = {
+                                    label="Pics" ,title="Pics",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                    composer = { lua="photogallery" ,time=250, effect="crossFade" },
+                                   },
+                           
                            fmaps = {
-                                        label="Maps",lua="mapscene",title="Maps",time=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                        label="Maps", title="Maps",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                        composer = { lua="mapscene" ,time=250, effect="crossFade" },
                                         options = {
                                                 pageTitle = "Corona Headquarters"
                                                  }                              
                                     },
-                          gdebug = {label="Debug",lua="debugapp",title="Debug",stime=250, effect="crossFade",def="images/tabbaricon.png",over="images/tabbaricon-down.png"},
-
+                          gdebug = {
+                                     label="Debug" ,title="Debug" ,def="images/tabbaricon.png",over="images/tabbaricon-down.png" ,
+                                    composer = { lua="debugapp" ,time=250, effect="crossFade" },
+                                  }
                                 }
                    },
 

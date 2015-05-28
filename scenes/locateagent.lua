@@ -25,15 +25,15 @@ function scene:create(event)
     local group = self.view
     params = event.params           -- params contains the item table  
     print (params.title)
-    local container = common.SceneContainer()
-    group:insert(container)
+    params.container  = common.SceneContainer()
+    group:insert(params.container )
 
          -------------------------------------------------
      -- Background
      -------------------------------------------------
      local myRoundedRect = display.newRoundedRect(0,0,50,100, 1 )
      myRoundedRect:setFillColor(myApp.homepage.groupbackground.r,myApp.homepage.groupbackground.g,myApp.homepage.groupbackground.b,myApp.homepage.groupbackground.a )
-     container:insert(myRoundedRect)
+     params.container :insert(myRoundedRect)
 
 
 
@@ -73,6 +73,27 @@ end
 function scene:destroy( event )
 	local group = self.view
     print ("Destroy "   .. currScene)
+end
+
+
+---------------------------------------------------
+-- use if someone wants us to transition away
+-- for navigational appearnaces
+---------------------------------------------------
+function scene:moveContainer( event )
+    if params.container then
+         local containerX = params.container.x
+         local containerY = params.container.Y
+         local x = containerX
+         local y = containerY
+         if event.direction == "left" then
+            x = params.container.x*-1
+         end
+         if event.direction == "right" then
+            x = params.container.x*3
+         end
+         transition.to(  params.container, { time=event.time,  x= x,y=y, onComplete=function() transition.to(  params.container, {  alpha=1,  x= containerX, y =containerY } )end} )
+     end
 end
 
 scene:addEventListener( "create", scene )

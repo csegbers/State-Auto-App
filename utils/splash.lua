@@ -31,7 +31,7 @@ local function closeSplash()
                 ----------------------------------------------------------
                 -- Launch the first screen
                 ----------------------------------------------------------
-                myApp.showScreen({key=myApp.tabs.launchkey,firsttime=true})
+                myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabs.launchkey],firsttime=true})
 
     end
     local function closeSplash1()

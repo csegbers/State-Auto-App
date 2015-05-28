@@ -100,7 +100,11 @@ local tabCnt = 0
 local function addtabBtn(tkey)
     tabCnt = tabCnt + 1
     local btnrntry = myApp.tabs.btns[tkey]
+    ---------------------------------
+    -- dynamically add a couple items
+    ---------------------------------
     btnrntry.sel=tabCnt                         -- add a sequence
+    btnrntry.key=tkey                           -- add the key to the table
     local tabitem = 
         {
             label = btnrntry.label,
@@ -112,7 +116,7 @@ local function addtabBtn(tkey)
             },
             width = myApp.tabs.tabbtnw,
             height = myApp.tabs.tabbtnh,
-            onPress = function () myApp.showScreen({key=tkey}) end,
+            onPress = function () myApp.showScreen({instructions=btnrntry}) end,
         }
     table.insert(tabButtons, tabitem)
 end
@@ -170,18 +174,26 @@ if myApp.isTall then
     myApp.scenemaskFile = myApp.imgfld .. "mask-320x448.png"
 end
 
+--------------------------------------------------
+-- showScreenIcon
+--
+-- parms - {instructions (table)}
+--------------------------------------------------
 function myApp.showScreenIcon(parms)
-            display.remove(myApp.TitleGroup.backButton)    -- may not exist first time, this wont hurt
+        local tnt = parms.instructions
+        display.remove(myApp.TitleGroup.backButton)    -- may not exist first time, this wont hurt
         myApp.TitleGroup.backButton = nil
         ----------------------------------------------------------
         --   This is the title bar icon
         ----------------------------------------------------------
         display.remove(myApp.TitleGroup.titleIcon)    -- may not exist first time, this wont hurt
         myApp.TitleGroup.titleIcon = nil
-        myApp.TitleGroup.titleIcon = display.newImageRect(myApp.tabs.btns[parms.key].over,myApp.tabs.tabbtnh,myApp.tabs.tabbtnw)
+
+        myApp.TitleGroup.titleIcon = display.newImageRect(myApp.tabs.btns[tnt.key].over,myApp.tabs.tabbtnh,myApp.tabs.tabbtnw)
         common.fitImage( myApp.TitleGroup.titleIcon, myApp.titleBarHeight - myApp.titleBarEdge, false )
         myApp.TitleGroup.titleIcon.x = myApp.titleBarEdge + (myApp.TitleGroup.titleIcon.width * 0.5 )
         myApp.TitleGroup.titleIcon.y = (myApp.titleBarHeight * 0.5 )+ myApp.tSbch
+
         print ("icon scale " .. myApp.TitleGroup.titleIcon.xScale)
         myApp.TitleGroup.titleIcon.alpha = 0
         myApp.TitleGroup:insert(myApp.TitleGroup.titleIcon)
@@ -190,68 +202,133 @@ end
 --------------------------------------------------
 -- Show screen. Add function
 --
--- This is for main screen
+-- Used for the Major scenes from the Tabbar
+--
+-- parms - instructions(table), [firsttime], [effectback]
+--         instructions table must have a composer table
 --------------------------------------------------
 function myApp.showScreen(parms)
 
-    print ("goto " .. parms.key)
+    local tnt = parms.instructions
+
+    ----------------------------------------------------------
+    --   Make sure the Tab is selected in case we came from a different direction instead of user tapping tabbar
+    ----------------------------------------------------------
+    myApp.tabBar:setSelected(tnt.sel)
+
     ----------------------------------------------------------
     --   Change the title in the status bar and launch new screen
     ----------------------------------------------------------
-    local tnt = myApp.tabs.btns[parms.key]
-    tnt.key = parms.key
-    myApp.tabBar:setSelected(tnt.sel)
-
     if parms.firsttime  then
         myApp.TitleGroup.titleText.text = tnt.title
         myApp.showScreenIcon(parms)
     else
-        transition.to( myApp.TitleGroup.titleText, { time=myApp.tabs.transitiontime, alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=myApp.tabs.transitiontime}) end } )
-        transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=myApp.showScreenIcon(parms)})
-
+        if parms.effectback then  
+            transition.to( myApp.TitleGroup.titleText, { 
+            time=myApp.tabs.transitiontime, alpha=.2,x = myApp.TitleGroup.titleText.x*3,
+            onComplete= function () myApp.TitleGroup.titleText.text = tnt.title; myApp.TitleGroup.titleText.x = myApp.cCx*3;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime }) end } )
+ 
+        else
+            transition.to( myApp.TitleGroup.titleText, { time=myApp.tabs.transitiontime, alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=myApp.tabs.transitiontime}) end } )
+            transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=myApp.showScreenIcon(parms)})
+        end
     end
-    local effect = tnt.effect
+
+    local effect = tnt.composer.effect
+    -----------------------------------------------
+    -- override effect ? Maybe a "back" etc..
+    -----------------------------------------------
     if parms.effectback then effect = parms.effectback end
-    composer.gotoScene(myApp.scenesfld .. tnt.lua, {time=tnt.time, effect=effect, params = tnt})
+
+    composer.gotoScene(myApp.scenesfld .. tnt.composer.lua, {time=tnt.composer.time, effect=effect, params = tnt})
     return true
 end
 
 
 --------------------------------------------------
 -- Show sub screen. Add function
+-- parms - instructions(table) 
+--         instructions table must have a composer table
 --------------------------------------------------
 function myApp.showSubScreen(parms)
+        local tnt = parms.instructions
+
+        ----------------------------------------------
+        -- was there a parent container ?
+        -- STore original and slide on out
+        -- would not necessarily have to do this but the composer would slide 
+        -- something in but not make the other appear to slide out
+        ----------------------------------------------
+        -- -- Get a reference to "titleScene"
+        -- local curScene = composer.getScene( composer.getSceneName( "current" ))
+        -- if curScene then
+        --      curScene:moveContainer({time=tnt.composer.time,direction="left"})
+        -- end
+ 
+ 
+ 
+
+        --------------------------------------------
+        -- Slide the current Text out
+        -- and set to the new text
+        -- SLide it on in
+        --------------------------------------------
         transition.to( myApp.TitleGroup.titleText, { 
             time=myApp.tabs.transitiontime, alpha=.2,x = myApp.TitleGroup.titleText.x*-1,
-            onComplete= function () myApp.TitleGroup.titleText.text = parms.title; myApp.TitleGroup.titleText.x = myApp.cCx*3;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime }) end } )
+            onComplete= function () myApp.TitleGroup.titleText.text = tnt.title; myApp.TitleGroup.titleText.x = myApp.cCx*3;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime }) end } )
         
+        --------------------------------------------
+        -- is there an icon ? get rid of
+        --------------------------------------------
+        if myApp.TitleGroup.titleIcon then
+            transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime*2, transition=easing.outQuint, alpha=0 ,x = myApp.TitleGroup.titleIcon.x*-1,onComplete= function () end})
+            display.remove(myApp.TitleGroup.titleIcon)    -- may not exist first time, this wont hurt
+            myApp.TitleGroup.titleIcon = nil
+        end
 
+        --------------------------------------------
+        -- is there a widget ? get rid of
+        --------------------------------------------
+        if myApp.TitleGroup.backButton then
+            transition.to( myApp.TitleGroup.backButton, { time=myApp.tabs.transitiontime*2, transition=easing.outQuint, alpha=0 ,x = myApp.TitleGroup.backButton.x*-1,onComplete= function () end})
+            display.remove(myApp.TitleGroup.backButton)    -- may not exist first time, this wont hurt
+            myApp.TitleGroup.backButton = nil
+        end
 
-        transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime*2, transition=easing.outQuint, alpha=0 ,x = myApp.TitleGroup.titleIcon.x*-1,onComplete= function () end})
-        display.remove(myApp.TitleGroup.titleIcon)    -- may not exist first time, this wont hurt
-        myApp.TitleGroup.titleIcon = nil
+        --------------------------------------------
+        -- iCreate a widget (text only) for the navigation ?
+        --------------------------------------------   
+        if tnt.backtext then    
+            myApp.TitleGroup.backButton = widget.newButton {
+                label = tnt.backtext ,
+                labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
+                fontSize = 30,
+                font = myApp.fontBold,
+                onRelease = tnt.callBack,
+            }
+            myApp.TitleGroup.backButton.x = myApp.cW
+            myApp.TitleGroup.backButton.y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch  
+            myApp.TitleGroup:insert(myApp.TitleGroup.backButton)
+            transition.to( myApp.TitleGroup.backButton, { time=myApp.tabs.transitiontime*2, x = myApp.titleBarEdge *2 , transition=easing.outQuint})
+        else
+            if x then
+                myApp.TitleGroup.titleIcon = display.newImageRect(myApp.tabs.btns[tnt.key].over,myApp.tabs.tabbtnh,myApp.tabs.tabbtnw)
+                common.fitImage( myApp.TitleGroup.titleIcon, myApp.titleBarHeight - myApp.titleBarEdge, false )
+                myApp.TitleGroup.titleIcon.x = myApp.titleBarEdge + (myApp.TitleGroup.titleIcon.width * 0.5 )
+                myApp.TitleGroup.titleIcon.y = (myApp.titleBarHeight * 0.5 )+ myApp.tSbch
 
-        display.remove(myApp.TitleGroup.backButton)    -- may not exist first time, this wont hurt
-        myApp.TitleGroup.backButton = nil
-
-
-    myApp.TitleGroup.backButton = widget.newButton {
-        label = "<",
-        labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
-        fontSize = 30,
-        font = myApp.fontBold,
-        onRelease = parms.callBack,
-    }
+                print ("icon scale " .. myApp.TitleGroup.titleIcon.xScale)
+                myApp.TitleGroup.titleIcon.alpha = 0
+                myApp.TitleGroup:insert(myApp.TitleGroup.titleIcon)
+                transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=1 })
+            end
+        end
  
-        myApp.TitleGroup.backButton.x = myApp.cW
-        myApp.TitleGroup.backButton.y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch  
-     myApp.TitleGroup:insert(myApp.TitleGroup.backButton)
-         transition.to( myApp.TitleGroup.backButton, { time=myApp.tabs.transitiontime*2, x = myApp.titleBarEdge *2 , transition=easing.outQuint})
+         --------------------------------------------
+        -- igoto the new scene
+        --------------------------------------------
+        composer.gotoScene(myApp.scenesfld .. tnt.composer.lua, {time=tnt.composer.time, effect=tnt.composer.effect, params = tnt})
  
- 
-
-        composer.gotoScene(myApp.scenesfld .. parms.lua, {time=parms.time, effect=parms.effect, params = parms})
-
     return true
 end
 

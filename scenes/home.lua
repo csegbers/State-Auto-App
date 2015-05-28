@@ -32,11 +32,7 @@ function scene:create(event)
     params.container = common.SceneContainer()
     group:insert(params.container)
 
-    --------------------------------------------------
-    -- save the original settings in case we tranistionout
-    --------------------------------------------------
-    params.containerX = params.container.x
-    params.containerY = params.container.Y
+
 
     local function scrollListener( event )
             
@@ -127,21 +123,14 @@ function scene:create(event)
      end
 
      local function onObjectTouch( event )
-         print( "Tap event began on: " .. event.target.id  )
-       -- print( "Touch event began on: " .. event.target.id .. "  Phase " .. event.phase)
-        -- if event.phase == "began" then
-        --     return false
-        -- end
-        -- return true
-
         local homepageitem = myApp.homepage.items[event.target.id]
 
-
-        if homepageitem.lua then
-           homepageitem.callBack = function() myApp.showScreen({key=params.key,effectback=homepageitem.effectback}) end
-           transition.to(  params.container, { time=homepageitem.time,  x= params.container.x*-1} )
-
-           myApp.showSubScreen (homepageitem)  --- cant just launch if we recycle composer for some reason
+        -------------------------------------------
+        -- launch another scene ?
+        -------------------------------------------
+        if homepageitem.composer then
+           homepageitem.callBack = function() myApp.showScreen({instructions=params,effectback=homepageitem.composer.effectback}) end
+           myApp.showSubScreen ({instructions=homepageitem})  --- cant just launch if we recycle composer for some reason
         end
         
      end
@@ -261,7 +250,7 @@ function scene:hide( event )
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
     elseif ( phase == "did" ) then
-        transition.to( params.container, { time=200,  x=params.containerX} )     -- put it back for next call
+        
         -- Called immediately after scene goes off screen.
     end
 
@@ -271,6 +260,27 @@ function scene:destroy( event )
 	local group = self.view
     print ("Destroy "   .. currScene)
 end
+
+-- ---------------------------------------------------
+-- -- use if someone wants us to transition away
+-- -- for navigational appearnaces
+-- -- ****** just use the slide transitions from composer
+-- ---------------------------------------------------
+-- function scene:moveContainer( event )
+--     if params.container then
+--          local containerX = params.container.x
+--          local containerY = params.container.Y
+--          local x = containerX
+--          local y = containerY
+--          if event.direction == "left" then
+--             x = params.container.x*-1
+--          end
+--          if event.direction == "right" then
+--             x = params.container.x*3
+--          end
+--          transition.to(  params.container, { time=event.time,  x= x,y=y, onComplete=function() transition.to(  params.container, {  alpha=1,  x= containerX, y =containerY } )end} )
+--      end
+-- end
 
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
