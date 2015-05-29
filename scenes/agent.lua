@@ -24,37 +24,55 @@ function scene:create(event)
     print ("Create  " .. currScene)
     local group = self.view
     params = event.params           -- params contains the item table  
-    print (params.title)
+
     local container  = common.SceneContainer()
     group:insert(container )
 
-    if common.testNetworkConnection() then
-       native.setActivityIndicator( true )
-       parse:run("getagenciesnearby",{["lat"] = myApp.gps.event.latitude, ["lng"] = myApp.gps.event.longitude,["limit"] = myApp.locateanagent.gps.limit, ["miles"] = myApp.locateanagent.gps.miles}, function(e) native.setActivityIndicator( false ) if not e.error then debugpopup ("BACK from agentsnearby " ) end end )
-    end
      -------------------------------------------------
      -- Background
      -------------------------------------------------
-     local myRoundedRect = display.newRoundedRect(0,0,50,100, 1 )
+     local myRoundedRect = display.newRoundedRect(0,0,90,130, 1 )
      myRoundedRect:setFillColor(myApp.homepage.groupbackground.r,myApp.homepage.groupbackground.g,myApp.homepage.groupbackground.b,myApp.homepage.groupbackground.a )
      container:insert(myRoundedRect)
 
 
-        --local agentpagelink = common.DeepCopy(myApp.locatepage.agentinfo)
-       -- local parentinfo = common.DeepCopy(params)
-        local agentpagelink =  myApp.locateanagent.agentinfo 
+
+        -- local debuglink = common.DeepCopy({
+        --                      title = "Dbug Info", 
+        --                      backtext = "<",
+        --                      groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
+        --                      composer = {
+        --                                  lua="debugapp",
+        --                                  time=250, 
+        --                                  effect="slideLeft",
+        --                                  effectback="slideRight",
+        --                               },
+        --                          })
+
+        -- local parentinfo = common.DeepCopy(params)
+                local debuglink = {
+                             title = "Dbug Info", 
+                             backtext = "<",
+                             groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
+                             composer = {
+                                         lua="debugapp",
+                                         time=250, 
+                                         effect="slideLeft",
+                                         effectback="slideRight",
+                                      },
+                                 } 
+
         local parentinfo =  params 
-        agentpagelink.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback=agentpagelink.composer.effectback}) end
-        local agentbackButton = widget.newButton {
-            label = agentpagelink.title ,
+        debuglink.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+        local debugbackButton = widget.newButton {
+            label = "Debug Link" ,
             labelColor = { default={ 0, 1, 1 }, over={ 0, 0, 0, 0.5 } },
             fontSize = 30,
             font = myApp.fontBold,
-            onRelease = function () myApp.showSubScreen ({instructions=agentpagelink}) end,
+            onRelease = function () myApp.showSubScreen ({instructions=debuglink}) end,
          }
-       agentbackButton.y = 150
-
-container:insert(agentbackButton)
+       debugbackButton.y = 150
+       container:insert(debugbackButton)
 
 end
 

@@ -1,9 +1,21 @@
 local myApp = require( "myapp" )
 local socket = require( "socket" )
+local json = require("json")
 -------------------------------------------------------
 -- common functions used in any app
 -------------------------------------------------------
 local M = { }
+
+-------------------------------------------------------
+-- wont work for functions and other types in the table
+-------------------------------------------------------
+-- function M.DeepCopy(t)
+--    local t2 = {};
+--    if type(t) == "table" then
+--       t2 = json.decode(json.encode(t))
+--    end
+--    return t2
+-- end
 
 function M.SceneBackground()
     

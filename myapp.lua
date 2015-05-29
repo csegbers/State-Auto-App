@@ -38,6 +38,10 @@ local M = {
             gps = {
                      timer = 30000,     --30 seconds
                      event= "",
+                     debug = {                                -- will be used if in debugmode
+                                latitude=39.896311,
+                                longitude=-82.7674464,
+                              },
                   },
 
 
@@ -115,7 +119,7 @@ local M = {
                                                        effectback="slideRight",
                                                     },
                                                },
-                                       broasast = {title = "RoadSide Asance222", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=156/255, g=42/255, b=57/255, a=1 },
+                                       broasast = {title = "another page", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=156/255, g=42/255, b=57/255, a=1 },
                                                   backtext = "<",
                                                   composer = {
                                                        lua="locateagent",
@@ -124,13 +128,40 @@ local M = {
                                                        effectback="slideRight",
                                                     },
                                                  },
-                                        css = {title = "RoadSide Assi333e", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
+                                        css = {title = "RoadSide Assi333e", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },
+                                                  defaultFile = "images/backbutton7_white.png",
+                                                  overFile ="images/agent.png",
+                                                  composer = {
+                                                       lua="locateagent",
+                                                       time=250, 
+                                                       effect="slideLeft",
+                                                       effectback="slideRight",
+                                                    },
+                                              },
                                        dtt = {title = "RoadSide 444", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
                                         et3t = {title = "RoadSide Asance555", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
                                        fttt = {title = "RoadSide Assice666", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=2/255, g=149/255, b=255/255, a=1 },},
                                        g1tyt = {title = "RoadSide Ass777", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=60/255, b=255/255, a=1 },},
                                       g2yy = {title = "RoadSide e888", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
                                  },
+                       },
+            locateanagent = {
+                        gps ={
+                                limit=50,
+                                miles=30
+                              },
+                        agentinfo = {
+                             title = "Agent Info", 
+                             backtext = "<",
+                             groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
+                             composer = {
+                                         lua="agent",
+                                         time=250, 
+                                         effect="slideLeft",
+                                         effectback="slideRight",
+                                      },
+                                 },
+                                 
                        },
             tabs = {
                         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "ahome", transitiontime = 200,

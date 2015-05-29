@@ -18,20 +18,18 @@ logo.y = myApp.cCy
 
 local function closeSplash()
    local function closeSplashFinal()
-            -- display.remove(title)
-                -- title = nil
-                display.remove(logo)
-                logo = nil
-                local function removeBack()
-                    display.remove(background)
-                    background = nil
-                    print ("splash: OUT")
-                end
-                transition.to( background, {time=800, alpha=0 , onComplete=removeBack } )
-                ----------------------------------------------------------
-                -- Launch the first screen
-                ----------------------------------------------------------
-                myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabs.launchkey],firsttime=true})
+            display.remove(logo)
+            logo = nil
+            local function removeBack()
+                display.remove(background)
+                background = nil
+                print ("splash: OUT")
+            end
+            transition.to( background, {time=800, alpha=0 , onComplete=removeBack } )
+            ----------------------------------------------------------
+            -- Launch the first screen
+            ----------------------------------------------------------
+            myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabs.launchkey],firsttime=true})
 
     end
     local function closeSplash1()

@@ -14,24 +14,19 @@ local login = require( myApp.classfld .. "classlogin" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 local params
 
-print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
-
-parse:logEvent( "MyCustomEvent", { ["x"] = "home" ,["y"] = "ccc"}, function (e) print ("return from  home logevent") print (e.requestType)   end )
-
-
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
 --
--- self.view -> Container -> SCrollvew
+-- self.view -> Container -> SCrollvew -> primgroup
 ------------------------------------------------------
 function scene:create(event)
 
     print ("Create  " .. currScene)
     params = event.params or {}
     local group = self.view
-    params.container = common.SceneContainer()
-    group:insert(params.container)
-
+    local container = common.SceneContainer()
+    group:insert(container)
+ 
 
 
     local function scrollListener( event )
@@ -64,40 +59,24 @@ function scene:create(event)
             horizontalScrollDisabled = true,
             hideBackground = true,
         }
-    params.container:insert(scrollView)
+     container:insert(scrollView)
 
-
-
- 
-    -- local aline = display.newLine( 0, 0,myApp.sceneWidth, 0)
-    --  aline:setStrokeColor( 1, 0, 0, 1 )
-    --  aline.strokeWidth = 1
-    --  scrollView:insert(aline)
-
-
-    -- local aline2 = display.newLine( 0, myApp.sceneHeight ,myApp.sceneWidth, myApp.sceneHeight)
-    --  aline2:setStrokeColor( 7, 0, 9, 10 )
-    --  aline2.strokeWidth = 2
-    --  scrollView:insert(aline2)
-
-
-
-     -- local container2 = display.newContainer( 100, 100)
-     -- local bkgd = display.newImage( "salogo.jpg" )
-     -- container2:insert( bkgd, true )
-     -- scrollView:insert(container2)
-     -- container2:translate( scrollView.width*0.5, scrollView.height*.5 )
-     -- transition.to( container2, { rotation=360, transition=easing.inOutExpo} )
-
---container:insert(scrollView)
--- Create the widget
-
-
-     local primGroup = display.newGroup(  )
-     -- local aline = display.newLine( 0, 0,myApp.sceneWidth, 0)
-     -- aline:setStrokeColor( 1, 0, 0, 1 )
-     -- aline.strokeWidth = 1
-     -- primGroup:insert(aline)
+     ----------------------------------------------
+     -- Tcouhed an object - go do something
+     ----------------------------------------------
+     local function onObjectTouch( event )
+        local homepageitem = myApp.homepage.items[event.target.id] 
+        -------------------------------------------
+        -- launch another scene ?
+        -- Pass in our scene info for the new scene callback
+        -------------------------------------------
+        if homepageitem.composer then
+           local parentinfo = params 
+           homepageitem.callBack = function() myApp.showScreen({instructions=parentinfo,effectback=homepageitem.composer.effectback}) end
+           myApp.showSubScreen ({instructions=homepageitem})   
+        end
+        
+     end
 
      local groupwidth = myApp.homepage.groupwidth                                -- starting width of the selection box
      local workingScreenWidth = myApp.sceneWidth - myApp.homepage.groupbetween   -- screen widh - the left edge (since each box would have 1 right edge)
@@ -122,19 +101,8 @@ function scene:create(event)
         leftY = (leftWidth) / 2 + (myApp.homepage.groupbetween / 2 )
      end
 
-     local function onObjectTouch( event )
-        local homepageitem = myApp.homepage.items[event.target.id]
 
-        -------------------------------------------
-        -- launch another scene ?
-        -------------------------------------------
-        if homepageitem.composer then
-           homepageitem.callBack = function() myApp.showScreen({instructions=params,effectback=homepageitem.composer.effectback}) end
-           myApp.showSubScreen ({instructions=homepageitem})  --- cant just launch if we recycle composer for some reason
-        end
-        
-     end
-
+     local primGroup = display.newGroup(  )
      --------------------------------------------
      -- must sort otherwise order is not honered
      -- so the KEYS must be in alphabetical order you want !!
@@ -195,7 +163,7 @@ function scene:create(event)
              -------------------------------------------------
              primGroup:insert(itemGrp)
              col = col+1
-     end
+   end
 
    scrollView:insert(primGroup)
 
@@ -203,15 +171,6 @@ function scene:create(event)
    -- stick in a buffer for the scroll
    ----------------------------------------------
    scrollView:insert(display.newRoundedRect(1, (myApp.homepage.groupbetween*(row+1)) + row*myApp.homepage.groupheight ,1, myApp.homepage.groupbetween, 1 ))
-
-
-
-
-     
-
-
-
-
 
 end
 
@@ -226,6 +185,7 @@ function scene:show( event )
        
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
+
             -- Called when the scene is now on screen.
             -- Insert code here to make the scene come alive.
             -- Example: start timers, begin animation, play audio, etc.

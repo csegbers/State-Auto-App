@@ -57,6 +57,15 @@ function print(...)
         end
     end
 end
+
+ 
+function debugpopup(whatstr) 
+     if myApp.debugMode then
+        native.showAlert( myApp.appName ,whatstr )
+    end
+end
+
+
 print "In startup.lua"
 
 -------------------------------------------------------
@@ -119,7 +128,7 @@ parse.showJSON = myApp.debugMode -- output the raw JSON response in the console
 parse:appOpened(function (e) print ("return from appOpened") print (e.requestType)   end )
 parse:getObject("Agency","9ez6Z2tcaC", function(e) if not e.error then print ("BBBBAAACCCK " .. e.response.agencyName) end end )
 parse:getConfig( function(e) if not e.error then myApp.appName = e.response.params.appName print ("ZZZZZZBBBBAAACCCK " .. e.response.params.appName) end end )
-parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from home logevent") print (e.requestType)   end )
+--parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from home logevent") print (e.requestType)   end )
 
 
 -------------------------------------------------------
@@ -127,13 +136,16 @@ parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function 
 -------------------------------------------------------
 function myApp.locationHandler ( event )
     myApp.gps.event = event
+    if myApp.debugMode then
+        myApp.gps.event.latitude = myApp.gps.debug.latitude 
+        myApp.gps.event.longitude = myApp.gps.debug.longitude 
+    end
     print("locationHandler")
 end
 function myApp.updateGPS()
     -- Reload GPS location
     Runtime:removeEventListener( "location", myApp.locationHandler )    
     Runtime:addEventListener( "location", myApp.locationHandler )    
-
     -- Update again
     timer.performWithDelay( myApp.gps.timer, myApp.updateGPS )
 end

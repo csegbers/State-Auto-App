@@ -42,35 +42,37 @@ function scene:create(event)
     starty = starty + backlogo.height
     scrollView:insert(backlogo)
 
-    local function gpsInfo(whatText)
+    local function renderInfo(whatText)
         starty = starty + 10
         local disNt = display.newText( whatText, 100, starty, native.systemFont, 16 )
         disNt:setFillColor( 1, 0, 0 )
         scrollView:insert(disNt)
         starty = starty + disNt.height
     end
-    gpsInfo("latitude " .. string.format( '%.4f', myApp.gps.event.latitude ))
-    gpsInfo("longitude " .. string.format( '%.4f', myApp.gps.event.longitude ))
-    gpsInfo("altitude " .. string.format( '%.4f', myApp.gps.event.altitude ))
-    gpsInfo("accuracy " .. string.format( '%.4f', myApp.gps.event.accuracy ))
-    gpsInfo("speed " .. string.format( '%.4f', myApp.gps.event.speed ))
-    gpsInfo("direction " .. string.format( '%.4f', myApp.gps.event.direction ))
-    gpsInfo("time " .. string.format( '%.4f', myApp.gps.event.time ))
+    renderInfo("latitude " .. string.format( '%.4f', myApp.gps.event.latitude ))
+    renderInfo("longitude " .. string.format( '%.4f', myApp.gps.event.longitude ))
+    renderInfo("altitude " .. string.format( '%.4f', myApp.gps.event.altitude ))
+    renderInfo("accuracy " .. string.format( '%.4f', myApp.gps.event.accuracy ))
+    renderInfo("speed " .. string.format( '%.4f', myApp.gps.event.speed ))
+    renderInfo("direction " .. string.format( '%.4f', myApp.gps.event.direction ))
+    renderInfo("time " .. string.format( '%.4f', myApp.gps.event.time ))
 
-
-
-
+    renderInfo("  " )
+ 
+    renderInfo("memory " .. system.getInfo( "textureMemoryUsed" ) / 1000000)
 
 end
 
 function scene:show( event )
 
-    local group = self.view
+
     local phase = event.phase
     print ("Show:" .. phase.. " " .. currScene)
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
+            local group = self.view
+
     elseif ( phase == "did" ) then
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
