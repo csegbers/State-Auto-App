@@ -141,7 +141,8 @@ function scene:create(event)
              -------------------------------------------------
              local startYother = startY- groupheight/2 + myApp.homepage.groupbetween
              local myRoundedTop = display.newRoundedRect(startX, startYother ,groupwidth, myApp.homepage.groupheaderheight, 1 )
-             myRoundedTop:setFillColor(v.groupheader.r,v.groupheader.g,v.groupheader.b,v.groupheader.a )
+             local headcolor = v.groupheader or myApp.homepage.groupheader
+             myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
              itemGrp:insert(myRoundedTop)
              
              -------------------------------------------------
@@ -155,7 +156,7 @@ function scene:create(event)
              -- Icon ?
              -------------------------------------------------
              if v.pic then
-                 local myIcon = display.newImageRect(v.pic, v.originaliconwidth or myApp.homepage.iconwidth ,v.originaliconheight or myApp.homepage.iconheight )
+                 local myIcon = display.newImageRect(myApp.imgfld .. v.pic, v.originaliconwidth or myApp.homepage.iconwidth ,v.originaliconheight or myApp.homepage.iconheight )
                  common.fitImage( myIcon, v.iconwidth or myApp.homepage.iconwidth   )
                  myIcon.x = startX
                  myIcon.y = startYother + itemGrp.height/2 - 10

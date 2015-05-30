@@ -17,11 +17,11 @@ local M = { }
 --    return t2
 -- end
 
-function M.SceneBackground()
-    
+function M.SceneBackground(colortbl)
+    local colortable = colortbl or myApp.sceneBackgroundcolor
     local background = display.newRect(0,0,myApp.cW, myApp.cH)
-    background:setFillColor(235/myApp.colorDivisor, 235/myApp.colorDivisor, 225/myApp.colorDivisor, 255/myApp.colorDivisor)
-    background:setFillColor(myApp.sceneBackground.r,myApp.sceneBackground.g,myApp.sceneBackground.b,myApp.sceneBackground.a)
+    --background:setFillColor(235/myApp.colorDivisor, 235/myApp.colorDivisor, 225/myApp.colorDivisor, 255/myApp.colorDivisor)
+    background:setFillColor(colortable.r,colortable.g,colortable.b,colortable.a)
     background.x = myApp.cW / 2
     background.y = myApp.cH / 2
     return background
@@ -29,7 +29,7 @@ end
 
 function M.SceneContainer()
     local container = display.newContainer(myApp.sceneWidth,myApp.sceneHeight)
-    container:insert(M.SceneBackground())
+    container:insert(M.SceneBackground(myApp.sceneBackgroundcolor))
     container.y = myApp.sceneHeight  /2 + myApp.sceneStartTop
     container.x = myApp.sceneWidth / 2  
     return container

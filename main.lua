@@ -26,8 +26,9 @@ composer.recycleOnSceneChange = myApp.composer.recycleOnSceneChange
 local widget = require( "widget" )
 widget.setTheme(myApp.theme)
 
+require( myApp.utilsfld .. "backgroup" )   -- set the backgroup
 ------------------------------------------------------
-print ("main: After Main Requires")
+ 
 ------------------------------------------------------
 require( myApp.utilsfld .. "tabandtop" )   -- set the top and bottom sections
 
@@ -35,10 +36,12 @@ require( myApp.utilsfld .. "tabandtop" )   -- set the top and bottom sections
 --  Sort everything in the correct z-index order
 ----------------------------------------------------
 local stage = display.getCurrentStage()
+stage:insert( myApp.moreGroup )
 stage:insert( myApp.backGroup )
 stage:insert( composer.stage )
 stage:insert( myApp.TitleGroup )
 stage:insert( myApp.tabBar )
+
 
 ---------------------------------------------------
 --  Splash and launch first page

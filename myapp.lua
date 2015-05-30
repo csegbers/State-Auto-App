@@ -33,8 +33,68 @@ local M = {
             sceneStartTop = 0,     -- set elsewhere
             sceneHeight = 0,     -- set elsewhere
             sceneWidth = 0,     -- set elsewhere
-            sceneBackground = { r=241/255, g=242/255, b=243/255, a=1 },
+            sceneBackgroundcolor = { r=241/255, g=242/255, b=243/255, a=1 },
+            sceneBackgroundmorecolor = { r=25/255, g=75/255, b=150/255, a=1 },
             scenemaskFile = "",
+            moreinfo = {
+                      transitiontime = 700,
+                      direction = "left",     -- initial direction
+                      movefactor = 1.18,
+
+
+                      items = {
+                                      alocate = {
+                                           title = "Locate an Agent", 
+                                           pic="trustedchoice.png",
+                                           originaliconwidth = 196,
+                                           originaliconheight = 77,
+                                           iconwidth = 120,      -- height will be scaled appropriately
+                                           text="Locate agents nearby or from an address",
+                                           backtext = "<",
+                                          -- groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
+                                           locateinfo = {
+                                                          functionname="getagenciesnearby",
+                                                          limit=20,
+                                                          miles=25,
+                                                        },
+                                           composer = {
+                                                       lua="locate",
+                                                       time=250, 
+                                                       effect="slideLeft",
+                                                       effectback="slideRight",
+                                                    },
+                                               },
+                                       broasast = {title = "another page", 
+                                                   pic="truck.png",
+                                                   text="Flat tire, out of gas ? We can help",
+                                                   backtext = "<",
+                                                  locateinfo = {
+                                                          functionname="getagenciesnearby",
+                                                          limit=2,
+                                                          miles=50,
+                                                        },
+                                                  composer = {
+                                                       lua="locate",
+                                                       time=250, 
+                                                       effect="slideLeft",
+                                                       effectback="slideRight",
+                                                    },
+                                                 },
+                                        css = {title = "RoadSide Assi333e", 
+                                        pic="truck.png",
+                                        text="Flat tire, out of gas ? We can help really help",
+                                                  pic="truck.png",
+                                                  composer = {
+                                                       lua="locateagent",
+                                                       time=250, 
+                                                       effect="slideLeft",
+                                                       effectback="slideRight",
+                                                    },
+                                              },
+                                 },
+
+
+                        },
             gps = {
                      timer = 30000,                           --30 seconds
                      event= "",                               -- set elsewhere
@@ -107,6 +167,7 @@ local M = {
                           groupheaderheight = 20,
                           groupbetween = 10,
                           groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
+                          groupheader = { r=25/255, g=75/255, b=150/255, a=1 },
                           iconwidth = 60,    -- can be overidden in item
                           iconheight = 60,   -- can be overidden in item
                           headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
@@ -116,13 +177,13 @@ local M = {
                           items = {
                                       alocate = {
                                            title = "Locate an Agent", 
-                                           pic="images/trustedchoice.png",
+                                           pic="trustedchoice.png",
                                            originaliconwidth = 196,
                                            originaliconheight = 77,
                                            iconwidth = 120,      -- height will be scaled appropriately
-                                           text="Locate agents nearby",
+                                           text="Locate agents nearby or from an address",
                                            backtext = "<",
-                                           groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
+                                          -- groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
                                            locateinfo = {
                                                           functionname="getagenciesnearby",
                                                           limit=20,
@@ -136,9 +197,8 @@ local M = {
                                                     },
                                                },
                                        broasast = {title = "another page", 
-                                                   pic="images/truck.png",
+                                                   pic="truck.png",
                                                    text="Flat tire, out of gas ? We can help",
-                                                   groupheader = { r=156/255, g=42/255, b=57/255, a=1 },
                                                    backtext = "<",
                                                   locateinfo = {
                                                           functionname="getagenciesnearby",
@@ -153,9 +213,9 @@ local M = {
                                                     },
                                                  },
                                         css = {title = "RoadSide Assi333e", 
-                                        pic="images/truck.png",
-                                        text="Flat tire, out of gas ? We can help really help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },
-                                                  pic="images/truck.png",
+                                        pic="truck.png",
+                                        text="Flat tire, out of gas ? We can help really help",
+                                                  pic="truck.png",
                                                   composer = {
                                                        lua="locateagent",
                                                        time=250, 
@@ -163,11 +223,11 @@ local M = {
                                                        effectback="slideRight",
                                                     },
                                               },
-                                       dtt = {title = "RoadSide 444", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
-                                        et3t = {title = "RoadSide Asance555", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
-                                       fttt = {title = "RoadSide Assice666", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=2/255, g=149/255, b=255/255, a=1 },},
-                                       g1tyt = {title = "RoadSide Ass777", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=60/255, b=255/255, a=1 },},
-                                      g2yy = {title = "RoadSide e888", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
+                                       dtt = {title = "RoadSide 444", pic="truck.png",text="Flat tire, out of gas ? We can help",},
+                                        et3t = {title = "RoadSide Asance555", pic="truck.png",text="Flat tire, out of gas ? We can help" ,},
+                                       fttt = {title = "RoadSide Assice666", pic="truck.png",text="Flat tire, out of gas ? We can help",},
+                                       g1tyt = {title = "RoadSide Ass777", pic="truck.png",text="Flat tire, out of gas ? We can help",},
+                                      g2yy = {title = "RoadSide e888", pic="truck.png",text="Flat tire, out of gas ? We can help",},
                                  },
                        },
             locateanagent = {    -- tem,poirary for now
@@ -189,14 +249,18 @@ local M = {
                                  
                        },
             tabs = {
+                        morebutton = {
+                                      defaultFile="morebutton.png",
+                                      overFile="morebutton.png",
+                                      },
                         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "ahome", transitiontime = 200,
                         btns = {
                             ahome = {
-                                        label="Home", title="State Auto" ,def="images/saicon.png",over="images/saicon-down.png",
+                                        label="Home", title="State Auto" ,def="saicon.png",over="saicon-down.png",
                                         composer = { lua="home" ,time=250, effect="crossFade" },
                                     },
                             bvideo = {
-                                        label="My Agent" ,title="My Agent" ,def="images/myagent.png",over="images/myagent-down.png",
+                                        label="My Agent" ,title="My Agent" ,def="myagent.png",over="myagent-down.png",
                                         composer = { lua="video" ,time=250, effect="slideRight" },
                                         options = {
                                                 feedName = "video.rss",
@@ -208,11 +272,11 @@ local M = {
                                                    }                                
                                     },
                             cmenu = {
-                                        label="Account",  title="Menu" ,def="images/account.png",over="images/account-down.png",
+                                        label="Account",  title="Menu" ,def="account.png",over="account-down.png",
                                         composer = { lua="menu" ,time=250, effect="slideDown" },
                                     },
                             dblogs = {
-                                      label="Blogs" ,title="Blog" ,def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                      label="Blogs" ,title="Blog" ,def="tabbaricon.png",over="tabbaricon-down.png",
                                       composer = { lua="feed" ,time=250, effect="crossFade" },
                                       options = {
                                             feedName = "corona.rss",
@@ -223,19 +287,19 @@ local M = {
                                                  }
                                       },
                            epics = {
-                                    label="Pics" ,title="Pics",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                    label="Pics" ,title="Pics",def="tabbaricon.png",over="tabbaricon-down.png",
                                     composer = { lua="photogallery" ,time=250, effect="crossFade" },
                                    },
                            
                            fmaps = {
-                                        label="Maps", title="Maps",def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                        label="Maps", title="Maps",def="tabbaricon.png",over="tabbaricon-down.png",
                                         composer = { lua="mapscene" ,time=250, effect="crossFade" },
                                         options = {
                                                 pageTitle = "Corona Headquarters"
                                                  }                              
                                     },
                           gdebug = {
-                                     label="Debug" ,title="Debug" ,def="images/tabbaricon.png",over="images/tabbaricon-down.png" ,
+                                     label="Debug" ,title="Debug" ,def="tabbaricon.png",over="tabbaricon-down.png" ,
                                     composer = { lua="debugapp" ,time=250, effect="crossFade" },
                                   }
                                 }

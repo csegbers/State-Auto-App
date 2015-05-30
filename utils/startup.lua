@@ -6,8 +6,17 @@
 local myApp = require( "myapp" ) 
 local parse = require( myApp.utilsfld .. "mod_parse" ) 
 
+----------------------------------------------------------
+--   Common info for the screens
+----------------------------------------------------------
+myApp.sceneStartTop = myApp.titleBarHeight + myApp.tSbch  
+myApp.sceneWidth = myApp.cW
+myApp.sceneHeight = myApp.cH - myApp.sceneStartTop - myApp.tabs.tabBarHeight
+
 myApp.login.loggedin = false
 myApp.justLaunched = true
+
+myApp.moreinfo.direction = "left"
 
 function print_r ( t )  
     local print_r_cache={}
@@ -126,10 +135,9 @@ parse.showStatus = myApp.debugMode-- outputs response info in the console
 parse.showJSON = myApp.debugMode -- output the raw JSON response in the console 
 --parse.dispatcher:addEventListener( "parseRequest", onParseResponse )
 parse:appOpened(function (e) print ("return from appOpened") print (e.requestType)   end )
-parse:getObject("Agency","9ez6Z2tcaC", function(e) if not e.error then print ("BBBBAAACCCK " .. e.response.agencyName) end end )
+--parse:getObject("Agency","9ez6Z2tcaC", function(e) if not e.error then print ("BBBBAAACCCK " .. e.response.agencyName) end end )
 parse:getConfig( function(e) if not e.error then myApp.appName = e.response.params.appName print ("ZZZZZZBBBBAAACCCK " .. e.response.params.appName) end end )
 --parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from home logevent") print (e.requestType)   end )
-
 
 -------------------------------------------------------
 -- Runtime Events

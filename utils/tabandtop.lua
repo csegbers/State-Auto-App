@@ -8,19 +8,9 @@ local common = require( myApp.utilsfld .. "common" )
 local widget = require( "widget" )
 local composer = require( "composer" )
 
-----------------------------------------------------------
---    background 
-----------------------------------------------------------
-myApp.backGroup = display.newGroup( )
 
-local background = common.SceneBackground()
 
---local backlogo = display.newImageRect("salogo.jpg",305,170)
---backlogo.x = myApp.cCx
---backlogo.y = myApp.cCy
---backlogo.alpha = .1 
 
-myApp.backGroup:insert(background)
 --myApp.backGroup:insert(backlogo)
 
 ----------------------------------------------------------
@@ -85,6 +75,21 @@ myApp.TitleGroup:insert(myApp.TitleGroup.titleText)
 
 
 ----------------------------------------------------------
+--   right side more button
+----------------------------------------------------------
+myApp.TitleGroup.moreIcon = widget.newButton {
+                    defaultFile = myApp.imgfld .. myApp.tabs.morebutton.defaultFile,
+                    overFile = myApp.imgfld .. myApp.tabs.morebutton.overFile ,
+                    height = myApp.tabs.tabbtnh,
+                    width = myApp.tabs.tabbtnw,
+                    x = myApp.sceneWidth - myApp.tabs.tabbtnw/2 - myApp.titleBarEdge  ,
+                    y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch  ,
+                    onRelease = myApp.MoreInfo,
+               }
+
+myApp.TitleGroup:insert(myApp.TitleGroup.moreIcon) 
+ 
+----------------------------------------------------------
 --   the icon is added in the showscreen
 ----------------------------------------------------------
 
@@ -110,8 +115,8 @@ local function addtabBtn(tkey)
     local tabitem = 
         {
             label = btnrntry.label,
-            defaultFile = btnrntry.def,
-            overFile = btnrntry.over,
+            defaultFile = myApp.imgfld .. btnrntry.def,
+            overFile = myApp.imgfld .. btnrntry.over,
             labelColor = { 
                 default = myApp.colorGray,   
                 over = myApp.saColor,  
@@ -160,9 +165,6 @@ myApp.tabBar = widget.newTabBar{
 ----------------------------------------------------------
 --   Common info for the screens
 ----------------------------------------------------------
-myApp.sceneStartTop = myApp.titleBarHeight + myApp.tSbch  
-myApp.sceneHeight = myApp.cH - myApp.sceneStartTop - myApp.tabBar.height
-myApp.sceneWidth = myApp.cW
 
 
 ----------------------------------------------------------
@@ -256,7 +258,7 @@ function myApp.showScreen(parms)
     ----------------------------------------------------------
     if parms.firsttime  then
         myApp.TitleGroup.titleText.text = tnt.title
-        myApp.showScreenIcon(parms.instructions.over)
+        myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)
     else
         ---------------------------------------------------
         -- on a subscreen coming back ? slide it on in
@@ -264,11 +266,11 @@ function myApp.showScreen(parms)
         if parms.effectback then  
             transition.to( myApp.TitleGroup.titleText, { 
             time=myApp.tabs.transitiontime/2, alpha=.2,x = myApp.TitleGroup.titleText.x*3,
-            onComplete= function () myApp.TitleGroup.titleText.text = tnt.title; myApp.TitleGroup.titleText.x = myApp.cCx*-1;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime  }) myApp.showScreenIcon(parms.instructions.over) end } )
+            onComplete= function () myApp.TitleGroup.titleText.text = tnt.title; myApp.TitleGroup.titleText.x = myApp.cCx*-1;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime  }) myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over) end } )
               
         else
             transition.to( myApp.TitleGroup.titleText, { time=myApp.tabs.transitiontime , alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=myApp.tabs.transitiontime }) end } )
-            transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=myApp.showScreenIcon(parms.instructions.over)})
+            transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)})
         end
     end
 
@@ -363,6 +365,19 @@ end
 function myApp.Login(parms)
     print "IN overlay"
     composer.showOverlay(myApp.scenesfld .. myApp.login.lua, myApp.login.options)
+    return true
+end
+
+
+function myApp.MoreInfo(parms)
+ 
+    transition.to(  composer.stage, { time=myApp.tabs.transitiontime*2,delta=true, x = myApp.cW/2*-1 , transition=easing.outQuint})
+
+--     stage:insert( myApp.moreGroup )
+--     stage:insert( myApp.backGroup )
+--     stage:insert( composer.stage )
+-- stage:insert( myApp.TitleGroup )
+-- stage:insert( myApp.tabBar )  
     return true
 end
 
