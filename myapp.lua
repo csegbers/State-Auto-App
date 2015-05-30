@@ -10,7 +10,7 @@ local M = {
             cCx = display.contentCenterX,
             cCy = display.contentCenterY,
             tSbch = display.topStatusBarContentHeight,
-            statusBarType = display.TranslucentStatusBar,       "display.DefaultStatusBar",    "display.DarkStatusBar",    "display.TranslucentStatusBar",
+            statusBarType = display.DefaultStatusBar,       "display.DefaultStatusBar",    "display.DarkStatusBar",    "display.TranslucentStatusBar",
             splashDelay = 150,    -- milliseconds
             saColor = { },
             saColorTrans = { },
@@ -39,7 +39,7 @@ local M = {
             moreinfo = {
                       transitiontime = 700,
                       direction = "left",     -- initial direction
-                      movefactor = 1.18,
+                      movefactor = 1.50,
 
 
                       items = {

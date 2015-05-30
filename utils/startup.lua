@@ -139,6 +139,9 @@ parse:appOpened(function (e) print ("return from appOpened") print (e.requestTyp
 parse:getConfig( function(e) if not e.error then myApp.appName = e.response.params.appName print ("ZZZZZZBBBBAAACCCK " .. e.response.params.appName) end end )
 --parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from home logevent") print (e.requestType)   end )
 
+
+
+
 -------------------------------------------------------
 -- Runtime Events
 -------------------------------------------------------
