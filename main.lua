@@ -21,7 +21,7 @@ print("main: Program Start")
 
 local composer = require( "composer" )
 composer.isDebug = myApp.debugMode
-composer.recycleOnSceneChange = myApp.composerrecycleOnSceneChange
+composer.recycleOnSceneChange = myApp.composer.recycleOnSceneChange
 
 local widget = require( "widget" )
 widget.setTheme(myApp.theme)

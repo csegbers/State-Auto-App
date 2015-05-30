@@ -17,7 +17,7 @@ local params
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
 --
--- self.view -> Container -> SCrollvew -> primgroup
+-- self.view -> Container -> SCrollvew -> primgroup -> individual item groups
 ------------------------------------------------------
 function scene:create(event)
 
@@ -27,26 +27,8 @@ function scene:create(event)
     local container = common.SceneContainer()
     group:insert(container)
  
-
-
     local function scrollListener( event )
-            
-            -- local phase = event.phase
-            -- if ( phase == "began" ) then print( "Scroll view was touched" )
-            -- elseif ( phase == "moved" ) then print( "Scroll view was moved" )
-            -- elseif ( phase == "ended" ) then print( "Scroll view was released" )
-            -- end
-
-            -- -- In the event a scroll limit is reached...
-            -- if ( event.limitReached ) then
-            --     if ( event.direction == "up" ) then print( "Reached top limit" )
-            --     elseif ( event.direction == "down" ) then print( "Reached bottom limit" )
-            --     elseif ( event.direction == "left" ) then print( "Reached left limit" )
-            --     elseif ( event.direction == "right" ) then print( "Reached right limit" )
-            --     end
-            -- end
-
-            return true
+          return true
     end
 
     local scrollView = widget.newScrollView
@@ -70,20 +52,33 @@ function scene:create(event)
         -- launch another scene ?
         -- Pass in our scene info for the new scene callback
         -------------------------------------------
-        if homepageitem.composer then
-           local parentinfo = params 
-           homepageitem.callBack = function() myApp.showScreen({instructions=parentinfo,effectback=homepageitem.composer.effectback}) end
-           myApp.showSubScreen ({instructions=homepageitem})   
-        end
+        local function onObjectTouchAction(  )
+            if homepageitem.composer then
+               local parentinfo = params 
+               homepageitem.callBack = function() myApp.showScreen({instructions=parentinfo,effectback=homepageitem.composer.effectback}) end
+               myApp.showSubScreen ({instructions=homepageitem})   
+            end
+        end       
+
+        ---------------------------------------------
+        -- simulate a pressing of a button
+        ---------------------------------------------
+        transition.to( event.target, { time=100, x=5,y=5,  delta=true , transition=easing.continuousLoop, onComplete=onObjectTouchAction } )
+
         
      end
 
+     local groupheight = myApp.homepage.groupheight
      local groupwidth = myApp.homepage.groupwidth                                -- starting width of the selection box
      local workingScreenWidth = myApp.sceneWidth - myApp.homepage.groupbetween   -- screen widh - the left edge (since each box would have 1 right edge)
      local workingGroupWidth = groupwidth + myApp.homepage.groupbetween          -- group width plus the right edge
-     local groupsPerRow = math.floor(workingScreenWidth / workingGroupWidth )    --how many across can we fit
+     local groupsPerRow = math.floor(workingScreenWidth / workingGroupWidth )    -- how many across can we fit
      local leftWidth = myApp.sceneWidth - (workingGroupWidth*groupsPerRow )      -- width of the left edige
      local leftY = (leftWidth) / 2 + (myApp.homepage.groupbetween / 2 )          -- starting point of left box
+     local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=myApp.homepage.textfontsize})
+     local textHeightSingleLine = dumText.height
+     display.remove( dumText )
+     dumText=nil
 
      -------------------------------------------
      -- lots of extra edging ? edging > space in between ?
@@ -101,8 +96,11 @@ function scene:create(event)
         leftY = (leftWidth) / 2 + (myApp.homepage.groupbetween / 2 )
      end
 
-
+     -----------------------------------------------
+     -- where we stuff all the little selection groups
+     -----------------------------------------------
      local primGroup = display.newGroup(  )
+
      --------------------------------------------
      -- must sort otherwise order is not honered
      -- so the KEYS must be in alphabetical order you want !!
@@ -129,19 +127,19 @@ function scene:create(event)
              local itemGrp = display.newGroup(  )
              itemGrp.id = k
              local startX = workingGroupWidth*(col-1) + leftY + groupwidth/2
-             local startY = (myApp.homepage.groupheight/2 +myApp.homepage.groupbetween*row) + (row-1)*myApp.homepage.groupheight
+             local startY = (groupheight/2 +myApp.homepage.groupbetween*row) + (row-1)* groupheight
              
              -------------------------------------------------
              -- Background
              -------------------------------------------------
-             local myRoundedRect = display.newRoundedRect(startX, startY ,groupwidth, myApp.homepage.groupheight, 1 )
+             local myRoundedRect = display.newRoundedRect(startX, startY ,groupwidth,  groupheight, 1 )
              myRoundedRect:setFillColor(myApp.homepage.groupbackground.r,myApp.homepage.groupbackground.g,myApp.homepage.groupbackground.b,myApp.homepage.groupbackground.a )
              itemGrp:insert(myRoundedRect)
 
              -------------------------------------------------
              -- Header Background
              -------------------------------------------------
-             local startYother = startY-myApp.homepage.groupheight/2 + myApp.homepage.groupbetween
+             local startYother = startY- groupheight/2 + myApp.homepage.groupbetween
              local myRoundedTop = display.newRoundedRect(startX, startYother ,groupwidth, myApp.homepage.groupheaderheight, 1 )
              myRoundedTop:setFillColor(v.groupheader.r,v.groupheader.g,v.groupheader.b,v.groupheader.a )
              itemGrp:insert(myRoundedTop)
@@ -149,9 +147,31 @@ function scene:create(event)
              -------------------------------------------------
              -- Header text
              -------------------------------------------------
-             local myText = display.newText( v.title, startX, startYother,  myApp.fontBold, 12 )
+             local myText = display.newText( v.title, startX, startYother,  myApp.fontBold, myApp.homepage.headerfontsize )
              myText:setFillColor( myApp.homepage.headercolor.r,myApp.homepage.headercolor.g,myApp.homepage.headercolor.b,myApp.homepage.headercolor.a )
              itemGrp:insert(myText)
+
+             -------------------------------------------------
+             -- Icon ?
+             -------------------------------------------------
+             if v.pic then
+                 local myIcon = display.newImageRect(v.pic, v.originaliconwidth or myApp.homepage.iconwidth ,v.originaliconheight or myApp.homepage.iconheight )
+                 common.fitImage( myIcon, v.iconwidth or myApp.homepage.iconwidth   )
+                 myIcon.x = startX
+                 myIcon.y = startYother + itemGrp.height/2 - 10
+                 itemGrp:insert(myIcon)
+             end
+
+             -------------------------------------------------
+             -- Desc text
+             -------------------------------------------------
+             
+
+             local myDesc = display.newText( {text=v.text, x=startX, y=0, height=0,width=groupwidth-5 ,font= myApp.fontBold, fontSize=myApp.homepage.textfontsize,align="center" })
+             myDesc.y=startYother+groupheight  -(myDesc.height/2) - textHeightSingleLine + 2
+             myDesc:setFillColor( myApp.homepage.textcolor.r,myApp.homepage.textcolor.g,myApp.homepage.textcolor.b,myApp.homepage.textcolor.a )
+             itemGrp:insert(myDesc)
+
 
              -------------------------------------------------
              -- Add touch event
@@ -161,7 +181,10 @@ function scene:create(event)
              -------------------------------------------------
              -- insert each individual group into the master group
              -------------------------------------------------
+
              primGroup:insert(itemGrp)
+
+             
              col = col+1
    end
 

@@ -20,7 +20,7 @@ local params
 -- Called first time. May not be called again if we dont recyle
 ------------------------------------------------------
 function scene:create(event)
-
+ 
     print ("Create  " .. currScene)
     local group = self.view
     params = event.params           -- params contains the item table  
@@ -28,16 +28,96 @@ function scene:create(event)
     local container  = common.SceneContainer()
     group:insert(container )
 
+
+local function onRowRender( event )
+
+   --Set up the localized variables to be passed via the event table
+
+   local row = event.row
+   local id = row.index
+   local params = event.row.params
+
+   -- row.bg = display.newRect( 0, 0, display.contentWidth, 60 )
+   -- row.bg.anchorX = 0
+   -- row.bg.anchorY = 0
+   -- row.bg:setFillColor( 1, 1, 1 )
+   -- row:insert( row.bg )
+
+   if ( event.row.params ) then    
+      row.nameText = display.newText( params.name, 10, 0, native.systemFontBold, 14 )
+      row.nameText.anchorX = 0
+      row.nameText.anchorY = 0.5
+      row.nameText:setFillColor( 0 )
+      row.nameText.y = 20
+      row.nameText.x = 42
+
+      row.milesText = display.newText( "Miles: " .. string.format( '%.2f', params.miles ), 10, 0, native.systemFont, 14 )
+      row.milesText.anchorX = 0
+      row.milesText.anchorY = 0.5
+      row.milesText:setFillColor( 0.5 )
+      row.milesText.y = 40
+      row.milesText.x = 42
+
+    row.rightArrow = display.newImageRect(myApp.icons, 15 , 40, 40)
+    row.rightArrow.x = display.contentWidth - 20
+    row.rightArrow.y = row.height / 2
+      -- row.rightArrow = display.newImageRect( "rightarrow.png", 15 , 40, 40 )
+      -- row.rightArrow.x = display.contentWidth - 20
+      -- row.rightArrow.y = row.height / 2
+
+      row:insert( row.nameText )
+      row:insert( row.milesText )
+      row:insert( row.rightArrow )
+   end
+   return true
+end
+
+
+
     if common.testNetworkConnection() then
        native.setActivityIndicator( true )
-       parse:run("getagenciesnearby",{["lat"] = myApp.gps.event.latitude, ["lng"] = myApp.gps.event.longitude,["limit"] = myApp.locateanagent.gps.limit, ["miles"] = myApp.locateanagent.gps.miles}, function(e) native.setActivityIndicator( false ) if not e.error then debugpopup ("BACK from agentsnearby " ) end end )
+       parse:run(params.locateinfo.functionname,{["lat"] = myApp.gps.event.latitude, ["lng"] = myApp.gps.event.longitude,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
+
+
+local myList = widget.newTableView {
+   x = 0 ,
+   y = 0, 
+
+   width = myApp.sceneWidth, 
+   height = myApp.sceneHeight/3 ,
+   onRowRender = onRowRender,
+   onRowTouch = onRowTouch,
+   listener = scrollListener,
+ 
+}
+container:insert(myList )
+ 
+
+for i = 1, #e.response.result do
+    print("AGCNY NAME" .. e.response.result[i].agencyName)
+   myList:insertRow{
+      rowHeight = 50,
+      isCategory = false,
+      rowColor = { 1, 1, 1 },
+      lineColor = { 220/255 },
+
+            params = {
+         name = e.response.result[i].agencyName,
+         miles = e.response.result[i].milesTo,
+      }
+   }
+
+end
+
+
+        end end )
     end
-     -------------------------------------------------
-     -- Background
-     -------------------------------------------------
-     local myRoundedRect = display.newRoundedRect(0,0,50,100, 1 )
-     myRoundedRect:setFillColor(myApp.homepage.groupbackground.r,myApp.homepage.groupbackground.g,myApp.homepage.groupbackground.b,myApp.homepage.groupbackground.a )
-     container:insert(myRoundedRect)
+
+
+
+
+ 
+
 
 
         --local agentpagelink = common.DeepCopy(myApp.locatepage.agentinfo)

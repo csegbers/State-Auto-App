@@ -36,18 +36,16 @@ local M = {
             sceneBackground = { r=241/255, g=242/255, b=243/255, a=1 },
             scenemaskFile = "",
             gps = {
-                     timer = 30000,     --30 seconds
-                     event= "",
+                     timer = 30000,                           --30 seconds
+                     event= "",                               -- set elsewhere
                      debug = {                                -- will be used if in debugmode
                                 latitude=39.896311,
                                 longitude=-82.7674464,
                               },
                   },
-
-
             login = {
                         loggedin = false,
-                        lua="login",
+                        lua = "login",
                         options = {
                                       isModal = true,
                                       effect = "fromTop",
@@ -55,8 +53,9 @@ local M = {
                                        params = { }
                                    },
                     },
-
-            composerrecycleOnSceneChange = false,
+            composer = {
+                          recycleOnSceneChange = false
+                       },
             titleGradient = {
                     type = 'gradient',
                     color1 = { 189/255, 203/255, 220/255, 1 }, 
@@ -79,58 +78,84 @@ local M = {
                         appId = 'nShcc7IgtlMjqroizNXtlVwjtwjfJgLsiRVgvUfA',
                         restApikey = 'DeOzYBpk6bBSha0SJ9cRUc36EbWUmuseajSyBrlF',
                         url = "https://api.parse.com/1",
-                        endpoints = {
-                                        config  = {
-                                                     endpoint = "/config",
-                                                     verb = "GET",
-                                                  },
+                        -- endpoints = {
+                        --                 config  = {
+                        --                              endpoint = "/config",
+                        --                              verb = "GET",
+                        --                           },
                                  
-                                        appopened  = {
-                                                     endpoint = "/events/AppOpened",
-                                                     verb = "POST",
-                                                  },
-                                        customevent  = {
-                                                     endpoint = "/events",    -- pass in actual eventname
-                                                     verb = "POST",
-                                                  },
+                        --                 appopened  = {
+                        --                              endpoint = "/events/AppOpened",
+                        --                              verb = "POST",
+                        --                           },
+                        --                 customevent  = {
+                        --                              endpoint = "/events",    -- pass in actual eventname
+                        --                              verb = "POST",
+                        --                           },
 
 
-                                  },
+                        --           },
                     },
+            --------------------------------------------------------
+            -- note: physical order of items does not matter. 
+            -- Order is based on alphabetical based on key 
+            --------------------------------------------------------
             homepage = {
                           groupwidth = 120,
                           groupmaxwidth = 170,     -- we will allow to grow to fit better if there is extra edging. This would be max however
-                          groupheight = 160,
+                          groupheight = 140,
                           groupheaderheight = 20,
                           groupbetween = 10,
                           groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
-                          headercolor = { r=255/255, g=255/255, b=255/255, a=1 },                         
+                          iconwidth = 60,    -- can be overidden in item
+                          iconheight = 60,   -- can be overidden in item
+                          headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
+                          headerfontsize = 13,  
+                          textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                          textfontsize=12   ,                
                           items = {
                                       alocate = {
                                            title = "Locate an Agent", 
-                                           pic="images/agent-down.png",
+                                           pic="images/trustedchoice.png",
+                                           originaliconwidth = 196,
+                                           originaliconheight = 77,
+                                           iconwidth = 120,      -- height will be scaled appropriately
                                            text="Locate agents nearby",
                                            backtext = "<",
                                            groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
+                                           locateinfo = {
+                                                          functionname="getagenciesnearby",
+                                                          limit=20,
+                                                          miles=25,
+                                                        },
                                            composer = {
-                                                       lua="locateagent",
+                                                       lua="locate",
                                                        time=250, 
                                                        effect="slideLeft",
                                                        effectback="slideRight",
                                                     },
                                                },
-                                       broasast = {title = "another page", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=156/255, g=42/255, b=57/255, a=1 },
-                                                  backtext = "<",
+                                       broasast = {title = "another page", 
+                                                   pic="images/truck.png",
+                                                   text="Flat tire, out of gas ? We can help",
+                                                   groupheader = { r=156/255, g=42/255, b=57/255, a=1 },
+                                                   backtext = "<",
+                                                  locateinfo = {
+                                                          functionname="getagenciesnearby",
+                                                          limit=2,
+                                                          miles=50,
+                                                        },
                                                   composer = {
-                                                       lua="locateagent",
+                                                       lua="locate",
                                                        time=250, 
                                                        effect="slideLeft",
                                                        effectback="slideRight",
                                                     },
                                                  },
-                                        css = {title = "RoadSide Assi333e", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },
-                                                  defaultFile = "images/backbutton7_white.png",
-                                                  overFile ="images/agent.png",
+                                        css = {title = "RoadSide Assi333e", 
+                                        pic="images/truck.png",
+                                        text="Flat tire, out of gas ? We can help really help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },
+                                                  pic="images/truck.png",
                                                   composer = {
                                                        lua="locateagent",
                                                        time=250, 
@@ -145,7 +170,7 @@ local M = {
                                       g2yy = {title = "RoadSide e888", pic="images/truck.png",text="Flat tire, out of gas ? We can help",groupheader = { r=120/255, g=149/255, b=255/255, a=1 },},
                                  },
                        },
-            locateanagent = {
+            locateanagent = {    -- tem,poirary for now
                         gps ={
                                 limit=50,
                                 miles=30
@@ -171,7 +196,7 @@ local M = {
                                         composer = { lua="home" ,time=250, effect="crossFade" },
                                     },
                             bvideo = {
-                                        label="My Agent" ,title="My Agent" ,def="images/agent.png",over="images/agent-down.png",
+                                        label="My Agent" ,title="My Agent" ,def="images/myagent.png",over="images/myagent-down.png",
                                         composer = { lua="video" ,time=250, effect="slideRight" },
                                         options = {
                                                 feedName = "video.rss",
@@ -183,7 +208,7 @@ local M = {
                                                    }                                
                                     },
                             cmenu = {
-                                        label="Menu",  title="Menu" ,def="images/tabbaricon.png",over="images/tabbaricon-down.png",
+                                        label="Account",  title="Menu" ,def="images/account.png",over="images/account-down.png",
                                         composer = { lua="menu" ,time=250, effect="slideDown" },
                                     },
                             dblogs = {
