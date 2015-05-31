@@ -234,6 +234,7 @@ end
 
 function scene:enterScene( event )
 	local group = self.view
+        params = event.params           -- params contains the item table 
 
 	--
 	-- Because mapViews's are native objects, the cannot intermix with the OpenGL objects that storyboard is 

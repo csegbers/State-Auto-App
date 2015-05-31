@@ -108,8 +108,21 @@ function scene:create(event)
 end
 
 function scene:show( event )
-	local group = self.view
+ 
+    local group = self.view
+    local phase = event.phase
+    print ("Show:" .. phase.. " " .. currScene)
 
+    if ( phase == "will" ) then
+        -- Called when the scene is still off screen (but is about to come on screen).
+    elseif ( phase == "did" ) then
+        -- Called when the scene is now on screen.
+        -- Insert code here to make the scene come alive.
+        -- Example: start timers, begin animation, play audio, etc.
+        params = event.params           -- params contains the item table 
+
+
+    end
 end
 
 function scene:hide( event )

@@ -56,7 +56,11 @@ function scene:create(event)
             if homepageitem.composer then
                local parentinfo = params 
                homepageitem.callBack = function() myApp.showScreen({instructions=parentinfo,effectback=homepageitem.composer.effectback}) end
-               myApp.showSubScreen ({instructions=homepageitem})   
+               myApp.showSubScreen ({instructions=homepageitem})  
+            else
+               if homepageitem.tabbar then
+                  myApp.showScreen({instructions=myApp.tabs.btns[homepageitem.tabbar.key]})
+               end 
             end
         end       
 
@@ -209,6 +213,7 @@ function scene:show( event )
        
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
+        params = event.params           -- params contains the item table 
 
             -- Called when the scene is now on screen.
             -- Insert code here to make the scene come alive.

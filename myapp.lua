@@ -40,7 +40,7 @@ local M = {
                       transitiontime = 700,
                       transitiontimealpha = 200,
                       direction = "left",     -- initial direction
-                      movefactor = 1.50,
+                      movefactor = 1.50,      -- how much left or right
                       morebutton = {
                                       defaultFile="morebutton.png",
                                       overFile="morebutton-down.png",
@@ -71,6 +71,7 @@ local M = {
                                                           miles=25,
                                                         },
                                            composer = {
+                                                       id = "alocate1",    -- same id as home page item. This way if selected on we are on that screen dont do anything
                                                        lua="locate",
                                                        time=250, 
                                                        effect="slideLeft",
@@ -87,13 +88,14 @@ local M = {
                                                           miles=50,
                                                         },
                                                   composer = {
+                                                       id = "broadmore",
                                                        lua="locate",
                                                        time=250, 
                                                        effect="slideLeft",
                                                        effectback="slideRight",
                                                     },
                                                  },
-                                        css = {title = "more RoadSide", 
+                                        css = {title = "Debug", 
                                                   pic="truck.png",
                                                   text="Flat tire, out of gas ? We can help really help",
                                                    backtext = "<",
@@ -102,11 +104,9 @@ local M = {
                                                           limit=2,
                                                           miles=50,
                                                         },
-                                                  composer = {
-                                                       lua="locateagent",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
+                                                  tabbar = {
+                                                       id = "xxxmore",
+                                                       key="gdebug",
                                                     },
                                               },
                                  },
@@ -132,7 +132,7 @@ local M = {
                                    },
                     },
             composer = {
-                          recycleOnSceneChange = false
+                          recycleOnSceneChange = false,
                        },
             titleGradient = {
                     type = 'gradient',
@@ -208,6 +208,7 @@ local M = {
                                                           miles=25,
                                                         },
                                            composer = {
+                                                       id = "alocate1",
                                                        lua="locate",
                                                        time=250, 
                                                        effect="slideLeft",
@@ -224,27 +225,22 @@ local M = {
                                                           miles=50,
                                                         },
                                                   composer = {
+                                                       id = "alocate2",
                                                        lua="locate",
                                                        time=250, 
                                                        effect="slideLeft",
                                                        effectback="slideRight",
                                                     },
                                                  },
-                                        css = {title = "RoadSide Assi333e", 
+                                        css = {title = "debug", 
                                             pic="truck.png",
                                             text="Flat tire, out of gas ? We can help really help",
                                             backtext = "<",
                                                   pic="truck.png",
-                                            locateinfo = {
-                                                          functionname="getagenciesnearby",
-                                                          limit=2,
-                                                          miles=50,
-                                                        },
-                                                  composer = {
-                                                       lua="locate",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
+
+                                             tabbar = {
+                                                       id = "xxxxx",
+                                                       key="gdebug",
                                                     },
                                               },
                                        dtt = {title = "RoadSide 444", pic="truck.png",text="Flat tire, out of gas ? We can help",},
@@ -264,6 +260,7 @@ local M = {
                              backtext = "<",
                              groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
                              composer = {
+                                         id = "agentinfo1",
                                          lua="agent",
                                          time=250, 
                                          effect="slideLeft",
@@ -278,11 +275,11 @@ local M = {
                         btns = {
                             ahome = {
                                         label="Home", title="State Auto" ,def="saicon.png",over="saicon-down.png",
-                                        composer = { lua="home" ,time=250, effect="crossFade" },
+                                        composer = { id = "home",lua="home" ,time=250, effect="crossFade" },
                                     },
                             bvideo = {
                                         label="My Agent" ,title="My Agent" ,def="myagent.png",over="myagent-down.png",
-                                        composer = { lua="video" ,time=250, effect="slideRight" },
+                                        composer = {id = "video", lua="video" ,time=250, effect="slideRight" },
                                         options = {
                                                 feedName = "video.rss",
                                                 --feedURL = "http://gdata.youtube.com/feeds/mobile/users/CoronaLabs/uploads?max-results=20&alt=rss&orderby=published&format=1",
@@ -294,11 +291,11 @@ local M = {
                                     },
                             cmenu = {
                                         label="Account",  title="Menu" ,def="account.png",over="account-down.png",
-                                        composer = { lua="menu" ,time=250, effect="slideDown" },
+                                        composer = { id = "account",lua="menu" ,time=250, effect="slideDown" },
                                     },
                             dblogs = {
                                       label="Blogs" ,title="Blog" ,def="tabbaricon.png",over="tabbaricon-down.png",
-                                      composer = { lua="feed" ,time=250, effect="crossFade" },
+                                      composer = {id = "blog", lua="feed" ,time=250, effect="crossFade" },
                                       options = {
                                             feedName = "corona.rss",
                                             feedURL = "http://www.coronalabs.com/feed/",
@@ -309,19 +306,19 @@ local M = {
                                       },
                            epics = {
                                     label="Pics" ,title="Pics",def="tabbaricon.png",over="tabbaricon-down.png",
-                                    composer = { lua="photogallery" ,time=250, effect="crossFade" },
+                                    composer = { id = "epic",lua="photogallery" ,time=250, effect="crossFade" },
                                    },
                            
                            fmaps = {
                                         label="Maps", title="Maps",def="tabbaricon.png",over="tabbaricon-down.png",
-                                        composer = { lua="mapscene" ,time=250, effect="crossFade" },
+                                        composer = {id = "maps", lua="mapscene" ,time=250, effect="crossFade" },
                                         options = {
                                                 pageTitle = "Corona Headquarters"
                                                  }                              
                                     },
                           gdebug = {
                                      label="Debug" ,title="Debug" ,def="tabbaricon.png",over="tabbaricon-down.png" ,
-                                    composer = { lua="debugapp" ,time=250, effect="crossFade" },
+                                    composer = { id = "debug",lua="debugapp" ,time=250, effect="crossFade" },
                                   }
                                 }
                    },

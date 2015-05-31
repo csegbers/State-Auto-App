@@ -72,12 +72,23 @@ local onRowTouch = function( event )
                   ---------------------------------------------
                   ---------------------------------------------
                   -- Composer ?
+                  -- Different scene name or id ?
                   ----------------------------------------------
-                  if v.composer and composer.getSceneName( "current" )  ~= (myApp.scenesfld .. v.composer.lua) then
-                     --local parentinfo = composer.getScene( composer.getSceneName( "current" ) ).myparams()
-                     v.callBack = function() myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabCurrentKey],effectback=v.composer.effectback}) end
-                     myApp.showSubScreen ({instructions=v})   
+                  --debugpopup (composer.getScene( composer.getSceneName( "current" ) ).myparams().composer.id)
+                  if v.composer  then
+                      if ((composer.getSceneName( "current" )  == (myApp.scenesfld .. v.composer.lua))
+                          and (composer.getScene( composer.getSceneName( "current" ) ).myparams().composer.id == v.composer.id)) then
+                       else
+                         --local parentinfo = composer.getScene( composer.getSceneName( "current" ) ).myparams()
+                         v.callBack = function() myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabCurrentKey],effectback=v.composer.effectback}) end
+                         myApp.showSubScreen ({instructions=v})   
+                     end
+                  else
+                    if v.tabbar then
+                       myApp.showScreen({instructions=myApp.tabs.btns[v.tabbar.key]})
+                    end
                   end
+
               end })
     end
  
