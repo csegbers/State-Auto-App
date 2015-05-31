@@ -8,14 +8,6 @@ local common = require( myApp.utilsfld .. "common" )
 local widget = require( "widget" )
 local composer = require( "composer" )
 
-
-
-
-
-
-
---myApp.backGroup:insert(backlogo)
-
 ----------------------------------------------------------
 --    Top Title Bar stuff
 ----------------------------------------------------------
@@ -34,13 +26,6 @@ myApp.TitleGroup:insert(statusBarBackground)
 ----------------------------------------------------------
 --   This is the title bar
 ----------------------------------------------------------
-
---myApp.statusBarType = display.TranslucentStatusBar
--- local titleBar = display.newImageRect(myApp.topBarBg, myApp.cW, myApp.titleBarHeight + sbAdjust)
--- titleBar.x = myApp.cCx
--- titleBar.y = (myApp.titleBarHeight * 0.5 )+ myApp.tSbch - sbAdjust
--- titleBar:setFillColor( myApp.titleGradient )
--- myApp.TitleGroup:insert(titleBar)
 
 local tbry = myApp.titleBarHeight / 2
 local tbrheight = myApp.titleBarHeight
@@ -64,18 +49,12 @@ myApp.TitleGroup:insert(titleBarRect)
 ----------------------------------------------------------
 --   text in the Titlebar Set to blank initially
 ----------------------------------------------------------
---local titleText = display.newText(myApp.tabs.btns[myApp.tabs.launchkey].title, 0, 0, myApp.fontBold, 20 )
 local titleText = display.newText("", 0, 0, myApp.fontBold, 20 )
-if myApp.isGraphics2 then
-    titleText:setFillColor(1, 1, 1)
-else
-    titleText:setTextColor( 255, 255, 255 )
-end
+titleText:setFillColor (myApp.titleBarTextColor.r,myApp.titleBarTextColor.g,myApp.titleBarTextColor.b,myApp.titleBarTextColor.a)
 titleText.x = myApp.cCx
 titleText.y = myApp.titleBarHeight * 0.5 + myApp.tSbch  
 myApp.TitleGroup.titleText = titleText
 myApp.TitleGroup:insert(myApp.TitleGroup.titleText) 
-
 
 ----------------------------------------------------------
 --   right side more button
@@ -87,7 +66,7 @@ myApp.TitleGroup.moreIcon = widget.newButton {
                     width = myApp.tabs.tabbtnw,
                     x = myApp.sceneWidth - myApp.tabs.tabbtnw/2 - myApp.titleBarEdge  ,
                     y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch  ,
-                    onRelease = myApp.MoreInfoMove,
+                    onRelease = function() if myApp.moreinfo.imsliding == false then myApp.MoreInfoMove() end end,
                }
 
 myApp.TitleGroup:insert(myApp.TitleGroup.moreIcon) 
@@ -113,17 +92,12 @@ local function addtabBtn(tkey)
     ---------------------------------
     btnrntry.sel=tabCnt                         -- add a sequence
     btnrntry.key=tkey                           -- add the key to the table
-
-    --debugpopup ("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK " .. btnrntry.key .. " " .. myApp.tabs.btns[tkey].key  )
     local tabitem = 
         {
             label = btnrntry.label,
             defaultFile = myApp.imgfld .. btnrntry.def,
             overFile = myApp.imgfld .. btnrntry.over,
-            labelColor = { 
-                default = myApp.colorGray,   
-                over = myApp.saColor,  
-            },
+            labelColor = { default = myApp.colorGray,   over = myApp.saColor,  },
             width = myApp.tabs.tabbtnw,
             height = myApp.tabs.tabbtnh,
             onPress = function () myApp.showScreen({instructions=btnrntry}) end,
@@ -137,20 +111,8 @@ end
  for n in pairs(myApp.tabs.btns) do table.insert(a, n) end
  table.sort(a)
  for i,k in ipairs(a) do addtabBtn(k) end
----- following wors just puts them in random order
--- for k,v in pairs(myApp.tabs.btns) do 
---     addtabBtn(k)
--- end
 
--- addtabBtn("home")
--- addtabBtn("video")
--- addtabBtn("menu")
--- addtabBtn("blogs")
--- addtabBtn("pics")
--- addtabBtn("maps")
--- addtabBtn("debug")
-
-myApp.tabBar = widget.newTabBar{
+ myApp.tabBar = widget.newTabBar{
     top =  myApp.cH - myApp.tabs.tabBarHeight ,
     left = 0,
     width = myApp.cW,
@@ -164,11 +126,6 @@ myApp.tabBar = widget.newTabBar{
     height = myApp.tabs.tabBarHeight,
     --background="images/tabBarBg7.png"
 }
-
-----------------------------------------------------------
---   Common info for the screens
-----------------------------------------------------------
-
 
 ----------------------------------------------------------
 --   following may not be needed
@@ -213,18 +170,6 @@ end
 -- parms - {instructions (table)}
 --------------------------------------------------
 function myApp.showScreenIcon(image)
- 
-
-        -- --------------------------------------------
-        -- -- is there a widget ? get rid of
-        -- --------------------------------------------
-        -- display.remove(myApp.TitleGroup.backButton)    -- may not exist first time, this wont hurt
-        -- myApp.TitleGroup.backButton = nil
-        -- ----------------------------------------------------------
-        -- --   This is the title bar icon
-        -- ----------------------------------------------------------
-        -- display.remove(myApp.TitleGroup.titleIcon)    -- may not exist first time, this wont hurt
-        -- myApp.TitleGroup.titleIcon = nil
 
         myApp.clearScreenIconWidget()
 
@@ -233,13 +178,9 @@ function myApp.showScreenIcon(image)
         myApp.TitleGroup.titleIcon.x = myApp.titleBarEdge + (myApp.TitleGroup.titleIcon.width * 0.5 )
         myApp.TitleGroup.titleIcon.y = (myApp.titleBarHeight * 0.5 )+ myApp.tSbch
 
-        print ("icon scale " .. myApp.TitleGroup.titleIcon.xScale)
         myApp.TitleGroup.titleIcon.alpha = 0
         myApp.TitleGroup:insert(myApp.TitleGroup.titleIcon)
         transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=1 })
-
-
-
 end
 --------------------------------------------------
 -- Show screen. Add function
@@ -290,7 +231,6 @@ function myApp.showScreen(parms)
     return true
 end
 
-
 --------------------------------------------------
 -- Show sub screen. Add function
 -- parms - instructions(table) 
@@ -331,8 +271,6 @@ function myApp.showSubScreen(parms)
                time=myApp.tabs.transitiontime, alpha=.2,x = myApp.TitleGroup.titleText.x*xendpoint,
                onComplete= function () myApp.TitleGroup.titleText.text = tnt.title; myApp.TitleGroup.titleText.x = myApp.cCx*xstartpoint;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime }) end
              } )
-        --debugpopup (tnt.backtext .. " " .. type(parms) .. " " ..type(tnt) .. " " ..type(tnt.callBack))
-
 
         --------------------------------------------
         -- Create a widget (text only or icon) for the navigation ?
@@ -371,19 +309,6 @@ end
 function myApp.Login(parms)
     print "IN overlay"
     composer.showOverlay(myApp.scenesfld .. myApp.login.lua, myApp.login.options)
-    return true
-end
-
-
-function myApp.MoreInfo(parms)
- 
-    transition.to(  composer.stage, { time=myApp.tabs.transitiontime*2,delta=true, x = myApp.cW/2*-1 , transition=easing.outQuint})
-
---     stage:insert( myApp.moreGroup )
---     stage:insert( myApp.backGroup )
---     stage:insert( composer.stage )
--- stage:insert( myApp.TitleGroup )
--- stage:insert( myApp.tabBar )  
     return true
 end
 

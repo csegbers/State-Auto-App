@@ -37,7 +37,7 @@ function scene:create(event)
 
     local starty = 0
     
-    local backlogo = display.newImageRect("salogo.jpg",305,170)
+    local backlogo = display.newImageRect(myApp.imgfld .. myApp.splash.image,305,170)
     backlogo:scale( .5,.5  )
     backlogo.x = myApp.cCx
     starty = backlogo.height * .5 * .5  + 10

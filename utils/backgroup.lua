@@ -23,14 +23,20 @@ myApp.transContainer = common.SceneBackground(myApp.moreinfo.transparentcolor)
 myApp.transContainer.y = myApp.transContainer.y + myApp.sceneStartTop/2
 myApp.transContainer.height = myApp.transContainer.height - myApp.sceneStartTop
 myApp.transContainer.alpha = 0
+
 ---------------------------------------------
 -- dont allow touches to go thru
--- for some reason itemds in composer idnore this
+-- for some reason items in composer idnore this
 -----------------------------------------------
 myApp.transContainer:addEventListener( "touch", function(event)   return myApp.transContainer.alpha  > 0  end )
 
+---------------------------------------------
+-- used to slide out the major groups left and right
+-- and tuern on / off the alpha of the last group
+-----------------------------------------------
 function myApp.MoreInfoMove( parms )
   
+    myApp.moreinfo.imsliding = true
     local params = parms or {}
     local transtime = myApp.moreinfo.transitiontime
     local deltax = myApp.cW/myApp.moreinfo.movefactor*-1
@@ -49,12 +55,12 @@ function myApp.MoreInfoMove( parms )
     transition.to(  myApp.backGroup, { time=transtime ,delta=true, x = deltax , transition=easing.outQuint})
     transition.to(  myApp.TitleGroup, { time=transtime,delta=true, x = deltax, transition=easing.outQuint})
     transition.to(  myApp.tabBar, { time=transtime,delta=true, x = deltax , transition=easing.outQuint})
-    ----------------------------------
-    -- do separate because of the delta
+    transition.to(  myApp.transContainer, { time=transtime, delta=true, x = deltax , transition=easing.outQuint, onComplete = function() myApp.moreinfo.imsliding = false end })  
+    ---------------------------------------
+    -- do alpha separate because of the delta
     ---------------------------------------
     transition.to(  myApp.transContainer, { time=myApp.moreinfo.transitiontimealpha,alpha = talpha, onComplete = params.onComplete })
-    transition.to(  myApp.transContainer, { time=transtime, delta=true, x = deltax , transition=easing.outQuint })
- 
+
 end
 
 
@@ -62,19 +68,18 @@ end
 -- Action on selection
 -----------------------------------------------
 local onRowTouch = function( event )
-    if event.phase == "release" then
+    if event.phase == "release" and  myApp.moreinfo.imsliding == false then
         myApp.MoreInfoMove({onComplete = 
               function()  
                   local v = myApp.moreinfo.items[event.row.params.key]
                   ----------------------------------------------
-                  -- always do a "back" to the main Tabbar page
+                  -- always do a "back" to the MAIN Tabbar page !!!!
                   -- no nested backing for these items
                   ---------------------------------------------
                   ---------------------------------------------
                   -- Composer ?
                   -- Different scene name or id ?
                   ----------------------------------------------
-                  --debugpopup (composer.getScene( composer.getSceneName( "current" ) ).myparams().composer.id)
                   if v.composer  then
                       if ((composer.getSceneName( "current" )  == (myApp.scenesfld .. v.composer.lua))
                           and (composer.getScene( composer.getSceneName( "current" ) ).myparams().composer.id == v.composer.id)) then
@@ -129,19 +134,16 @@ table.sort(a)
 -- Generate the rows
 --------------------------------------------- 
 for i,k in ipairs(a) do 
-
 	   myList:insertRow({
 	      rowHeight = myApp.moreinfo.row.height, 
 	      rowColor =  { default={myApp.sceneBackgroundmorecolor.r,myApp.sceneBackgroundmorecolor.g,myApp.sceneBackgroundmorecolor.b}, over=myApp.moreinfo.row.over },
 	      lineColor = myApp.moreinfo.row.linecolor,
 	      params = { title = myApp.moreinfo.items[k].title,key = k,}
 	   })
-
-
  end
 ---------------------------------------------
 -- Insert the list
 --------------------------------------------- 
-myApp.moreGroup :insert(myList )
+myApp.moreGroup:insert(myList )
 
 

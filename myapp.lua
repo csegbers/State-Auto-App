@@ -11,7 +11,6 @@ local M = {
             cCy = display.contentCenterY,
             tSbch = display.topStatusBarContentHeight,
             statusBarType = display.TranslucentStatusBar,       "display.DefaultStatusBar",    "display.DarkStatusBar",    "display.TranslucentStatusBar",
-            splashDelay = 150,    -- milliseconds
             saColor = { },
             saColorTrans = { },
             colorGray = { },
@@ -21,6 +20,7 @@ local M = {
             is_iPad = false,
             titleBarHeight = 50,
             titleBarEdge = 10,
+            titleBarTextColor = { r=255/255, g=255/255, b=255/255, a=1 },
             imgfld = "images/",
             scenesfld = "scenes.",
             utilsfld = "utils.",
@@ -36,7 +36,9 @@ local M = {
             sceneBackgroundcolor = { r=241/255, g=242/255, b=243/255, a=1 },
             sceneBackgroundmorecolor = { r=25/255, g=75/255, b=150/255, a=1 },
             scenemaskFile = "",
+            splash = {image = "splash.jpg", delay = 150, },
             moreinfo = {
+                      imsliding = false,
                       transitiontime = 700,
                       transitiontimealpha = 200,
                       direction = "left",     -- initial direction

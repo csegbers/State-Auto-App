@@ -63,13 +63,10 @@ function scene:create(event)
                end 
             end
         end       
-
         ---------------------------------------------
         -- simulate a pressing of a button
         ---------------------------------------------
-        transition.to( event.target, { time=100, x=5,y=5,  delta=true , transition=easing.continuousLoop, onComplete=onObjectTouchAction } )
-
-        
+        transition.to( event.target, { time=100, x=5,y=5,  delta=true , transition=easing.continuousLoop, onComplete=onObjectTouchAction } )  
      end
 
      local groupheight = myApp.homepage.groupheight
@@ -171,12 +168,10 @@ function scene:create(event)
              -- Desc text
              -------------------------------------------------
              
-
              local myDesc = display.newText( {text=v.text, x=startX, y=0, height=0,width=groupwidth-5 ,font= myApp.fontBold, fontSize=myApp.homepage.textfontsize,align="center" })
              myDesc.y=startYother+groupheight  -(myDesc.height/2) - textHeightSingleLine + 2
              myDesc:setFillColor( myApp.homepage.textcolor.r,myApp.homepage.textcolor.g,myApp.homepage.textcolor.b,myApp.homepage.textcolor.a )
              itemGrp:insert(myDesc)
-
 
              -------------------------------------------------
              -- Add touch event
@@ -189,7 +184,6 @@ function scene:create(event)
 
              primGroup:insert(itemGrp)
 
-             
              col = col+1
    end
 
@@ -253,26 +247,6 @@ end
 function scene:myparams( event )
        return params
 end
--- ---------------------------------------------------
--- -- use if someone wants us to transition away
--- -- for navigational appearnaces
--- -- ****** just use the slide transitions from composer
--- ---------------------------------------------------
--- function scene:moveContainer( event )
---     if params.container then
---          local containerX = params.container.x
---          local containerY = params.container.Y
---          local x = containerX
---          local y = containerY
---          if event.direction == "left" then
---             x = params.container.x*-1
---          end
---          if event.direction == "right" then
---             x = params.container.x*3
---          end
---          transition.to(  params.container, { time=event.time,  x= x,y=y, onComplete=function() transition.to(  params.container, {  alpha=1,  x= containerX, y =containerY } )end} )
---      end
--- end
 
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )

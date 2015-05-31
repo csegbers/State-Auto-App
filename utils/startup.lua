@@ -1,20 +1,9 @@
 
 -------------------------------------------------------
--- OLoaded once in main, used to override variables and create some common functions
+-- Loaded once in main, used to override variables and create some common functions
 -------------------------------------------------------
-
 local myApp = require( "myapp" ) 
 local parse = require( myApp.utilsfld .. "mod_parse" ) 
-
-----------------------------------------------------------
---   Common info for the screens
-----------------------------------------------------------
-myApp.sceneStartTop = myApp.titleBarHeight + myApp.tSbch  
-myApp.sceneWidth = myApp.cW
-myApp.sceneHeight = myApp.cH - myApp.sceneStartTop - myApp.tabs.tabBarHeight
-myApp.login.loggedin = false
-myApp.justLaunched = true
-myApp.moreinfo.direction = "left"
 
 function print_r ( t )  
     local print_r_cache={}
@@ -65,47 +54,38 @@ function print(...)
     end
 end
 
- 
+-------------------------------------------------------
+-- pop up messgae
+------------------------------------------------------- 
 function debugpopup(whatstr) 
-     if myApp.debugMode then
-        native.showAlert( myApp.appName ,whatstr )
-    end
+  if myApp.debugMode then native.showAlert( myApp.appName ,whatstr )  end
 end
 
-
 print "In startup.lua"
-
 -------------------------------------------------------
 -- Seed random generator in case we use
 -------------------------------------------------------
 math.randomseed( os.time() )
-
--------------------------------------------------------
-----Get User Defaults here
------------------------------------------------------
-display.setStatusBar( myApp.statusBarType )
-myApp.tSbch = display.topStatusBarContentHeight 
  
 -------------------------------------------------------
 -- Set app variables
 -------------------------------------------------------
-if (display.pixelHeight/display.pixelWidth) > 1.5 then
-    myApp.isTall = true
-end
 
+display.setStatusBar( myApp.statusBarType )
+myApp.tSbch = display.topStatusBarContentHeight 
+myApp.sceneStartTop = myApp.titleBarHeight + myApp.tSbch  
+myApp.sceneWidth = myApp.cW
+myApp.sceneHeight = myApp.cH - myApp.sceneStartTop - myApp.tabs.tabBarHeight
+myApp.login.loggedin = false
+myApp.justLaunched = true
+myApp.moreinfo.direction = "left"
+if (display.pixelHeight/display.pixelWidth) > 1.5 then  myApp.isTall = true end
 if display.contentWidth > 320 then myApp.is_iPad = true end
-
---
--- -- Handle Graphics 2.0 changes
--- if tonumber( system.getInfo("build") ) < 2013.2000 then
---     -- we are a Graphics 1.0 build
---     M.colorDivisor = 1
---     M.isGraphics2 = false
--- end
 
 myApp.saColor = { 0/myApp.colorDivisor, 104/myApp.colorDivisor, 167/myApp.colorDivisor } 
 myApp.saColorTrans = { 0/myApp.colorDivisor, 104/myApp.colorDivisor, 167/myApp.colorDivisor, .75 }
 myApp.colorGray = { 83/myApp.colorDivisor, 83/myApp.colorDivisor, 83/myApp.colorDivisor }
+myApp.icons = graphics.newImageSheet(myApp.imgfld.. myApp.iconinfo.sheet,myApp.iconinfo.icondimensions)
 
 if system.getInfo("platformName") == "Android" then
     myApp.theme = "widget_theme_android"
@@ -118,11 +98,6 @@ else
     local coronaBuild = system.getInfo("build")
     if tonumber(coronaBuild:sub(6,12)) < 1206 then myApp.theme = "widget_theme_ios" end
 end
-
--------------------------------------------------------
--- Icon sheet
--------------------------------------------------------
-myApp.icons = graphics.newImageSheet(myApp.imgfld.. myApp.iconinfo.sheet,myApp.iconinfo.icondimensions)
 
 -------------------------------------------------------
 --  Start Parse
