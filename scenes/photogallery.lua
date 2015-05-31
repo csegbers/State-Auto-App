@@ -41,6 +41,7 @@ local scene = composer.newScene()
 local widget = require("widget")
 local myApp = require( "myapp" ) 
 local common = require( myApp.utilsfld .. "common" )
+local params
 
 widget.setTheme(myApp.theme)
 
@@ -76,6 +77,7 @@ end
 
 function scene:create( event )
     local group = self.view
+    params = event.params or {}
 
     local background = display.newRect(0,0,display.contentWidth, display.contentHeight)
     background:setFillColor(242, 242, 242, 255)
@@ -173,7 +175,9 @@ function scene:destory( event )
     
 end
 
-
+function scene:myparams( event )
+       return params
+end
 ---------------------------------------------------------------------------------
 -- END OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------

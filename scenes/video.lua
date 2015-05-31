@@ -375,7 +375,7 @@ function scene:create( event )
     local group = self.view
     print ("Create  " .. currScene)
     
-    params = event.params
+    params = event.params or {}
         
     local background = common.SceneBackground()
     group:insert(background)
@@ -451,6 +451,10 @@ function scene:destroy( event )
     print ("Destroy "   .. currScene)
 end
 
+
+function scene:myparams( event )
+       return params
+end
 
 ---------------------------------------------------------------------------------
 -- END OF YOUR IMPLEMENTATION

@@ -10,7 +10,7 @@ local M = {
             cCx = display.contentCenterX,
             cCy = display.contentCenterY,
             tSbch = display.topStatusBarContentHeight,
-            statusBarType = display.DefaultStatusBar,       "display.DefaultStatusBar",    "display.DarkStatusBar",    "display.TranslucentStatusBar",
+            statusBarType = display.TranslucentStatusBar,       "display.DefaultStatusBar",    "display.DarkStatusBar",    "display.TranslucentStatusBar",
             splashDelay = 150,    -- milliseconds
             saColor = { },
             saColorTrans = { },
@@ -38,13 +38,26 @@ local M = {
             scenemaskFile = "",
             moreinfo = {
                       transitiontime = 700,
+                      transitiontimealpha = 200,
                       direction = "left",     -- initial direction
                       movefactor = 1.50,
-
-
+                      morebutton = {
+                                      defaultFile="morebutton.png",
+                                      overFile="morebutton-down.png",
+                                      },
+                      transparentcolor = { r=255/255, g=255/255, b=255/255, a=1 },
+                      transparentalpha = .7,
+                      row = {
+                              over={ 1, 0.5, 0, 0.2 },
+                              linecolor={ 200/255 },
+                              height = 50,
+                              indent = 25,
+                              textcolor = 1,
+                              textfontsize=14 
+                            },
                       items = {
                                       alocate = {
-                                           title = "Locate an Agent", 
+                                           title = "Locate an Agent more", 
                                            pic="trustedchoice.png",
                                            originaliconwidth = 196,
                                            originaliconheight = 77,
@@ -64,7 +77,7 @@ local M = {
                                                        effectback="slideRight",
                                                     },
                                                },
-                                       broasast = {title = "another page", 
+                                       broasast = {title = "More page", 
                                                    pic="truck.png",
                                                    text="Flat tire, out of gas ? We can help",
                                                    backtext = "<",
@@ -80,10 +93,15 @@ local M = {
                                                        effectback="slideRight",
                                                     },
                                                  },
-                                        css = {title = "RoadSide Assi333e", 
-                                        pic="truck.png",
-                                        text="Flat tire, out of gas ? We can help really help",
+                                        css = {title = "more RoadSide", 
                                                   pic="truck.png",
+                                                  text="Flat tire, out of gas ? We can help really help",
+                                                   backtext = "<",
+                                                  locateinfo = {
+                                                          functionname="getagenciesnearby",
+                                                          limit=2,
+                                                          miles=50,
+                                                        },
                                                   composer = {
                                                        lua="locateagent",
                                                        time=250, 
@@ -186,7 +204,7 @@ local M = {
                                           -- groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
                                            locateinfo = {
                                                           functionname="getagenciesnearby",
-                                                          limit=20,
+                                                          limit=100,
                                                           miles=25,
                                                         },
                                            composer = {
@@ -213,11 +231,17 @@ local M = {
                                                     },
                                                  },
                                         css = {title = "RoadSide Assi333e", 
-                                        pic="truck.png",
-                                        text="Flat tire, out of gas ? We can help really help",
+                                            pic="truck.png",
+                                            text="Flat tire, out of gas ? We can help really help",
+                                            backtext = "<",
                                                   pic="truck.png",
+                                            locateinfo = {
+                                                          functionname="getagenciesnearby",
+                                                          limit=2,
+                                                          miles=50,
+                                                        },
                                                   composer = {
-                                                       lua="locateagent",
+                                                       lua="locate",
                                                        time=250, 
                                                        effect="slideLeft",
                                                        effectback="slideRight",
@@ -249,10 +273,7 @@ local M = {
                                  
                        },
             tabs = {
-                        morebutton = {
-                                      defaultFile="morebutton.png",
-                                      overFile="morebutton.png",
-                                      },
+
                         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "ahome", transitiontime = 200,
                         btns = {
                             ahome = {

@@ -245,6 +245,9 @@ function scene:destroy( event )
     print ("Destroy "   .. currScene)
 end
 
+function scene:myparams( event )
+       return params
+end
 -- ---------------------------------------------------
 -- -- use if someone wants us to transition away
 -- -- for navigational appearnaces

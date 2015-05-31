@@ -81,13 +81,13 @@ myApp.TitleGroup:insert(myApp.TitleGroup.titleText)
 --   right side more button
 ----------------------------------------------------------
 myApp.TitleGroup.moreIcon = widget.newButton {
-                    defaultFile = myApp.imgfld .. myApp.tabs.morebutton.defaultFile,
-                    overFile = myApp.imgfld .. myApp.tabs.morebutton.overFile ,
+                    defaultFile = myApp.imgfld .. myApp.moreinfo.morebutton.defaultFile,
+                    overFile = myApp.imgfld .. myApp.moreinfo.morebutton.overFile ,
                     height = myApp.tabs.tabbtnh,
                     width = myApp.tabs.tabbtnw,
                     x = myApp.sceneWidth - myApp.tabs.tabbtnw/2 - myApp.titleBarEdge  ,
                     y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch  ,
-                    onRelease = myApp.MoreInfo,
+                    onRelease = myApp.MoreInfoMove,
                }
 
 myApp.TitleGroup:insert(myApp.TitleGroup.moreIcon) 
@@ -251,39 +251,42 @@ end
 --------------------------------------------------
 function myApp.showScreen(parms)
 
-    local tnt = parms.instructions
-    ----------------------------------------------------------
-    --   Make sure the Tab is selected in case we came from a different direction instead of user tapping tabbar
-    ----------------------------------------------------------
-    myApp.tabBar:setSelected(tnt.sel)
-    ----------------------------------------------------------
-    --   Change the title in the status bar and launch new screen
-    ----------------------------------------------------------
-    if parms.firsttime  then
-        myApp.TitleGroup.titleText.text = tnt.title
-        myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)
-    else
-        ---------------------------------------------------
-        -- on a subscreen coming back ? slide it on in
-        ---------------------------------------------------
-        if parms.effectback then  
-            transition.to( myApp.TitleGroup.titleText, { 
-            time=myApp.tabs.transitiontime/2, alpha=.2,x = myApp.TitleGroup.titleText.x*3,
-            onComplete= function () myApp.TitleGroup.titleText.text = tnt.title; myApp.TitleGroup.titleText.x = myApp.cCx*-1;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime  }) myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over) end } )
-              
+    if myApp.moreinfo.direction  == "left" then 
+        local tnt = parms.instructions
+        myApp.tabCurrentKey = tnt.key
+        ----------------------------------------------------------
+        --   Make sure the Tab is selected in case we came from a different direction instead of user tapping tabbar
+        ----------------------------------------------------------
+        myApp.tabBar:setSelected(tnt.sel)
+        ----------------------------------------------------------
+        --   Change the title in the status bar and launch new screen
+        ----------------------------------------------------------
+        if parms.firsttime  then
+            myApp.TitleGroup.titleText.text = tnt.title
+            myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)
         else
-            transition.to( myApp.TitleGroup.titleText, { time=myApp.tabs.transitiontime , alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=myApp.tabs.transitiontime }) end } )
-            transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)})
+            ---------------------------------------------------
+            -- on a subscreen coming back ? slide it on in
+            ---------------------------------------------------
+            if parms.effectback then  
+                transition.to( myApp.TitleGroup.titleText, { 
+                time=myApp.tabs.transitiontime/2, alpha=.2,x = myApp.TitleGroup.titleText.x*3,
+                onComplete= function () myApp.TitleGroup.titleText.text = tnt.title; myApp.TitleGroup.titleText.x = myApp.cCx*-1;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime  }) myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over) end } )
+                  
+            else
+                transition.to( myApp.TitleGroup.titleText, { time=myApp.tabs.transitiontime , alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=myApp.tabs.transitiontime }) end } )
+                transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)})
+            end
         end
+
+        local effect = tnt.composer.effect
+        -----------------------------------------------
+        -- override effect ? Maybe a "back" etc..
+        -----------------------------------------------
+        if parms.effectback then effect = parms.effectback end
+
+        composer.gotoScene(myApp.scenesfld .. tnt.composer.lua, {time=tnt.composer.time, effect=effect, params = tnt})
     end
-
-    local effect = tnt.composer.effect
-    -----------------------------------------------
-    -- override effect ? Maybe a "back" etc..
-    -----------------------------------------------
-    if parms.effectback then effect = parms.effectback end
-
-    composer.gotoScene(myApp.scenesfld .. tnt.composer.lua, {time=tnt.composer.time, effect=effect, params = tnt})
     return true
 end
 

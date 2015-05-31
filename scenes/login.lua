@@ -13,6 +13,8 @@ local login = require( myApp.classfld .. "classlogin" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
+local params
+
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
 --
@@ -21,6 +23,7 @@ print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 function scene:create(event)
     print ("Create  " .. currScene)
 	local group = self.view
+    params = event.params or {}
 
      local background = display.newRect(0,0,myApp.cW,100)
     background:setFillColor(155/myApp.colorDivisor, 255/myApp.colorDivisor, 255/myApp.colorDivisor, 255/myApp.colorDivisor)
@@ -74,6 +77,9 @@ function scene:destroy( event )
     print ("Destroy "   .. currScene)
 end
 
+function scene:myparams( event )
+       return params
+end
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )

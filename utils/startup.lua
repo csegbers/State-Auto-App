@@ -12,10 +12,8 @@ local parse = require( myApp.utilsfld .. "mod_parse" )
 myApp.sceneStartTop = myApp.titleBarHeight + myApp.tSbch  
 myApp.sceneWidth = myApp.cW
 myApp.sceneHeight = myApp.cH - myApp.sceneStartTop - myApp.tabs.tabBarHeight
-
 myApp.login.loggedin = false
 myApp.justLaunched = true
-
 myApp.moreinfo.direction = "left"
 
 function print_r ( t )  
@@ -87,7 +85,7 @@ math.randomseed( os.time() )
 -----------------------------------------------------
 display.setStatusBar( myApp.statusBarType )
 myApp.tSbch = display.topStatusBarContentHeight 
--- print ("sttaus bar height " .. display.topStatusBarContentHeight )
+ 
 -------------------------------------------------------
 -- Set app variables
 -------------------------------------------------------
@@ -138,9 +136,6 @@ parse:appOpened(function (e) print ("return from appOpened") print (e.requestTyp
 --parse:getObject("Agency","9ez6Z2tcaC", function(e) if not e.error then print ("BBBBAAACCCK " .. e.response.agencyName) end end )
 parse:getConfig( function(e) if not e.error then myApp.appName = e.response.params.appName print ("ZZZZZZBBBBAAACCCK " .. e.response.params.appName) end end )
 --parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from home logevent") print (e.requestType)   end )
-
-
-
 
 -------------------------------------------------------
 -- Runtime Events

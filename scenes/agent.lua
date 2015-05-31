@@ -23,7 +23,7 @@ function scene:create(event)
 
     print ("Create  " .. currScene)
     local group = self.view
-    params = event.params           -- params contains the item table  
+    params = event.params or {}
 
     local container  = common.SceneContainer()
     group:insert(container )
@@ -117,8 +117,8 @@ end
 -- use if someone wants us to transition away
 -- for navigational appearnaces
 ---------------------------------------------------
-function scene:specialFunction( event )
- 
+function scene:myparams( event )
+       return params
 end
 
 scene:addEventListener( "create", scene )

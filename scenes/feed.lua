@@ -533,7 +533,9 @@ function scene:destroy( event )
     print("destroy scene")
 end
 
-
+function scene:myparams( event )
+       return params
+end
 ---------------------------------------------------------------------------------
 -- END OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------

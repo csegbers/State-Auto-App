@@ -15,6 +15,7 @@ print ("In " .. currScene .. " Scene")
 local titleText
 local locationtxt
 local views = {}
+local params
 
 
 local function ignoreTouch( event )
@@ -24,6 +25,7 @@ end
 function scene:create(event)
         print "menu createscene"
 	local group = self.view
+    params = event.params or {}
 
     local background = common.SceneBackground()
     group:insert(background)
@@ -121,6 +123,10 @@ end
 
 function scene:destroy( event )
 	local group = self.view
+end
+
+function scene:myparams( event )
+       return params
 end
 
 scene:addEventListener( "create", scene )

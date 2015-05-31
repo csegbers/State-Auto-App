@@ -2,10 +2,9 @@
 -- Insured App
 --====================================================================--
 local myApp = require( "myapp" )  
- 
 local startup = require( myApp.utilsfld .. "startup" ) 
 local common = require( myApp.utilsfld .. "common" )  
- 
+
 ------------------------------------------------------
 print("main: Program Start") 
 ------------------------------------------------------
@@ -27,10 +26,8 @@ local widget = require( "widget" )
 widget.setTheme(myApp.theme)
 
 require( myApp.utilsfld .. "backgroup" )   -- set the backgroup
-------------------------------------------------------
- 
-------------------------------------------------------
 require( myApp.utilsfld .. "tabandtop" )   -- set the top and bottom sections
+------------------------------------------------------
 
 ---------------------------------------------------
 --  Sort everything in the correct z-index order
@@ -41,7 +38,7 @@ stage:insert( myApp.backGroup )
 stage:insert( composer.stage )
 stage:insert( myApp.TitleGroup )
 stage:insert( myApp.tabBar )
-
+stage:insert( myApp.transContainer )
 
 ---------------------------------------------------
 --  Splash and launch first page

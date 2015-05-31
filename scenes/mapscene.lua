@@ -45,6 +45,7 @@ local common = require( myApp.utilsfld .. "common" )
 
 widget.setTheme(myApp.theme)
 
+local params
 local titleText
 local myMap
 local locationtxt
@@ -121,7 +122,7 @@ end
 function scene:createScene(event)
 	local group = self.view
 
-	local params = event.params
+	params = event.params or {}
 
     local background = display.newRect(0,0,display.contentWidth, display.contentHeight)
     background:setFillColor(242/myApp.colorDivisor, 242/myApp.colorDivisor, 242/myApp.colorDivisor, 255/myApp.colorDivisor)
@@ -285,6 +286,10 @@ end
 
 function scene:destroyScene( event )
 	local group = self.view
+end
+
+function scene:myparams( event )
+       return params
 end
 
 scene:addEventListener( "createScene", scene )

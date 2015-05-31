@@ -11,9 +11,12 @@ local common = require( myApp.utilsfld .. "common" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("In " .. currScene .. " Scene")
 
+local params
+
 function scene:create(event)
   print ("Create  " .. currScene)
     local group = self.view
+    params = event.params or {}
     local container = common.SceneContainer()
     group:insert(container)
 
@@ -100,6 +103,10 @@ end
 function scene:destroy( event )
 	local group = self.view
     print ("Destroy "   .. currScene)
+end
+
+function scene:myparams( event )
+       return params
 end
 
 scene:addEventListener( "create", scene )
