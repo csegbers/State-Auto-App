@@ -249,7 +249,6 @@ local M = {
                                         et3t = {title = "RoadSide Asance555", pic="truck.png",text="Flat tire, out of gas ? We can help" ,},
                                        fttt = {title = "RoadSide Assice666", pic="truck.png",text="Flat tire, out of gas ? We can help",},
                                        g1tyt = {title = "RoadSide Ass777", pic="truck.png",text="Flat tire, out of gas ? We can help",},
-                                      g2yy = {title = "RoadSide e888", pic="truck.png",text="Flat tire, out of gas ? We can help",},
                                  },
                        },
             locateanagent = {    -- tem,poirary for now

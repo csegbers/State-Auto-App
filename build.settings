@@ -4,6 +4,7 @@ settings =
     {
         plist=
 	   {
+            NSLocationWhenInUseUsageDescription = "This app uses maps.",
             UIApplicationExitsOnSuspend = false,
             UIPrerenderedIcon = true,
             UIStatusBarHidden = false,
