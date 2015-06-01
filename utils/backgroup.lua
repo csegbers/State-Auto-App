@@ -51,6 +51,13 @@ function myApp.MoreInfoMove( parms )
 
     end
 
+   -- Runtime:dispatchEvent{ name=newlesson.tabparm.eventname,id=newlesson.id,rowindex=newlesson.rowindex ,phase="insert"}
+   --Runtime:removeEventListener( "key",  self.onKey ) 
+   --Runtime:addEventListener( "key",  self.onKey ) 
+   --image:addEventListener( "myEventType", myListener )
+  --local event = { name="myEventType", target=image }
+   --image:dispatchEvent( event )
+
     transition.to(  composer.stage, {  time=transtime,delta=true, x = deltax , transition=easing.outQuint})
     transition.to(  myApp.backGroup, { time=transtime ,delta=true, x = deltax , transition=easing.outQuint})
     transition.to(  myApp.TitleGroup, { time=transtime,delta=true, x = deltax, transition=easing.outQuint})

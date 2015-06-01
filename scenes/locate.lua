@@ -115,6 +115,28 @@ myMap:setCenter( 37.331692, -122.030456 )
 container:insert(myMap)
 
 
+
+local function webListener( event )
+    if event.url then
+        print( "You are visiting: " .. event.url )
+    end
+
+    if event.type then
+        print( "The event.type is " .. event.type ) -- print the type of request
+    end
+
+    if event.errorCode then
+        native.showAlert( "Error!", event.errorMessage, { "OK" } )
+    end
+
+end
+
+local webView = native.newWebView( display.contentCenterX, display.contentCenterY, 320, 480 )
+webView:request( "http://www.coronalabs.com/" )
+
+webView:addEventListener( "urlRequest", webListener )
+
+
     if common.testNetworkConnection() then
        native.setActivityIndicator( true )
        parse:run(params.locateinfo.functionname,{["lat"] = myApp.gps.event.latitude, ["lng"] = myApp.gps.event.longitude,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
