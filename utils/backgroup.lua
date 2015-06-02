@@ -28,7 +28,18 @@ myApp.transContainer.alpha = 0
 -- dont allow touches to go thru
 -- for some reason items in composer idnore this
 -----------------------------------------------
-myApp.transContainer:addEventListener( "touch", function(event)   return myApp.transContainer.alpha  > 0  end )
+myApp.transContainer:addEventListener( "touch", 
+    function(event)   
+         if myApp.transContainer.alpha  > 0 then
+            if myApp.moreinfo.imsliding == false then
+                myApp.MoreInfoMove()
+            end
+            return true
+         else
+            return false
+         end
+    end 
+    )
 
 ---------------------------------------------
 -- used to slide out the major groups left and right
@@ -41,14 +52,16 @@ function myApp.MoreInfoMove( parms )
     local transtime = myApp.moreinfo.transitiontime
     local deltax = myApp.cW/myApp.moreinfo.movefactor*-1
     local talpha = myApp.moreinfo.transparentalpha
+    local action = ""
 
     if myApp.moreinfo.direction  == "right" then
        deltax = myApp.cW/myApp.moreinfo.movefactor
        myApp.moreinfo.direction = "left"
        talpha = 0
+       action = "slideon"
     else
        myApp.moreinfo.direction = "right"
-
+       action = "slideoff"
     end
 
    -- Runtime:dispatchEvent{ name=newlesson.tabparm.eventname,id=newlesson.id,rowindex=newlesson.rowindex ,phase="insert"}
@@ -57,6 +70,10 @@ function myApp.MoreInfoMove( parms )
    --image:addEventListener( "myEventType", myListener )
   --local event = { name="myEventType", target=image }
    --image:dispatchEvent( event )
+
+
+    pcall(function() composer.getScene( composer.getSceneName( "current" ) ):movebutton({time=transtime,x = deltax, transition=easing.outQuint,action=action} ) end)
+
 
     transition.to(  composer.stage, {  time=transtime,delta=true, x = deltax , transition=easing.outQuint})
     transition.to(  myApp.backGroup, { time=transtime ,delta=true, x = deltax , transition=easing.outQuint})
@@ -67,6 +84,8 @@ function myApp.MoreInfoMove( parms )
     -- do alpha separate because of the delta
     ---------------------------------------
     transition.to(  myApp.transContainer, { time=myApp.moreinfo.transitiontimealpha,alpha = talpha, onComplete = params.onComplete })
+
+
 
 end
 

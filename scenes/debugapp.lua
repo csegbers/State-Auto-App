@@ -64,6 +64,9 @@ function scene:create(event)
  
     renderInfo("memory " .. system.getInfo( "textureMemoryUsed" ) / 1000000)
 
+    renderInfo(" ")
+
+
 end
 
 function scene:show( event )
