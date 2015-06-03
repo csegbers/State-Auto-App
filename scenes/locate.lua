@@ -15,6 +15,10 @@ local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
 local params
+local container
+local myList
+local onRowRender    --  forward reference
+local onRowTouch    --  forward reference
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -25,54 +29,56 @@ function scene:create(event)
     local group = self.view
     params = event.params           -- params contains the item table  
     print (params.title)
-    local container  = common.SceneContainer()
+    container  = common.SceneContainer()
     group:insert(container )
 
 
-    local function onRowRender( event )
+    onRowRender = function ( event )
 
-       --Set up the localized variables to be passed via the event table
+           --Set up the localized variables to be passed via the event table
 
-       local row = event.row
-       local id = row.index
-       local params = event.row.params
+           local row = event.row
+           local id = row.index
+           local params = event.row.params
+           print ("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" .. params.name)
 
-       -- row.bg = display.newRect( 0, 0, display.contentWidth, 60 )
-       -- row.bg.anchorX = 0
-       -- row.bg.anchorY = 0
-       -- row.bg:setFillColor( 1, 1, 1 )
-       -- row:insert( row.bg )
+           -- row.bg = display.newRect( 0, 0, display.contentWidth, 60 )
+           -- row.bg.anchorX = 0
+           -- row.bg.anchorY = 0
+           -- row.bg:setFillColor( 1, 1, 1 )
+           -- row:insert( row.bg )
 
-       if ( event.row.params ) then    
-          row.nameText = display.newText( params.name, 10, 0, native.systemFontBold, 14 )
-          row.nameText.anchorX = 0
-          row.nameText.anchorY = 0.5
-          row.nameText:setFillColor( 0 )
-          row.nameText.y = 20
-          row.nameText.x = 42
+           if ( event.row.params ) then    
+              row.nameText = display.newText( params.name, 10, 0, native.systemFontBold, 14 )
+              row.nameText.anchorX = 0
+              row.nameText.anchorY = 0.5
+              row.nameText:setFillColor( 0 )
+              row.nameText.y = 20
+              row.nameText.x = 42
 
-          row.milesText = display.newText( "Miles: " .. string.format( '%.2f', params.miles ), 10, 0, native.systemFont, 14 )
-          row.milesText.anchorX = 0
-          row.milesText.anchorY = 0.5
-          row.milesText:setFillColor( 0.5 )
-          row.milesText.y = 40
-          row.milesText.x = 42
+              row.milesText = display.newText( "Miles: " .. string.format( '%.2f', params.miles ), 10, 0, native.systemFont, 14 )
+              row.milesText.anchorX = 0
+              row.milesText.anchorY = 0.5
+              row.milesText:setFillColor( 0.5 )
+              row.milesText.y = 40
+              row.milesText.x = 42
 
-        row.rightArrow = display.newImageRect(myApp.icons, 15 , 40, 40)
-        row.rightArrow.x = display.contentWidth - 20
-        row.rightArrow.y = row.height / 2
-          -- row.rightArrow = display.newImageRect( "rightarrow.png", 15 , 40, 40 )
-          -- row.rightArrow.x = display.contentWidth - 20
-          -- row.rightArrow.y = row.height / 2
+            row.rightArrow = display.newImageRect(myApp.icons, 15 , 40, 40)
+            row.rightArrow.x = display.contentWidth - 20
+            row.rightArrow.y = row.height / 2
+              -- row.rightArrow = display.newImageRect( "rightarrow.png", 15 , 40, 40 )
+              -- row.rightArrow.x = display.contentWidth - 20
+              -- row.rightArrow.y = row.height / 2
 
-          row:insert( row.nameText )
-          row:insert( row.milesText )
-          row:insert( row.rightArrow )
-       end
-       return true
-    end
-
-    local myList = widget.newTableView {
+              row:insert( row.nameText )
+              row:insert( row.milesText )
+              row:insert( row.rightArrow )
+           end
+           return true
+        end
+      onRowTouch = function ( event )
+      end
+    myList = widget.newTableView {
        x = 0 ,
        y = 0, 
 
@@ -85,7 +91,8 @@ function scene:create(event)
     }
     container:insert(myList )
 
-    --local agentpagelink = common.DeepCopy(myApp.locatepage.agentinfo)
+
+     --local agentpagelink = common.DeepCopy(myApp.locatepage.agentinfo)
    -- local parentinfo = common.DeepCopy(params)
     local agentpagelink =  myApp.locateanagent.agentinfo 
     local parentinfo =  params 
@@ -103,53 +110,6 @@ container:insert(agentbackButton)
 
 
 
-local myMap = native.newMapView( 20, 20, 280, 360 )
-myMap.x = display.contentCenterX
-myMap.y = display.contentCenterY
-
--- Display map as vector drawings of streets (other options are "satellite" and "hybrid")
-myMap.mapType = "standard"
-
--- Initialize map to a real location
-myMap:setCenter( 37.331692, -122.030456 )
-container:insert(myMap)
-
-
-
-    if common.testNetworkConnection() then
-       native.setActivityIndicator( true )
-       parse:run(params.locateinfo.functionname,{["lat"] = myApp.gps.event.latitude, ["lng"] = myApp.gps.event.longitude,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
-
-
-               
-
-              for i = 1, #e.response.result do
-                  print("AGCNY NAME" .. e.response.result[i].agencyName)
-                 myList:insertRow{
-                    rowHeight = 50,
-                    isCategory = false,
-                    rowColor = { 1, 1, 1 },
-                    lineColor = { 220/255 },
-
-                          params = {
-                       name = e.response.result[i].agencyName,
-                       miles = e.response.result[i].milesTo,
-                    }
-                 }
-
-              end
-
-
-        end end )
-    end
-
-
-
-
- 
-
-
-
 
 
 end
@@ -162,9 +122,37 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
+        myList:deleteAllRows()
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
         params = event.params           -- params contains the item table 
+        
+
+
+        if common.testNetworkConnection() then
+           native.setActivityIndicator( true )
+           parse:run(params.locateinfo.functionname,{["lat"] = myApp.gps.event.latitude, ["lng"] = myApp.gps.event.longitude,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
+
+                  for i = 1, #e.response.result do
+                      print("NAME" .. e.response.result[i][params.locateinfo.mapping.name])
+                     myList:insertRow{
+                        rowHeight = 50,
+                        isCategory = false,
+                        rowColor = { 1, 1, 1 },
+                        lineColor = { 220/255 },
+
+                              params = {
+                           name = e.response.result[i][params.locateinfo.mapping.name],
+                           miles = e.response.result[i][params.locateinfo.mapping.miles],
+                        }
+                     }
+
+                  end
+
+
+            end end )
+        end
+
 
     end
 	

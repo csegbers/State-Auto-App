@@ -72,6 +72,7 @@ local M = {
                                                           functionname="getagenciesnearby",
                                                           limit=20,
                                                           miles=25,
+                                                          mapping = {name = "agencyName", miles = "milesTo"},
                                                         },
                                            composer = {
                                                        id = "alocate1",    -- same id as home page item. This way if selected on we are on that screen dont do anything
@@ -259,6 +260,7 @@ local M = {
                                                           functionname="getagenciesnearby",
                                                           limit=100,
                                                           miles=25,
+                                                          mapping = {name = "agencyName", miles = "milesTo"},
                                                         },
                                            composer = {
                                                        id = "alocate1",
@@ -268,14 +270,15 @@ local M = {
                                                        effectback="slideRight",
                                                     },
                                                },
-                                       broasast = {title = "another page", 
-                                                   pic="truck.png",
-                                                   text="Flat tire, out of gas ? We can help",
+                                       broasast = {title = "Certified Repair Shops", 
+                                                   pic="qsg.png",
+                                                   text="Locate certified repair shops nearby or from an address",
                                                    backtext = "<",
                                                   locateinfo = {
-                                                          functionname="getagenciesnearby",
-                                                          limit=2,
+                                                          functionname="getbodyshopsnearby",
+                                                          limit=5,
                                                           miles=50,
+                                                          mapping = {name = "CompanyName", miles = "milesTo"},
                                                         },
                                                   composer = {
                                                        id = "alocate2",
