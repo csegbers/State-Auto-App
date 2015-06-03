@@ -139,6 +139,7 @@ if myApp.isTall then
 end
 
 
+
 --------------------------------------------------
 -- clear Title bar icons nav elements
 --
@@ -374,6 +375,35 @@ function myApp.showSubScreen(parms)
         composer.gotoScene(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time, effect=effect, params = tnt})
  
     return true
+end
+
+
+
+function myApp.navigationCommon(parms, parentinfo)
+       local v = parms
+       if v.navigation.composer  then
+          if ((composer.getSceneName( "current" )  == (myApp.scenesfld .. v.navigation.composer.lua))
+              and (composer.getScene( composer.getSceneName( "current" ) ).myparams().navigation.composer.id == v.navigation.composer.id)) then
+           else
+             --local parentinfo = composer.getScene( composer.getSceneName( "current" ) ).myparams()
+             if parentinfo then
+              v.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback=v.navigation.composer.effectback}) end
+             else
+              v.callBack = function() myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabCurrentKey],effectback=v.navigation.composer.effectback}) end
+             end
+             myApp.showSubScreen ({instructions=v})   
+          end
+       else
+            if v.navigation.tabbar then
+               myApp.showScreen({instructions=myApp.tabs.btns[v.navigation.tabbar.key]})
+            else
+               if v.navigation.systemurl then
+                  system.openURL( v.navigation.systemurl.url )
+               end
+            end
+       end
+
+
 end
 
 function myApp.Login(parms)

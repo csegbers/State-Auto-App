@@ -106,23 +106,24 @@ local onRowTouch = function( event )
                   -- Composer ?
                   -- Different scene name or id ?
                   ----------------------------------------------
-                  if v.navigation.composer  then
-                      if ((composer.getSceneName( "current" )  == (myApp.scenesfld .. v.navigation.composer.lua))
-                          and (composer.getScene( composer.getSceneName( "current" ) ).myparams().navigation.composer.id == v.navigation.composer.id)) then
-                       else
-                         --local parentinfo = composer.getScene( composer.getSceneName( "current" ) ).myparams()
-                         v.callBack = function() myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabCurrentKey],effectback=v.navigation.composer.effectback}) end
-                         myApp.showSubScreen ({instructions=v})   
-                     end
-                  else
-                    if v.navigation.tabbar then
-                       myApp.showScreen({instructions=myApp.tabs.btns[v.navigation.tabbar.key]})
-                    else
-                       if v.navigation.systemurl then
-                          system.openURL( v.navigation.systemurl.url )
-                       end
-                    end
-                  end
+                  myApp.navigationCommon(v)
+                  -- if v.navigation.composer  then
+                  --     if ((composer.getSceneName( "current" )  == (myApp.scenesfld .. v.navigation.composer.lua))
+                  --         and (composer.getScene( composer.getSceneName( "current" ) ).myparams().navigation.composer.id == v.navigation.composer.id)) then
+                  --      else
+                  --        --local parentinfo = composer.getScene( composer.getSceneName( "current" ) ).myparams()
+                  --        v.callBack = function() myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabCurrentKey],effectback=v.navigation.composer.effectback}) end
+                  --        myApp.showSubScreen ({instructions=v})   
+                  --    end
+                  -- else
+                  --   if v.navigation.tabbar then
+                  --      myApp.showScreen({instructions=myApp.tabs.btns[v.navigation.tabbar.key]})
+                  --   else
+                  --      if v.navigation.systemurl then
+                  --         system.openURL( v.navigation.systemurl.url )
+                  --      end
+                  --   end
+                  -- end
 
               end })
     end

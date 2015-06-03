@@ -53,19 +53,20 @@ function scene:create(event)
         -- Pass in our scene info for the new scene callback
         -------------------------------------------
         local function onObjectTouchAction(  )
-            if homepageitem.navigation.composer then
-               local parentinfo = params 
-               homepageitem.callBack = function() myApp.showScreen({instructions=parentinfo,effectback=homepageitem.navigation.composer.effectback}) end
-               myApp.showSubScreen ({instructions=homepageitem})  
-            else
-               if homepageitem.navigation.tabbar then
-                  myApp.showScreen({instructions=myApp.tabs.btns[homepageitem.navigation.tabbar.key]})
-               else
-                  if homepageitem.navigation.systemurl then
-                     system.openURL( homepageitem.navigation.systemurl.url )
-                  end
-               end
-            end
+            myApp.navigationCommon(homepageitem)
+            -- if homepageitem.navigation.composer then
+            --    local parentinfo = params 
+            --    homepageitem.callBack = function() myApp.showScreen({instructions=parentinfo,effectback=homepageitem.navigation.composer.effectback}) end
+            --    myApp.showSubScreen ({instructions=homepageitem})  
+            -- else
+            --    if homepageitem.navigation.tabbar then
+            --       myApp.showScreen({instructions=myApp.tabs.btns[homepageitem.navigation.tabbar.key]})
+            --    else
+            --       if homepageitem.navigation.systemurl then
+            --          system.openURL( homepageitem.navigation.systemurl.url )
+            --       end
+            --    end
+            -- end
         end       
         ---------------------------------------------
         -- simulate a pressing of a button
@@ -164,7 +165,7 @@ function scene:create(event)
                  local myIcon = display.newImageRect(myApp.imgfld .. v.pic, v.originaliconwidth or myApp.homepage.iconwidth ,v.originaliconheight or myApp.homepage.iconheight )
                  common.fitImage( myIcon, v.iconwidth or myApp.homepage.iconwidth   )
                  myIcon.x = startX
-                 myIcon.y = startYother + itemGrp.height/2 - 10
+                 myIcon.y = startYother + itemGrp.height/2 - 10 --- myApp.homepage.iconwidth
                  itemGrp:insert(myIcon)
              end
 
@@ -173,7 +174,7 @@ function scene:create(event)
              -------------------------------------------------
              
              local myDesc = display.newText( {text=v.text, x=startX, y=0, height=0,width=groupwidth-5 ,font= myApp.fontBold, fontSize=myApp.homepage.textfontsize,align="center" })
-             myDesc.y=startYother+groupheight  -(myDesc.height/2) - textHeightSingleLine + 2
+             myDesc.y=startYother+groupheight - (myDesc.height/2) - myApp.homepage.textbottomedge
              myDesc:setFillColor( myApp.homepage.textcolor.r,myApp.homepage.textcolor.g,myApp.homepage.textcolor.b,myApp.homepage.textcolor.a )
              itemGrp:insert(myDesc)
 
