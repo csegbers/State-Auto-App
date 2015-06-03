@@ -281,7 +281,7 @@ local M = {
                                                           mapping = {name = "CompanyName", miles = "milesTo"},
                                                         },
                                                   composer = {
-                                                       id = "alocate2",
+                                                       id = "alocateqsg",
                                                        lua="locate",
                                                        time=250, 
                                                        effect="slideLeft",

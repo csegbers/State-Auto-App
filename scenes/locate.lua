@@ -19,6 +19,8 @@ local container
 local myList
 local onRowRender    --  forward reference
 local onRowTouch    --  forward reference
+local runit  
+local justcreated  
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -31,6 +33,7 @@ function scene:create(event)
     print (params.title)
     container  = common.SceneContainer()
     group:insert(container )
+    justcreated = true
 
 
     onRowRender = function ( event )
@@ -122,14 +125,25 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
-        myList:deleteAllRows()
+        runit = true
+        if params and justcreated == false then
+          if  params.composer then
+             if params.composer.id == event.params.composer.id then
+               runit = false
+             end
+          end
+        end
+        if (runit or justcreated) then
+            myList:deleteAllRows()
+        end
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
+
         params = event.params           -- params contains the item table 
         
 
 
-        if common.testNetworkConnection() then
+        if common.testNetworkConnection() and (runit or justcreated) then
            native.setActivityIndicator( true )
            parse:run(params.locateinfo.functionname,{["lat"] = myApp.gps.event.latitude, ["lng"] = myApp.gps.event.longitude,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
 
@@ -152,7 +166,7 @@ function scene:show( event )
 
             end end )
         end
-
+        justcreated = false
 
     end
 	
