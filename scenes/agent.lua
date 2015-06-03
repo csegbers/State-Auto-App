@@ -54,12 +54,13 @@ function scene:create(event)
                              title = "Dbug Info", 
                              backtext = "<",
                              groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
-                             composer = {
+                             navigation = { composer = {
                                          lua="debugapp",
                                          time=250, 
                                          effect="slideLeft",
                                          effectback="slideRight",
                                       },
+                                    },
                                  } 
 
         local parentinfo =  params 

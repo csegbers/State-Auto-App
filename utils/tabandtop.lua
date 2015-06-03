@@ -138,6 +138,31 @@ if myApp.isTall then
     myApp.scenemaskFile = myApp.imgfld .. "mask-320x448.png"
 end
 
+
+--------------------------------------------------
+-- clear Title bar icons nav elements
+--
+-- parms - {instructions (table)}
+--------------------------------------------------
+function myApp.showScreenCallback(parms)
+    
+    local returncode = false
+    ----------------------------------------------
+    -- does the current screen want to do something with navigation ?
+    -- if so do it otherwise default to the normal navigation
+    --------------------------------------------------
+    pcall(function() returncode = composer.getScene( composer.getSceneName( "current" ) ):navigationhit({phase=parms.phase} ) end)
+    if returncode == false then
+        parms.callBack()
+    end
+end
+
+
+--------------------------------------------------
+-- clear Title bar icons nav elements
+--
+-- parms - {instructions (table)}
+--------------------------------------------------
 function myApp.clearScreenIconWidget(parms)
 
     local xendpoint = -1
@@ -155,12 +180,21 @@ function myApp.clearScreenIconWidget(parms)
     end
 
     --------------------------------------------
-    -- is there a widget ? get rid of
+    -- is there a back widget ? get rid of
     --------------------------------------------
     if myApp.TitleGroup.backButton then
         transition.to( myApp.TitleGroup.backButton, { time=myApp.tabs.transitiontime*2, transition=easing.outQuint, alpha=0 ,x = myApp.TitleGroup.backButton.x*xendpoint,onComplete= function () end})
         display.remove(myApp.TitleGroup.backButton)    -- may not exist first time, this wont hurt
         myApp.TitleGroup.backButton = nil
+    end
+
+    --------------------------------------------
+    -- is there a forward widget ? get rid of
+    --------------------------------------------
+    if myApp.TitleGroup.forwardButton then
+        transition.to( myApp.TitleGroup.forwardButton, { time=myApp.tabs.transitiontime*2, transition=easing.outQuint, alpha=0 ,x = myApp.TitleGroup.forwardButton.x*xendpoint,onComplete= function () end})
+        display.remove(myApp.TitleGroup.forwardButton)    -- may not exist first time, this wont hurt
+        myApp.TitleGroup.forwardButton = nil
     end
 end
 
@@ -220,13 +254,13 @@ function myApp.showScreen(parms)
             end
         end
 
-        local effect = tnt.composer.effect
+        local effect = tnt.navigation.composer.effect
         -----------------------------------------------
         -- override effect ? Maybe a "back" etc..
         -----------------------------------------------
         if parms.effectback then effect = parms.effectback end
 
-        composer.gotoScene(myApp.scenesfld .. tnt.composer.lua, {time=tnt.composer.time, effect=effect, params = tnt})
+        composer.gotoScene(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time, effect=effect, params = tnt})
     end
     return true
 end
@@ -258,7 +292,7 @@ function myApp.showSubScreen(parms)
         local xendpoint = -1
         local xstartpoint = 3
         local xbackbutton = myApp.cW
-        local effect = tnt.composer.effect
+        local effect = tnt.navigation.composer.effect
         if parms.effectback then  
            xendpoint = 3
            xstartpoint = -1
@@ -274,21 +308,48 @@ function myApp.showSubScreen(parms)
 
         --------------------------------------------
         -- Create a widget (text only or icon) for the navigation ?
+        --
+        -- Back button
         --------------------------------------------   
         if tnt.backtext then    
                myApp.TitleGroup.backButton = widget.newButton {
                     label = tnt.backtext ,
+                    width =  myApp.tabs.tabbtnw,
                     labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
                     fontSize = 30,
                     font = myApp.fontBold,
-                    onRelease = tnt.callBack,
+                    onRelease = function() myApp.showScreenCallback ({callBack=tnt.callBack,phase="back"}) end,
                }
+
         else
             if tnt.defaultFile then
                myApp.TitleGroup.backButton = widget.newButton {
                     defaultFile = tnt.defaultFile ,
                     overFile = tnt.overFile ,
-                    onRelease = tnt.callBack,
+                    onRelease = function() myApp.showScreenCallback ({callBack=tnt.callBack,phase="back"}) end,
+                }
+            end
+        end
+        --------------------------------------------
+        -- Create a widget (text only or icon) for the navigation ?
+        --
+        -- Forward button
+        --------------------------------------------   
+        if tnt.forwardtext then 
+           myApp.TitleGroup.forwardButton = widget.newButton {
+                label = tnt.forwardtext ,
+                width =  myApp.tabs.tabbtnw,
+                labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
+                fontSize = 30,
+                font = myApp.fontBold,
+                onRelease = function() myApp.showScreenCallback ({callBack=tnt.callBack,phase="forward"}) end,
+           }
+        else
+             if tnt.defaultForwardFile then
+               myApp.TitleGroup.forwardButton = widget.newButton {
+                    defaultFile = tnt.defaultForwardFile ,
+                    overFile = tnt.overForwardFile ,
+                    onRelease = function() myApp.showScreenCallback ({callBack=tnt.callBack,phase="forward"}) end,
                 }
             end
         end
@@ -298,10 +359,19 @@ function myApp.showSubScreen(parms)
         myApp.TitleGroup:insert(myApp.TitleGroup.backButton)
 
         transition.to( myApp.TitleGroup.backButton, { time=myApp.tabs.transitiontime*2, x = myApp.titleBarEdge *2 , transition=easing.outQuint})
+
+        if myApp.TitleGroup.forwardButton then
+            myApp.TitleGroup.forwardButton.x = xbackbutton 
+            myApp.TitleGroup.forwardButton.y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch  
+            myApp.TitleGroup:insert(myApp.TitleGroup.forwardButton)
+
+            transition.to( myApp.TitleGroup.forwardButton, { time=myApp.tabs.transitiontime*2, x = myApp.titleBarEdge *2 + myApp.tabs.tabbtnw, transition=easing.outQuint})
+        end
+
         --------------------------------------------
         -- goto the new scene
         --------------------------------------------
-        composer.gotoScene(myApp.scenesfld .. tnt.composer.lua, {time=tnt.composer.time, effect=effect, params = tnt})
+        composer.gotoScene(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time, effect=effect, params = tnt})
  
     return true
 end

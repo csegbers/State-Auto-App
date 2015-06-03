@@ -53,14 +53,18 @@ function scene:create(event)
         -- Pass in our scene info for the new scene callback
         -------------------------------------------
         local function onObjectTouchAction(  )
-            if homepageitem.composer then
+            if homepageitem.navigation.composer then
                local parentinfo = params 
-               homepageitem.callBack = function() myApp.showScreen({instructions=parentinfo,effectback=homepageitem.composer.effectback}) end
+               homepageitem.callBack = function() myApp.showScreen({instructions=parentinfo,effectback=homepageitem.navigation.composer.effectback}) end
                myApp.showSubScreen ({instructions=homepageitem})  
             else
-               if homepageitem.tabbar then
-                  myApp.showScreen({instructions=myApp.tabs.btns[homepageitem.tabbar.key]})
-               end 
+               if homepageitem.navigation.tabbar then
+                  myApp.showScreen({instructions=myApp.tabs.btns[homepageitem.navigation.tabbar.key]})
+               else
+                  if homepageitem.navigation.systemurl then
+                     system.openURL( homepageitem.navigation.systemurl.url )
+                  end
+               end
             end
         end       
         ---------------------------------------------

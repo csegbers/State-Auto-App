@@ -99,7 +99,7 @@ function scene:create(event)
    -- local parentinfo = common.DeepCopy(params)
     local agentpagelink =  myApp.locateanagent.agentinfo 
     local parentinfo =  params 
-    agentpagelink.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback=agentpagelink.composer.effectback}) end
+    agentpagelink.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback=agentpagelink.navigation.composer.effectback}) end
     local agentbackButton = widget.newButton {
         label = agentpagelink.title ,
         labelColor = { default={ 0, 1, 1 }, over={ 0, 0, 0, 0.5 } },

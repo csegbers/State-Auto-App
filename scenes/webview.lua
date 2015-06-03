@@ -49,8 +49,7 @@ function scene:show( event )
                 end
             end
 
-            
-            webView = native.newWebView( myApp.sceneWidth / 2, myApp.sceneHeight  /2 + myApp.sceneStartTop,myApp.sceneWidth,myApp.sceneHeight -200)
+            webView = native.newWebView( myApp.sceneWidth / 2, myApp.sceneHeight  /2 + myApp.sceneStartTop,myApp.sceneWidth,myApp.sceneHeight )
             webView.isVisible = false
             --webView:reload()
             webView:addEventListener( "urlRequest", webListener )
@@ -61,30 +60,7 @@ function scene:show( event )
                 webView:request( myApp.htmlfld .. params.htmlinfo.htmlfile , params.htmlinfo.dir )
             end
 
-
-
-----------------------------------------------------------
---   right side more button
-----------------------------------------------------------
-       backbutton = widget.newButton {
-                    defaultFile = myApp.imgfld .. myApp.moreinfo.morebutton.defaultFile,
-                    overFile = myApp.imgfld .. myApp.moreinfo.morebutton.overFile ,
-                    height = myApp.tabs.tabbtnh,
-                    width = myApp.tabs.tabbtnw,
-                    x = myApp.sceneWidth - myApp.tabs.tabbtnw/2 - myApp.titleBarEdge  ,
-                    y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch + 100 ,
-                    --onRelease = function() if myApp.moreinfo.imsliding == false then myApp.MoreInfoMove() end end,
-               }
-
-      group:insert(backbutton )
-
-
-      --         row.rightArrow = display.newImageRect(myApp.icons, 15 , 40, 40)
-      -- row.rightArrow.x = display.contentWidth - 20
-      --  row.rightArrow.y = row.height / 2
-
-    end
-	
+    end	
 
 end
 
@@ -99,11 +75,9 @@ function scene:hide( event )
             webView:removeSelf()
             webView = nil
         end
-        -- Called when the scene is on screen (but is about to go off screen).
-        -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.
+
     elseif ( phase == "did" ) then
-        -- Called immediately after scene goes off screen.
+
     end
 
 end
@@ -112,7 +86,6 @@ function scene:destroy( event )
 	local group = self.view
     print ("Destroy "   .. currScene)
 end
-
 
 ---------------------------------------------------
 -- use if someone wants us to transition away
@@ -127,10 +100,25 @@ end
 -- for navigational appearnaces
 -- used from the more button
 ---------------------------------------------------
-function scene:movebutton( parms )
- 
+function scene:morebutton( parms )
      transition.to(  webView, {  time=parms.time,delta=true, x = parms.x , transition=parms.transition})
+end
 
+---------------------------------------------------
+-- Title bar navigation hit. Do we do something ?
+---------------------------------------------------
+function scene:navigationhit( parms )
+     local returncode = false
+     if parms.phase == "back" and webView.canGoBack then
+        returncode = true
+        webView:back()
+     elseif parms.phase == "forward"  then     -- go ahead and set true even if we cant go forward since no other nav is needed
+        returncode = true
+        if  webView.canGoForward then
+           webView:forward()
+        end
+     end
+     return returncode
 end
 
 scene:addEventListener( "create", scene )
