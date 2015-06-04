@@ -115,21 +115,82 @@ parse:getConfig( function(e) if not e.error then myApp.appName = e.response.para
 -------------------------------------------------------
 -- Runtime Events
 -------------------------------------------------------
-function myApp.locationHandler ( event )
-    myApp.gps.event = event
-    if myApp.debugMode then
-        myApp.gps.event.latitude = myApp.gps.debug.latitude 
-        myApp.gps.event.longitude = myApp.gps.debug.longitude 
-    end
-    print("locationHandler")
+-- function myApp.locationHandler ( event )
+--     myApp.gps.event = event
+--     if myApp.debugMode then
+--         myApp.gps.event.latitude = myApp.gps.debug.latitude 
+--         myApp.gps.event.longitude = myApp.gps.debug.longitude 
+--     end
+--     print("locationHandler")
+-- end
+-- function myApp.updateGPS()
+--     -- Reload GPS location
+--     Runtime:removeEventListener( "location", myApp.locationHandler )    
+--     Runtime:addEventListener( "location", myApp.locationHandler )    
+--     -- Update again
+--     timer.performWithDelay( myApp.gps.timer, myApp.updateGPS )
+-- end
+
+function  myApp.getCurrentLocation( event )
+        --local getGPS   -- forward reference
+        local parms = event or {}
+        local function locationHandler ( event )
+            Runtime:removeEventListener( "location", locationHandler )  
+            myApp.gps.currentlocation = event
+            if ( myApp.gps.currentlocation.errorCode or ( myApp.gps.currentlocation.latitude == 0 and myApp.gps.currentlocation.longitude == 0 ) ) then
+                
+               -- myApp.gps.attempts = myApp.gps.attempts + 1
+               -- print ("locationHandler" .. myApp.gps.attempts)
+              --  if ( myApp.gps.attempts > myApp.gps.maxattempts ) then
+                    native.showAlert( "No GPS Signal", "Can't sync with GPS. Error: " .. (myApp.gps.currentlocation.errorMessage or "Unknown"), { "Okay" } )
+               -- else
+
+                   -- timer.performWithDelay( myApp.gps.timebetweenattempts,  getGPS )
+               -- end
+           -- else
+               -- myApp.gps.attempts = myApp.gps.maxattempts + 1    -- stop the looping - success
+            else
+                 if myApp.debugMode then
+                     myApp.gps.currentlocation.latitude = myApp.gps.debug.latitude 
+                     myApp.gps.currentlocation.longitude = myApp.gps.debug.longitude 
+                  end
+            end
+            if parms.callback then
+                parms.callback()
+            end
+        end
+
+       -- function getGPS( event )
+             
+       --     Runtime:addEventListener( "location",locationHandler )    
+       -- end
+       ------------------------------------------------
+       -- start here
+       ------------------------------------------------
+      -- myApp.gps.currentlocation = {}
+       --myApp.gps.attempts = 0
+       --returncode = false
+       Runtime:addEventListener( "location",locationHandler ) 
+       --getGPS()
+       -- while true do
+       --     print (myApp.gps.attempts)
+       --     if ( myApp.gps.attempts > myApp.gps.maxattempts ) then
+       --         if ( myApp.gps.currentlocation.errorCode or ( myApp.gps.currentlocation.latitude == 0 and myApp.gps.currentlocation.longitude == 0 ) ) then
+       --            break
+       --         else
+       --            returncode = true
+       --            if myApp.debugMode then
+       --               myApp.gps.currentlocation.latitude = myApp.gps.debug.latitude 
+       --               myApp.gps.currentlocation.longitude = myApp.gps.debug.longitude 
+       --            end
+       --            break
+       --         end
+       --     end
+       -- end
+       -- Runtime:removeEventListener( "location", myApp.locationHandler )   
+       --return returncode
 end
-function myApp.updateGPS()
-    -- Reload GPS location
-    Runtime:removeEventListener( "location", myApp.locationHandler )    
-    Runtime:addEventListener( "location", myApp.locationHandler )    
-    -- Update again
-    timer.performWithDelay( myApp.gps.timer, myApp.updateGPS )
-end
+
 function myApp.onSystemEvent( event )
    if event.type == "applicationStart" then
         print("onSystemEvent start")
@@ -142,7 +203,7 @@ function myApp.onSystemEvent( event )
     end
 end
 
-myApp.updateGPS()
+--myApp.updateGPS()
 Runtime:addEventListener( "system", myApp.onSystemEvent )
 
 

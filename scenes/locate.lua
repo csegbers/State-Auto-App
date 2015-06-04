@@ -122,13 +122,13 @@ function scene:show( event )
     local group = self.view
     local phase = event.phase
     print ("Show:" .. phase.. " " .. currScene)
-
+    --debugpopup("params.navigation.composer.id " .. params.navigation.composer.id .. "event.params.navigation.composer.id ".. event.params.navigation.composer.id )
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
         runit = true
         if params and justcreated == false then
-          if  params.composer then
-             if params.composer.id == event.params.composer.id then
+          if  params.navigation.composer then
+             if params.navigation.composer.id == event.params.navigation.composer.id then
                runit = false
              end
           end
@@ -141,11 +141,13 @@ function scene:show( event )
 
         params = event.params           -- params contains the item table 
         
-
+        print (params.locateinfo.functionname)
+        print(myApp.gps.currentlocation.latitude .." " .. myApp.gps.currentlocation.longitude .. " " .. params.locateinfo.limit .. " " .. params.locateinfo.miles ) 
 
         if common.testNetworkConnection() and (runit or justcreated) then
            native.setActivityIndicator( true )
-           parse:run(params.locateinfo.functionname,{["lat"] = myApp.gps.event.latitude, ["lng"] = myApp.gps.event.longitude,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
+
+           parse:run(params.locateinfo.functionname,{["lat"] = myApp.gps.currentlocation.latitude, ["lng"] = myApp.gps.currentlocation.longitude,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
 
                   for i = 1, #e.response.result do
                       print("NAME" .. e.response.result[i][params.locateinfo.mapping.name])

@@ -177,8 +177,12 @@ local M = {
 
                         },
             gps = {
-                     timer = 30000,                           --30 seconds
-                     event= "",                               -- set elsewhere
+                     --timer = 30000,                           --30 seconds
+                     timebetweenattempts = 100,              --1 seconds
+                     attempts = 0,                             -- cointer
+                     maxattempts = 10,                     
+                     --event= "",                               -- set elsewhere
+                     currentlocation = {},                     -- set elsewhere
                      debug = {                                -- will be used if in debugmode
                                 latitude=39.896311,
                                 longitude=-82.7674464,
@@ -371,6 +375,7 @@ local M = {
                                 groupheight = 130,
                                 groupheaderheight = 40,
                                 groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
+                                groupstrokewidth = 1,
                                 groupheader = { r=25/255, g=75/255, b=150/255, a=1 },
                                 iconwidth = 60,    -- can be overidden in item
                                 iconheight = 60,   -- can be overidden in item
@@ -379,7 +384,9 @@ local M = {
                                 textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
                                 textfontsize=16  ,   
                                 textbottomedge =2   ,  
- 
+                                shape="roundedRect",
+                                curlocbtntext = "Use Current Location",
+                                btnheight = 35,
                                  
                        },
                tabs = {

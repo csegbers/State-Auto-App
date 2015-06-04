@@ -17,55 +17,7 @@ function scene:create(event)
   print ("Create  " .. currScene)
     local group = self.view
     params = event.params or {}
-    local container = common.SceneContainer()
-    group:insert(container)
-
-
-
-    local scrollView = widget.newScrollView
-        {
-            x = 0,
-            y = 0,
-            width = myApp.sceneWidth, 
-            height =  myApp.sceneHeight,
-            horizontalScrollDisabled = true,
-            hideBackground = true,
-        }
-    container:insert(scrollView)
-
-
-
-    local starty = 0
-    
-    local backlogo = display.newImageRect(myApp.imgfld .. myApp.splash.image,305,170)
-    backlogo:scale( .5,.5  )
-    backlogo.x = myApp.cCx
-    starty = backlogo.height * .5 * .5  + 10
-    backlogo.y = starty
-    starty = starty + backlogo.height
-    scrollView:insert(backlogo)
-
-    local function renderInfo(whatText)
-        starty = starty + 10
-        local disNt = display.newText( whatText, 100, starty, native.systemFont, 16 )
-        disNt:setFillColor( 1, 0, 0 )
-        scrollView:insert(disNt)
-        starty = starty + disNt.height
-    end
-    renderInfo("latitude " .. string.format( '%.4f', myApp.gps.event.latitude ))
-    renderInfo("longitude " .. string.format( '%.4f', myApp.gps.event.longitude ))
-    renderInfo("altitude " .. string.format( '%.4f', myApp.gps.event.altitude ))
-    renderInfo("accuracy " .. string.format( '%.4f', myApp.gps.event.accuracy ))
-    renderInfo("speed " .. string.format( '%.4f', myApp.gps.event.speed ))
-    renderInfo("direction " .. string.format( '%.4f', myApp.gps.event.direction ))
-    renderInfo("time " .. string.format( '%.4f', myApp.gps.event.time ))
-
-    renderInfo("  " )
  
-    renderInfo("memory " .. system.getInfo( "textureMemoryUsed" ) / 1000000)
-
-    renderInfo(" ")
-
 
 end
 
@@ -78,6 +30,57 @@ function scene:show( event )
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
             local group = self.view
+           local container = common.SceneContainer()
+            group:insert(container)
+
+
+
+            local scrollView = widget.newScrollView
+                {
+                    x = 0,
+                    y = 0,
+                    width = myApp.sceneWidth, 
+                    height =  myApp.sceneHeight,
+                    horizontalScrollDisabled = true,
+                    hideBackground = true,
+                }
+            container:insert(scrollView)
+
+
+
+            local starty = 0
+            
+            local backlogo = display.newImageRect(myApp.imgfld .. myApp.splash.image,305,170)
+            backlogo:scale( .5,.5  )
+            backlogo.x = myApp.cCx
+            starty = backlogo.height * .5 * .5  + 10
+            backlogo.y = starty
+            starty = starty + backlogo.height
+            scrollView:insert(backlogo)
+
+            local function renderInfo(whatText)
+                starty = starty + 10
+                local disNt = display.newText( whatText, 100, starty, native.systemFont, 16 )
+                disNt:setFillColor( 1, 0, 0 )
+                scrollView:insert(disNt)
+                starty = starty + disNt.height
+            end
+            myApp.getCurrentLocation(  )
+            renderInfo("latitude " .. string.format( '%.4f', myApp.gps.currentlocation.latitude ))
+            renderInfo("longitude " .. string.format( '%.4f', myApp.gps.currentlocation.longitude ))
+            renderInfo("altitude " .. string.format( '%.4f', myApp.gps.currentlocation.altitude ))
+            renderInfo("accuracy " .. string.format( '%.4f', myApp.gps.currentlocation.accuracy ))
+            renderInfo("speed " .. string.format( '%.4f', myApp.gps.currentlocation.speed ))
+            renderInfo("direction " .. string.format( '%.4f', myApp.gps.currentlocation.direction ))
+            renderInfo("time " .. string.format( '%.4f', myApp.gps.currentlocation.time ))
+            renderInfo("errorcode " ..  ( myApp.gps.currentlocation.errorCode or "" ))
+            renderInfo("erromessage " .. ( myApp.gps.currentlocation.errorMessage or "" ))
+
+            renderInfo("  " )
+         
+            renderInfo("memory " .. system.getInfo( "textureMemoryUsed" ) / 1000000)
+
+            renderInfo(" ")
 
     elseif ( phase == "did" ) then
                 params = event.params           -- params contains the item table 

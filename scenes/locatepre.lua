@@ -31,7 +31,9 @@ function scene:create(event)
      ---------------------------------------------
      -- lets create the group
      ---------------------------------------------
+
      local itemGrp = display.newGroup(  )
+     local headcolor = params.groupheader or myApp.locatepre.groupheader
      local startX = 0
      local startY = 0 -myApp.cH/2 + myApp.locatepre.groupheight/2 + myApp.locatepre.edge*2 + myApp.sceneStartTop
      local groupwidth = myApp.sceneWidth-myApp.locatepre.edge*2
@@ -41,16 +43,19 @@ function scene:create(event)
      -------------------------------------------------
      -- Background
      -------------------------------------------------
-     local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth,myApp.locatepre.groupheight, 1 )
+
+     local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locatepre.groupstrokewidth*2,myApp.locatepre.groupheight, 1 )
      myRoundedRect:setFillColor(myApp.locatepre.groupbackground.r,myApp.locatepre.groupbackground.g,myApp.locatepre.groupbackground.b,myApp.locatepre.groupbackground.a )
+     myRoundedRect.strokeWidth = myApp.locatepre.groupstrokewidth
+     myRoundedRect:setStrokeColor( headcolor.r,headcolor.g,headcolor.b ) 
      itemGrp:insert(myRoundedRect)
+
 
      -------------------------------------------------
      -- Header Background
      -------------------------------------------------
      local startYother = startY- myApp.locatepre.groupheight/2  
      local myRoundedTop = display.newRoundedRect(startX, startYother ,groupwidth, myApp.locatepre.groupheaderheight, 1 )
-     local headcolor = params.groupheader or myApp.locatepre.groupheader
      myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
      itemGrp:insert(myRoundedTop)
      
@@ -75,11 +80,7 @@ function scene:create(event)
      -------------------------------------------------
      -- Desc text
      -------------------------------------------------
-
-     
      local myDesc = display.newText( {text=params.text, x=startX , y=0, height=0,width=groupwidth-myApp.locatepre.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatepre.textfontsize,align="center" })
-     --myDesc.y=startYother+myApp.locatepre.groupheight  -(myDesc.height/2) - textHeightSingleLine /2 -2
-     myDesc.y=startYother+myApp.locatepre.groupheight - (myDesc.height/2) --- textHeightSingleLine
      myDesc.y=startYother+myApp.locatepre.groupheight - (myDesc.height/2) -  myApp.locatepre.textbottomedge
      myDesc:setFillColor( myApp.locatepre.textcolor.r,myApp.locatepre.textcolor.g,myApp.locatepre.textcolor.b,myApp.locatepre.textcolor.a )
      itemGrp:insert(myDesc)
@@ -87,17 +88,62 @@ function scene:create(event)
      container:insert(itemGrp)
 
 
-         local curlocButton = widget.newButton {
-            shape="rect",
-            fillColor = { default={ 0, 0.2, 0.5, 0.7 }, over={ 1, 0.2, 0.5, 1 } },
-            strokeColor = { default={ 0, 0, 0 }, over={ 0.4, 0.1, 0.2 } },
-            label = "Use Current Location" ,
-            labelColor = { default={ 0, 1, 1 }, over={ 0, 0, 0, 0.5 } },
-            fontSize = 14,
+     -------------------------------------------------
+     -- Current loc button
+     -------------------------------------------------
+     local function curlocRelease() 
+         local function curlocReleaseback() 
+
+print ("FUNTION " .. (params.title or "unknown"))
+                  local locatelaunch = {  
+                                             title = params.title, 
+                                             pic=params.pic,
+                                             originaliconwidth = params.originaliconwidth,
+                                             originaliconheight = params.originaliconheight,
+                                             iconwidth = params.iconwidth,      -- height will be scaled appropriately
+                                             text=params.text,
+                                             backtext = "<",
+                                             groupheader = params.groupheader,   -- can override
+
+                                             locateinfo = {
+                                                            functionname=params.locateinfo.functionname,
+                                                            limit=params.locateinfo.limit,
+                                                            miles=params.locateinfo.miles,
+                                                            mapping = {name = params.locateinfo.mapping.name, miles = params.locateinfo.mapping.miles},
+                                                          },
+                                             navigation = { composer = {
+                                                         id = "xxxxx",
+                                                         lua="locate",
+                                                         time=params.navigation.composer.time, 
+                                                         effect="slideLeft",
+                                                         effectback="slideRight",
+                                                      },},
+                                          }      
+
+
+
+             local parentinfo =  params 
+             locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+             myApp.showSubScreen ({instructions=locatelaunch})
+         end
+         myApp.getCurrentLocation({callback=curlocReleaseback})
+         
+        --transition.to( curlocButton, { time=10, x=2,y=2,delta=true , transition=easing.continuousLoop, onComplete=curlocReleaseContinue } )  
+     end
+      
+     local curlocButton = widget.newButton {
+            shape=myApp.locatepre.shape,
+            fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.8 }, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
+            label = myApp.locatepre.curlocbtntext,
+            labelColor = { default={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b }, over={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b, .75 } },
+            fontSize = myApp.locatepre.headerfontsize,
             font = myApp.fontBold,
-            --onRelease = function () myApp.showSubScreen ({instructions=debuglink}) end,
-         }
-       curlocButton.y = 50
+            width = itemGrp.width,
+            height = myApp.locatepre.btnheight,
+            x = itemGrp.x,
+            y = startY +  itemGrp.height /2 + myApp.locatepre.btnheight /2,
+            onRelease = curlocRelease,
+          }
        container:insert(curlocButton)
 
 

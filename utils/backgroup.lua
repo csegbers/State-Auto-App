@@ -8,6 +8,11 @@ local widget = require( "widget" )
 ----------------------------------------------------------
 myApp.backGroup = display.newGroup( )
 myApp.backGroup:insert(common.SceneBackground(myApp.sceneBackgroundcolor))
+---------------------------------------------
+-- Block touches from going thru to the nmoreGroup
+-----------------------------------------------
+myApp.backGroup:addEventListener( "touch", function(event)   return true end )
+
 ----------------------------------------------------------
 --    background that shows when top right button is hit
 ----------------------------------------------------------
