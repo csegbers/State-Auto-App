@@ -85,9 +85,10 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
+        params = event.params           -- params contains the item table 
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
-        params = event.params           -- params contains the item table 
+        
     end
 	
 

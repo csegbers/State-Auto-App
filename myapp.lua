@@ -296,7 +296,7 @@ local M = {
                                                         },
                                                   navigation = { composer = {
                                                        id = "alocateqsg",
-                                                       lua="locate",
+                                                       lua="locatepre",
                                                        time=250, 
                                                        effect="slideLeft",
                                                        effectback="slideRight",
@@ -387,8 +387,10 @@ local M = {
                                 shape="roundedRect",
                                 curlocbtntext = "Use Current Location",
                                 btnheight = 35,
+                                 milerange = {low=5,high=100},
                                  
                        },
+                               -- }
                tabs = {
 
                         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "ahome", transitiontime = 200,

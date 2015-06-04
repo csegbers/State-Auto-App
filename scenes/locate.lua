@@ -124,6 +124,12 @@ function scene:show( event )
     print ("Show:" .. phase.. " " .. currScene)
     --debugpopup("params.navigation.composer.id " .. params.navigation.composer.id .. "event.params.navigation.composer.id ".. event.params.navigation.composer.id )
     if ( phase == "will" ) then
+
+        ----------------------------
+        -- params at this point contains prior
+        -- KEEP IT THAT WAY !!!!!
+        --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ------------------------------
         -- Called when the scene is still off screen (but is about to come on screen).
         runit = true
         if params and justcreated == false then

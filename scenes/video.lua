@@ -404,6 +404,7 @@ function scene:show( event )
     print ("Show:" .. phase.. " " .. currScene)
 
     if ( phase == "will" ) then
+         params = event.params or {}
         -- Called when the scene is still off screen (but is about to come on screen).
 
         print("enter scene")
@@ -425,7 +426,7 @@ function scene:show( event )
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
-        params = event.params or {}
+       
     end
 
 end

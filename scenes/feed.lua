@@ -496,7 +496,7 @@ function scene:show( event )
      
     if event.phase == "did" then
         print("enter scene")
-        params = event.params           -- params contains the item table 
+         
 
         -- fetch the parameters from the storyboard table for this view
         
