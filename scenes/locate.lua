@@ -21,7 +21,37 @@ local onRowRender    --  forward reference
 local onRowTouch    --  forward reference
 local runit  
 local justcreated  
+local myMap
 
+
+local function markerListener( event )
+    print("type: ", event.type) -- event type
+    print("markerId: ", event.markerId) -- id of the marker that was touched
+    print("lat: ", event.latitude) -- latitude of the marker
+    print("long: ", event.longitude) -- longitude of the marker
+end
+
+local function mapLocationHandler(event)
+  myMap:setCenter( event.latitude, event.longitude, false )
+    myMap:setRegion( event.latitude, event.longitude, 0.25, 0.25, false)
+    print("adding office marker")
+    local options = { 
+      title="Corona Labs", 
+      subtitle="World HQ", 
+      --imageFile = 
+     -- {
+      --    filename = "images/coronamarker.png",
+       --   baseDir = system.ResourcesDirectory
+      --},
+        listener=markerListener 
+    }
+  result, errorMessage = myMap:addMarker( event.latitude, event.longitude, options )
+  if result then
+      print("everything went well")
+  else
+      print(errorMessage)
+  end
+end
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
 ------------------------------------------------------
@@ -83,7 +113,7 @@ function scene:create(event)
       end
     myList = widget.newTableView {
        x = 0 ,
-       y = 0, 
+       y = 100, 
 
        width = myApp.sceneWidth, 
        height = myApp.sceneHeight/3 ,
@@ -150,15 +180,33 @@ function scene:show( event )
         parse:logEvent( "Scene", { ["name"] = currScene} )
         
         print (params.locateinfo.functionname)
-        print(myApp.gps.currentlocation.latitude .." " .. myApp.gps.currentlocation.longitude .. " " .. params.locateinfo.limit .. " " .. params.locateinfo.miles ) 
+        print(params.locateinfo.lat .." " .. params.locateinfo.lng  .. " " .. params.locateinfo.limit .. " " .. params.locateinfo.miles ) 
 
         if common.testNetworkConnection() and (runit or justcreated) then
            native.setActivityIndicator( true )
 
-           parse:run(params.locateinfo.functionname,{["lat"] = myApp.gps.currentlocation.latitude, ["lng"] = myApp.gps.currentlocation.longitude,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
+
+           myMap = native.newMapView( 0, 0, 100 , 100 ) 
+           myMap.mapType = "standard" -- other mapType options are "satellite" or "hybrid"
+
+          -- The MapView is just another Corona display object, and can be moved or rotated, etc.
+           myMap.x = display.contentCenterX
+           myMap.y = display.contentCenterY
+
+           myMap:setCenter( event.latitude, event.longitude, false )
+           myMap:setRegion( event.latitude, event.longitude, 0.25, 0.25, false)
+
+           --myMap:requestLocation( "1900 Embarcadero Road, Palo Alto, CA", mapLocationHandler )
+
+
+           parse:run(params.locateinfo.functionname,{["lat"] = params.locateinfo.lat , ["lng"] = params.locateinfo.lng ,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
 
                   for i = 1, #e.response.result do
                       print("NAME" .. e.response.result[i][params.locateinfo.mapping.name])
+
+
+
+
                      myList:insertRow{
                         rowHeight = 50,
                         isCategory = false,
@@ -169,7 +217,23 @@ function scene:show( event )
                            name = e.response.result[i][params.locateinfo.mapping.name],
                            miles = e.response.result[i][params.locateinfo.mapping.miles],
                         }
-                     }
+                        }
+
+                      local options = { 
+                        title=e.response.result[i][params.locateinfo.mapping.name], 
+                        subtitle="Subtitle", 
+                        --imageFile = 
+                       -- {
+                        --    filename = "images/coronamarker.png",
+                         --   baseDir = system.ResourcesDirectory
+                        --},
+                          listener=markerListener 
+                      }
+                      print ("dddddd" .. params.locateinfo.mapping.geo)
+                      print ("JHIUHIHIUHUI" .. e.response.result[i][params.locateinfo.mapping.geo].latitude)
+                      myMap:addMarker( e.response.result[i][params.locateinfo.mapping.geo].latitude, e.response.result[i][params.locateinfo.mapping.geo].longitude, options )
+
+                     
 
                   end
 
@@ -192,6 +256,10 @@ function scene:hide( event )
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
+        if myMap and myMap.removeSelf then
+          myMap:removeSelf()
+          myMap = nil
+        end
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
     end

@@ -38,7 +38,7 @@ local moreinfo = {
                                                           functionname="getagenciesnearby",
                                                           limit=100,
                                                           miles=25,
-                                                          mapping = {name = "agencyName", miles = "milesTo"},
+                                                          mapping = {name = "agencyName", miles = "milesTo", geo="agencyGeo"},
                                                         },
                                            navigation = { composer = {
                                                        id = "alocatemore",

@@ -1,11 +1,12 @@
 ---------------------------------------------------------------------------------------
 -- locateagent scene
 ---------------------------------------------------------------------------------------
-
+local myApp = require( "myapp" ) 
 local composer = require( "composer" )
 local scene = composer.newScene()
 
 local widget = require( "widget" )
+local widgetExtras = require( myApp.utilsfld .. "widget-extras" )
 local myApp = require( "myapp" ) 
 
 local parse = require( myApp.utilsfld .. "mod_parse" ) 
@@ -16,6 +17,10 @@ print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
 local params
 local container
+local addressField
+local itemGrp
+local curlocButton
+local addressButton
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -50,7 +55,7 @@ function scene:show( event )
              -- lets create the group
              ---------------------------------------------
 
-             local itemGrp = display.newGroup(  )
+             itemGrp = display.newGroup(  )
              local headcolor = params.groupheader or myApp.locatepre.groupheader
              local startX = 0
              local startY = 0 -myApp.cH/2 + myApp.locatepre.groupheight/2 + myApp.locatepre.edge*2 + myApp.sceneStartTop
@@ -156,11 +161,7 @@ function scene:show( event )
              -- Current loc button pressed return
              -------------------------------------------------
 
-             local function curlocReleaseback() 
-                  ------------------------------------------------------
-                  -- have accurate location ?
-                  ------------------------------------------------------
-                  if myApp.gps.haveaccuratelocation == true then
+             local function launchLocateScene(parms) 
                       local locatelaunch = {  
                                          title = params.title, 
                                          pic=params.pic,
@@ -175,11 +176,13 @@ function scene:show( event )
                                                         functionname=params.locateinfo.functionname,
                                                         limit=params.locateinfo.limit,
                                                         miles=params.locateinfo.miles,
-                                                        mapping = {name = params.locateinfo.mapping.name, miles = params.locateinfo.mapping.miles},
+                                                        lat = parms.lat,
+                                                        lng = parms.lng,
+                                                        mapping = {name = params.locateinfo.mapping.name, miles = params.locateinfo.mapping.miles, geo=params.locateinfo.mapping.geo},
                                                       },
                                          navigation = { composer = {
                                                       -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
-                                                     id = params.locateinfo.functionname.."-" ..params.locateinfo.miles.."-" .. params.locateinfo.limit .."-".. myApp.gps.currentlocation.latitude .."-".. myApp.gps.currentlocation.longitude,   
+                                                     id = params.locateinfo.functionname.."-" ..params.locateinfo.miles.."-" .. params.locateinfo.limit .."-".. parms.lat .."-".. parms.lng,   
                                                      lua=myApp.locatepre.lua ,
                                                      time=params.navigation.composer.time, 
                                                      effect=myApp.locatepre.effect,
@@ -190,14 +193,36 @@ function scene:show( event )
                          local parentinfo =  params 
                          locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
                          myApp.showSubScreen ({instructions=locatelaunch})
-                    end
+
              end
 
-              
+
+             local function curlocReleaseback() 
+                  ------------------------------------------------------
+                  -- have accurate location ?
+                  ------------------------------------------------------
+                  if myApp.gps.haveaccuratelocation == true then
+                       launchLocateScene{lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
+                  end
+
+             end
+
+
+             local function addressReleaseback(event) 
+                   ------------------------------------------------------
+                  -- have accurate location ?
+                  ------------------------------------------------------
+                  if ( event.isError ) then
+                  else
+                       launchLocateScene{lat=event.latitude,lng=event.longitude}
+                  end
+              end  
+
+
              ---------------------------------------------
              -- Use Current Location button
              ---------------------------------------------
-             local curlocButton = widget.newButton {
+              curlocButton = widget.newButton {
                     shape=myApp.locatepre.shape,
                     fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.8 }, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
                     label = myApp.locatepre.curlocbtntext,
@@ -208,10 +233,40 @@ function scene:show( event )
                     height = myApp.locatepre.btnheight,
                     x = itemGrp.x,
                     y = startY +  itemGrp.height /2 + myApp.locatepre.btnheight /2 + horizontalSlider.height,
-                    onRelease = function() myApp.getCurrentLocation({callback=curlocReleaseback}) end,
+                    onRelease = function() 
+                                    myApp.getCurrentLocation({callback=curlocReleaseback}) 
+                                end,
                   }
                container:insert(curlocButton)
 
+
+              
+             ---------------------------------------------
+             -- Use Current Location button
+             ---------------------------------------------
+              addressButton = widget.newButton {
+                    shape=myApp.locatepre.shape,
+                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.8 }, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
+                    label = myApp.locatepre.addressbtntext,
+                    labelColor = { default={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b }, over={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b, .75 } },
+                    fontSize = myApp.locatepre.headerfontsize,
+                    font = myApp.fontBold,
+                    width = itemGrp.width,
+                    height = myApp.locatepre.btnheight,
+                    x = itemGrp.x,
+                    y = curlocButton.y +  myApp.locatepre.btnheight  + myApp.locatepre.edge*2,
+                    onRelease = function() 
+                                      local inputtext = addressField.textField.text or ""
+                                      if inputtext == "" then
+                                         native.showAlert( "Location Not Entered", "Please Enter A Valid Location", { "Okay" } )
+                                      else
+                                         myApp.getAddressLocation({address=addressField.textField.text,callback=addressReleaseback}) 
+                                      end
+                                end,
+                  }
+               container:insert(addressButton)
+ 
+--print ("fist time ".. container.y .. " " .. curlocButton.y .. " " .. showdidstarty .." " .. startY .. " " .. itemGrp.height /2  .. " " .. myApp.locatepre.btnheight /2 .. " " ..horizontalSlider.height)
 
 
         --myApp.sceneWidth / 2 ,myApp.sceneHeight  /2 + myApp.sceneStartTop
@@ -261,6 +316,53 @@ function scene:show( event )
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
         --params = event.params           -- params contains the item table 
+            local function textFieldHandler( event )
+                --
+                -- event.text only exists during the editing phase to show what's being edited.  
+                -- It is **NOT** the field's .text attribute.  That is event.target.text
+                --
+                if event.phase == "began" then
+
+                    -- user begins editing textField
+                    print( "Begin editing", event.target.text )
+
+                elseif event.phase == "ended" or event.phase == "submitted" then
+
+                    -- do something with defaulField's text
+                    print( "Final Text: ", event.target.text)
+                    native.setKeyboardFocus( nil )
+
+                elseif event.phase == "editing" then
+
+                    print( event.newCharacters )
+                    print( event.oldText )
+                    print( event.startPosition )
+                    print( event.text )
+
+                end
+            end
+        addressField = widget.newTextField({
+            width = itemGrp.width,
+            height = myApp.locatepre.addressfieldheight,
+            cornerRadius = myApp.locatepre.addressfieldcornerradius,
+            strokeWidth = 0,
+            text = "",
+            fontSize = myApp.locatepre.textfontsize,
+            placeholder = myApp.locatepre.addressfieldplaceholder,
+            font = myApp.fontBold,
+            labelWidth = 0,
+            --labelFont = "HelveticaNeue",
+            --labelFontSize = 14,
+            --labelWidth = 60,
+            listener = textFieldHandler,
+            --label = "Location"
+        })
+        -- Hide the native part of this until we need to show it on the screen.
+
+        addressField.x = myApp.cW/2
+        addressField.y = addressButton.y + addressButton.height + myApp.locatepre.edge*2 + container.y
+ 
+        group:insert(addressField)      -- insertng into container messes up
 
     end
 	
@@ -273,6 +375,8 @@ function scene:hide( event )
     print ("Hide:" .. phase.. " " .. currScene)
 
     if ( phase == "will" ) then
+        addressField:removeSelf()
+        addressField = nil
     elseif ( phase == "did" ) then
     end
 

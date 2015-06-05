@@ -143,13 +143,36 @@ local M = {
                                 textbottomedge =2   ,  
                                 shape="roundedRect",
                                 curlocbtntext = "Use Current Location",
+                                addressbtntext= "Use Location Entered Below",
                                 btnheight = 35,
                                 milerange = {low=5,high=100},
                                 lua="locate",
                                 effect="slideLeft",
                                 effectback="slideRight",
+                                addressfieldheight = 50,
+                                addressfieldcornerradius = 6,
+                                addressfieldplaceholder = "Location",
                                  
                        },
+
+
+            --========================
+            --== Device
+            --========================
+            deviceinfo = {
+                            infoname = {name="name",title="Name"},
+                            infoenvironment = {name="environment",title="Environment"},
+                            infoplatformName = {name="platformName",title="Plat Name"},
+                            infoplatformVersion = {name="platformVersion",title="Plat Version"},
+                            infoversion = {name="version",title="Version"},
+                            infobuild = {name="build",title="Corona BLD"},
+                            infotextureMemoryUsed = {name="textureMemoryUsed",title="Memory Used"},
+                            infoarchitectureInfo = {name="architectureInfo",title="Architecture"},
+                            pref1 = {cat="ui",name="language",title="UI Lang"},
+                            pref2 = {cat="locale",name="country",title="Loc Country"},
+                            pref3 = {cat="locale",name="identifier",title="Loc ID"},
+                            pref4 = {cat="locale",name="language",title="Loc Lang"},
+                        },
   
 
         }

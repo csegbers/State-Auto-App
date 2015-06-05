@@ -46,13 +46,14 @@ reallyPrint = print
 function print(...)
     if myApp.debugMode then
         reallyPrint("<-==============================================->") 
-        if type(arg[1]) == "table" then
-            print_r(arg[1])
-        else
-            reallyPrint(myApp.appName .. "-> " .. unpack(arg))
-        end
+        --if type(arg[1]) == "table" then
+            --print_r(arg[1])
+        --else
+            pcall(function() reallyPrint(myApp.appName .. "-> " .. unpack(arg)) end)
+        --end
     end
 end
+
 
 -------------------------------------------------------
 -- pop up messgae
@@ -152,7 +153,7 @@ function  myApp.getCurrentLocation( event )
                -- myApp.gps.attempts = myApp.gps.maxattempts + 1    -- stop the looping - success
             else
                  myApp.gps.haveaccuratelocation = true
-                 if myApp.debugMode then
+                 if myApp.debugMode and system.getInfo( "environment" ) == "simulator" then
                      myApp.gps.currentlocation.latitude = myApp.gps.debug.latitude 
                      myApp.gps.currentlocation.longitude = myApp.gps.debug.longitude 
                   end
@@ -192,6 +193,35 @@ function  myApp.getCurrentLocation( event )
        -- end
        -- Runtime:removeEventListener( "location", myApp.locationHandler )   
        --return returncode
+end
+
+
+function  myApp.getAddressLocation( event )
+        local parms = event or {}
+        print ("Calulating lat.lg for: " .. parms.address)
+        local myMap = native.newMapView( -100, -100, 20, 20 ) -- keep out the way
+
+        local function addressHandler ( event )
+
+            myMap:removeSelf()
+            myMap = nil
+
+            if ( event.isError ) then
+                native.showAlert( "Not Valid Location", "Cannot Deytermine Location: " .. (event.errorMessage or "Unknown"), { "Okay" } )
+            else
+                 native.showAlert( "ocation", "lat: " ..  event.latitude .. "  Long "..  event.longitude , { "Okay" } )
+             
+            end
+
+            ----------------------------------------------
+            -- Caller wants us to run something ?
+            ----------------------------------------------
+            if parms.callback then  parms.callback(event) end     
+
+        end
+        
+        myMap:requestLocation( parms.address, addressHandler )
+ 
 end
 
 function myApp.onSystemEvent( event )

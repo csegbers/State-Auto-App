@@ -61,7 +61,7 @@ function scene:show( event )
 
             local function renderInfo(whatText)
                 starty = starty + 10
-                local disNt = display.newText( whatText, 100, starty, native.systemFont, 16 )
+                local disNt = display.newText( whatText, myApp.cCx, starty, native.systemFont, 12 )
                 disNt:setFillColor( 1, 0, 0 )
                 scrollView:insert(disNt)
                 starty = starty + disNt.height
@@ -72,23 +72,32 @@ function scene:show( event )
             ---------------------------------------------------
             myApp.getCurrentLocation( {callback=
                  function() 
-                    renderInfo("latitude " .. string.format( '%.4f', myApp.gps.currentlocation.latitude ))
-                    renderInfo("longitude " .. string.format( '%.4f', myApp.gps.currentlocation.longitude ))
-                    renderInfo("altitude " .. string.format( '%.4f', myApp.gps.currentlocation.altitude ))
-                    renderInfo("accuracy " .. string.format( '%.4f', myApp.gps.currentlocation.accuracy ))
-                    renderInfo("speed " .. string.format( '%.4f', myApp.gps.currentlocation.speed ))
-                    renderInfo("direction " .. string.format( '%.4f', myApp.gps.currentlocation.direction ))
-                    renderInfo("time " .. string.format( '%.4f', myApp.gps.currentlocation.time ))
+                    renderInfo("latitude " .. string.format( '%.4f', (myApp.gps.currentlocation.latitude or 0)))
+                    renderInfo("longitude " .. string.format( '%.4f', (myApp.gps.currentlocation.longitude or 0)))
+                    renderInfo("altitude " .. string.format( '%.4f', (myApp.gps.currentlocation.altitude or 0)))
+                    renderInfo("accuracy " .. string.format( '%.4f', (myApp.gps.currentlocation.accuracy or 0)))
+                    renderInfo("speed " .. string.format( '%.4f', (myApp.gps.currentlocation.speed or 0)))
+                    renderInfo("direction " .. string.format( '%.4f', (myApp.gps.currentlocation.direction or 0)))
+                    renderInfo("time " .. string.format( '%.4f', (myApp.gps.currentlocation.time or 0)))
                     renderInfo("errorcode " ..  ( myApp.gps.currentlocation.errorCode or "" ))
                     renderInfo("erromessage " .. ( myApp.gps.currentlocation.errorMessage or "" ))
 
                     renderInfo("  " )                    
                   end })
 
-            ---------------------------------------------------
-            -- other info
-            ---------------------------------------------------
-            renderInfo("memory " .. system.getInfo( "textureMemoryUsed" ) / 1000000)
+                ---------------------------------------------------
+                -- other info
+                ---------------------------------------------------
+               
+                for k,v in pairs(myApp.deviceinfo) do 
+ 
+                     if v.cat then
+                        fieldvalue = system.getPreference( v.cat, v.name )
+                     else
+                        fieldvalue = system.getInfo( v.name )
+                     end
+                    renderInfo("Device Info Tile: " .. v.title .. " Value: " .. fieldvalue)
+                end  
 
             renderInfo(" ")
 

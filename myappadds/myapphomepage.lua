@@ -37,7 +37,7 @@ local homepage = {
                                                           functionname="getagenciesnearby",
                                                           limit=100,
                                                           miles=25,
-                                                          mapping = {name = "agencyName", miles = "milesTo"},
+                                                          mapping = {name = "agencyName", miles = "milesTo", geo="agencyGeo"},
                                                         },
                                            navigation = { composer = {
                                                        id = "alocate1",
@@ -55,7 +55,7 @@ local homepage = {
                                                           functionname="getbodyshopsnearby",
                                                           limit=100,
                                                           miles=10,
-                                                          mapping = {name = "CompanyName", miles = "milesTo"},
+                                                          mapping = {name = "CompanyName", miles = "milesTo", geo="ShopGeo"},
                                                         },
                                                   navigation = { composer = {
                                                        id = "alocateqsg",
