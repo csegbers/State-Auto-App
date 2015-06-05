@@ -290,8 +290,8 @@ local M = {
                                                    backtext = "<",
                                                   locateinfo = {
                                                           functionname="getbodyshopsnearby",
-                                                          limit=5,
-                                                          miles=50,
+                                                          limit=100,
+                                                          miles=10,
                                                           mapping = {name = "CompanyName", miles = "milesTo"},
                                                         },
                                                   navigation = { composer = {
