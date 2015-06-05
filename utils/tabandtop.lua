@@ -85,24 +85,29 @@ myApp.tabBar = {}
 local tabButtons = {}
 local tabCnt = 0
 local function addtabBtn(tkey)
-    tabCnt = tabCnt + 1
     local btnrntry = myApp.tabs.btns[tkey]      -- will refernece same copy no biggie for now
-    ---------------------------------
-    -- dynamically add a couple items
-    ---------------------------------
-    btnrntry.sel=tabCnt                         -- add a sequence
-    btnrntry.key=tkey                           -- add the key to the table
-    local tabitem = 
-        {
-            label = btnrntry.label,
-            defaultFile = myApp.imgfld .. btnrntry.def,
-            overFile = myApp.imgfld .. btnrntry.over,
-            labelColor = { default = myApp.colorGray,   over = myApp.saColor,  },
-            width = myApp.tabs.tabbtnw,
-            height = myApp.tabs.tabbtnh,
-            onPress = function () myApp.showScreen({instructions=btnrntry}) end,
-        }
-    table.insert(tabButtons, tabitem)
+    local showbtn =   true
+    if (btnrntry.showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
+    if showbtn then
+        tabCnt = tabCnt + 1
+
+        ---------------------------------
+        -- dynamically add a couple items
+        ---------------------------------
+        btnrntry.sel=tabCnt                         -- add a sequence
+        btnrntry.key=tkey                           -- add the key to the table
+        local tabitem = 
+            {
+                label = btnrntry.label,
+                defaultFile = myApp.imgfld .. btnrntry.def,
+                overFile = myApp.imgfld .. btnrntry.over,
+                labelColor = { default = myApp.colorGray,   over = myApp.saColor,  },
+                width = myApp.tabs.tabbtnw,
+                height = myApp.tabs.tabbtnh,
+                onPress = function () myApp.showScreen({instructions=btnrntry}) end,
+            }
+        table.insert(tabButtons, tabitem)
+    end
 end
 ------------------------------------------------
 -- have to sort first

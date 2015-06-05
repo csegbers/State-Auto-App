@@ -22,6 +22,7 @@ local M = {
             titleBarEdge = 10,
             titleBarTextColor = { r=255/255, g=255/255, b=255/255, a=1 },
             imgfld = "images/",
+            myappadds = "myappadds.",
             scenesfld = "scenes.",
             utilsfld = "utils.",
             classfld = "classes.",
@@ -38,150 +39,14 @@ local M = {
             sceneBackgroundmorecolor = { r=25/255, g=75/255, b=150/255, a=1 },
             scenemaskFile = "",
             splash = {image = "splash.jpg", delay = 150, },
-            moreinfo = {
-                      imsliding = false,
-                      transitiontime = 700,
-                      transitiontimealpha = 200,
-                      direction = "left",     -- initial direction
-                      movefactor = 1.2,      -- how much left or right. Less means less showing of the main screen
-                      morebutton = {
-                                      defaultFile="morebutton.png",
-                                      overFile="morebutton-down.png",
-                                      },
-                      transparentcolor = { r=255/255, g=255/255, b=255/255, a=1 },
-                      transparentalpha = .7,
-                      row = {
-                              over={ 1, 0.5, 0, 0.2 },
-                              linecolor={ 200/255 },
-                              height = 50,
-                              indent = 25,
-                              textcolor = 1,
-                              textfontsize=14 
-                            },
-                      items = {
-                                      alocate = {
-                                           title = "Locate an Agent more", 
-                                           pic="trustedchoice.png",
-                                           originaliconwidth = 196,
-                                           originaliconheight = 77,
-                                           iconwidth = 120,      -- height will be scaled appropriately
-                                           text="Locate agents nearby or from an address",
-                                           backtext = "<",
-                                          -- groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
-                                           locateinfo = {
-                                                          functionname="getagenciesnearby",
-                                                          limit=20,
-                                                          miles=25,
-                                                          mapping = {name = "agencyName", miles = "milesTo"},
-                                                        },
-                                           navigation = { composer = {
-                                                       id = "alocate1",    -- same id as home page item. This way if selected on we are on that screen dont do anything
-                                                       lua="locate",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
-                                                    },},
-                                               },
-                                       broasast = {title = "Terms", 
-                                                   pic="truck.png",
-                                                   text="Flat tire, out of gas ? We can help",
-                                                   backtext = "<",
-                                                  htmlinfo = {
-                                                          htmlfile="terms.html" ,
-                                                          dir = system.ResourceDirectory ,
-                                                        },
-                                                  navigation = { composer = {
-                                                       id = "term",
-                                                       lua="webview",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
-                                                    },},
-                                                 },
-                                        bzoasast = {title = "Help", 
-                                                   pic="truck.png",
-                                                   text="Flat tire, out of gas ? We can help",
-                                                   backtext = "<",
-                                                  htmlinfo = {
-                                                          htmlfile="help.html" ,
-                                                          dir = system.ResourceDirectory ,
-                                                        },
-                                                  navigation = { composer = {
-                                                       id = "help",
-                                                       lua="webview",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
-                                                    },},
-                                                 },
-                                       css = {title = "Debug", 
-                                                  pic="truck.png",
-                                                  text="Flat tire, out of gas ? We can help really help",
-                                                   backtext = "<",
-                                                  locateinfo = {
-                                                          functionname="getagenciesnearby",
-                                                          limit=2,
-                                                          miles=50,
-                                                        },
-                                                  navigation = { tabbar = {
-                                                       id = "xxxmore",
-                                                       key="gdebug",
-                                                    },},
-                                              },
-                                          dtt= {title = "Yahoo Web", 
-                                            pic="truck.png",
-                                            text="Sample web page",
-                                            backtext = "<",
-                                                  pic="truck.png",
-                                                  htmlinfo = {
-                                                          url="http://www.yahoo.com/" ,
-                                                        },
-                                                  navigation = { composer = {
-                                                       id = "yahooweb6",
-                                                       lua="webview",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
-                                                    },},
-                                                    
-                                              },
-                                           dtt= {title = "Privacy", 
-                                            pic="truck.png",
-                                            text="Sample web page",
-                                            backtext = "<",
-                                                  pic="truck.png",
-                                                  htmlinfo = {
-                                                          htmlfile="privacy.html" ,
-                                                          dir = system.ResourceDirectory ,
-                                                        },
-                                                  navigation = { composer = {
-                                                       id = "yahooweb6",
-                                                       lua="webview",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
-                                                    },},
-                                                    
-                                              },
-
-                                          edd= {title = "External Launch", 
-                                            pic="truck.png",
-                                            text="xxxxxx",
-                                            backtext = "<",
-                                                  pic="truck.png",
-                                                  navigation = { systemurl = { url="tel:614-915-9769"},},
-                                                    
-                                              },
-                                      },
-
-
-                        },
+ 
             gps = {
                      --timer = 30000,                           --30 seconds
-                     timebetweenattempts = 100,              --1 seconds
-                     attempts = 0,                             -- cointer
-                     maxattempts = 10,                     
+                     --timebetweenattempts = 100,              --1 seconds
+                     --attempts = 0,                             -- cointer
+                     --maxattempts = 10,                     
                      --event= "",                               -- set elsewhere
+                     haveaccuratelocation = false ,  
                      currentlocation = {},                     -- set elsewhere
                      debug = {                                -- will be used if in debugmode
                                 latitude=39.896311,
@@ -241,134 +106,26 @@ local M = {
 
                         --           },
                     },
-            --------------------------------------------------------
-            -- note: physical order of items does not matter. 
-            -- Order is based on alphabetical based on key 
-            --------------------------------------------------------
-            homepage = {
-                          groupwidth = 120,
-                          groupmaxwidth = 170,     -- we will allow to grow to fit better if there is extra edging. This would be max however
-                          groupheight = 140,
-                          groupheaderheight = 20,
-                          groupbetween = 10,
-                          groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
-                          groupheader = { r=25/255, g=75/255, b=150/255, a=1 },
-                          iconwidth = 60,    -- can be overidden in item
-                          iconheight = 60,   -- can be overidden in item
-                          headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
-                          headerfontsize = 13,  
-                          textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
-                          textfontsize=12   ,       
-                          textbottomedge =12   ,           
-                          items = {
-                                      alocate = {
-                                           title = "Locate an Agent", 
-                                           pic="trustedchoice.png",
-                                           originaliconwidth = 196,
-                                           originaliconheight = 77,
-                                           iconwidth = 120,      -- height will be scaled appropriately
-                                           text="Locate agents nearby or from an address",
-                                           backtext = "<",
-                                           --groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
-                                           locateinfo = {
-                                                          functionname="getagenciesnearby",
-                                                          limit=100,
-                                                          miles=25,
-                                                          mapping = {name = "agencyName", miles = "milesTo"},
-                                                        },
-                                           navigation = { composer = {
-                                                       id = "alocate1",
-                                                       lua="locatepre",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
-                                                    },},
-                                               },
-                                       broasast = {title = "Certified Repair Shops", 
-                                                   pic="qsg.png",
-                                                   text="Locate certified repair shops nearby or from an address",
-                                                   backtext = "<",
-                                                  locateinfo = {
-                                                          functionname="getbodyshopsnearby",
-                                                          limit=100,
-                                                          miles=10,
-                                                          mapping = {name = "CompanyName", miles = "milesTo"},
-                                                        },
-                                                  navigation = { composer = {
-                                                       id = "alocateqsg",
-                                                       lua="locatepre",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
-                                                    },},
-                                                 },
-                                        css = {title = "debug", 
-                                            pic="truck.png",
-                                            text="Flat tire, out of gas ? We can help really help",
-                                            backtext = "<",
-                                                  pic="truck.png",
 
-                                             navigation = { tabbar = {
-                                                       id = "xxxxx",
-                                                       key="gdebug",
-                                                    },},
-                                              },
-                                        dss = {title = "State Auto Web", 
-                                            pic="truck.png",
-                                            text="Sample web page",
-                                            backtext = "<",
-                                            forwardtext = ">",
-                                                  pic="truck.png",
-                                                  htmlinfo = {
-                                                          url="http://www.stateauto.com/" ,
-                                                        },
-                                                  navigation = { composer = {
-                                                       id = "stateautoweb",
-                                                       lua="webview",
-                                                       time=250, 
-                                                       effect="slideLeft",
-                                                       effectback="slideRight",
-                                                    },},
-                                                    
-                                              },
-                                          dtt= {title = "CNN Launch separate", 
-                                            pic="truck.png",
-                                            text="Sample web page",
-                                            backtext = "<",
-                                                  pic="truck.png",
-                                                  navigation = { systemurl = {
-                                                       url="http://www.cnn.com/"
-                                                    },},
-                                                    
-                                              },
-                                         et3t = {title = "Phone Call", pic="truck.png",text="Flat tire, out of gas ? We can help" ,
-                                             navigation = { systemurl = { url="tel:614-915-9769"},},
-                                                    
-                                                },
-                                       fttt = {title = "Mail", pic="truck.png",text="Flat tire, out of gas ? We can help", 
-                                             navigation = { systemurl = { url="mailto:nobody@mycompany.com?subject=hi%20there"},},
-                                               },
-                                   },
-                       },
-            locateanagent = {    -- tem,poirary for now
-                        gps ={
-                                limit=50,
-                                miles=30
-                              },
-                        agentinfo = {
-                             title = "Agent Info", 
-                             backtext = "<",
-                             groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
-                             navigation = { composer = {
-                                         id = "agentinfo1",
-                                         lua="agent",
-                                         time=250, 
-                                         effect="slideLeft",
-                                         effectback="slideRight",
-                                      },},
-                                 },
+            -- locateanagent = {    -- tem,poirary for now
+            --             gps ={
+            --                     limit=50,
+            --                     miles=30
+            --                   },
+            --             agentinfo = {
+            --                  title = "Agent Info", 
+            --                  backtext = "<",
+            --                  groupheader = { r=53/255, g=48/255, b=102/255, a=1 },
+            --                  navigation = { composer = {
+            --                              id = "agentinfo1",
+            --                              lua="agent",
+            --                              time=250, 
+            --                              effect="slideLeft",
+            --                              effectback="slideRight",
+            --                           },},
+            --                      },
                                  
-                       },
+            --            },
              locatepre = {    
 
                                 edge=10,
@@ -387,66 +144,18 @@ local M = {
                                 shape="roundedRect",
                                 curlocbtntext = "Use Current Location",
                                 btnheight = 35,
-                                 milerange = {low=5,high=100},
+                                milerange = {low=5,high=100},
+                                lua="locate",
+                                effect="slideLeft",
+                                effectback="slideRight",
                                  
                        },
-                               -- }
-               tabs = {
-
-                        tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "ahome", transitiontime = 200,
-                        btns = {
-                            ahome = {
-                                        label="Home", title="State Auto" ,def="saicon.png",over="saicon-down.png",
-                                        navigation = { composer = { id = "home",lua="home" ,time=250, effect="crossFade" },},
-                                    },
-                            bvideo = {
-                                        label="My Agent" ,title="My Agent" ,def="myagent.png",over="myagent-down.png",
-                                        navigation = { composer = {id = "video", lua="video" ,time=250, effect="slideRight" },},
-                                        options = {
-                                                feedName = "video.rss",
-                                                --feedURL = "http://gdata.youtube.com/feeds/mobile/users/CoronaLabs/uploads?max-results=20&alt=rss&orderby=published&format=1",
-                                                feedURL = "http://gdata.youtube.com/feeds/mobile/users/StateAutoChristmas/uploads?max-results=20&alt=rss&orderby=published&format=1",
-                                                icons = "embedded",
-                                                displayMode = "videoviewer",
-                                                pageTitle = "Corona Videos"
-                                                   }                                
-                                    },
-                            cmenu = {
-                                        label="Account",  title="Menu" ,def="account.png",over="account-down.png",
-                                        navigation = { composer = { id = "account",lua="menu" ,time=250, effect="slideDown" },},
-                                    },
-                            dblogs = {
-                                      label="Blogs" ,title="Blog" ,def="tabbaricon.png",over="tabbaricon-down.png",
-                                      navigation = { composer = {id = "blog", lua="feed" ,time=250, effect="crossFade" },},
-                                      options = {
-                                            feedName = "corona.rss",
-                                            feedURL = "http://www.coronalabs.com/feed/",
-                                            icons = "fixed",
-                                            displayMode = "webpage",
-                                            pageTitle = "Corona Labs"
-                                                 }
-                                      },
-                           epics = {
-                                    label="Pics" ,title="Pics",def="tabbaricon.png",over="tabbaricon-down.png",
-                                    navigation = { composer = { id = "epic",lua="photogallery" ,time=250, effect="crossFade" },},
-                                   },
-                           
-                           fmaps = {
-                                        label="Maps", title="Maps",def="tabbaricon.png",over="tabbaricon-down.png",
-                                        navigation = { composer = {id = "maps", lua="mapscene" ,time=250, effect="crossFade" },},
-                                        options = {
-                                                pageTitle = "Corona Headquarters"
-                                                 }                              
-                                    },
-                          gdebug = {
-                                     label="Debug" ,title="Debug" ,def="tabbaricon.png",over="tabbaricon-down.png" ,
-                                    navigation = { composer = { id = "debug",lua="debugapp" ,time=250, effect="crossFade" },},
-                                  }
-                                }
-                   },
+  
 
         }
-
+M.tabs     = require( M.myappadds .. "myapptabs" )  
+M.moreinfo = require( M.myappadds .. "myappmoreinfo" )  
+M.homepage = require( M.myappadds .. "myapphomepage" )  
 return M
 -- The following string values are supported for the effect key of the options table:
 

@@ -26,8 +26,6 @@ function scene:create(event)
     local group = self.view
     params = event.params or {}
 
-
-
 end
 
 function scene:show( event )
@@ -37,18 +35,16 @@ function scene:show( event )
     print ("Show:" .. phase.. " " .. currScene)
 
     if ( phase == "will" ) then
-        --------------------------
-        -- Setting params needed on the "Will" phase !!!!
-        --------------------------
-         params = event.params           -- params contains the item table 
-        -- Called when the scene is still off screen (but is about to come on screen).
-        display.remove( container )
-        container = nil
+             --------------------------
+             -- Setting params needed on the "Will" phase !!!!
+             --------------------------
+             params = event.params or {}          -- params contains the item table 
+             -- Called when the scene is still off screen (but is about to come on screen).
+             display.remove( container )           -- wont exist initially no biggie
+             container = nil
 
-
-
-            container  = common.SceneContainer()
-            group:insert(container )
+             container  = common.SceneContainer()
+             group:insert(container )
 
              ---------------------------------------------
              -- lets create the group
@@ -65,13 +61,11 @@ function scene:show( event )
              -------------------------------------------------
              -- Background
              -------------------------------------------------
-
              local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locatepre.groupstrokewidth*2,myApp.locatepre.groupheight, 1 )
              myRoundedRect:setFillColor(myApp.locatepre.groupbackground.r,myApp.locatepre.groupbackground.g,myApp.locatepre.groupbackground.b,myApp.locatepre.groupbackground.a )
              myRoundedRect.strokeWidth = myApp.locatepre.groupstrokewidth
              myRoundedRect:setStrokeColor( headcolor.r,headcolor.g,headcolor.b ) 
              itemGrp:insert(myRoundedRect)
-
 
              -------------------------------------------------
              -- Header Background
@@ -109,10 +103,6 @@ function scene:show( event )
 
              container:insert(itemGrp)
 
-
-
-
-
              -------------------------------------------------
              -- Range text
              -------------------------------------------------
@@ -141,7 +131,11 @@ function scene:show( event )
                 end
             end
             milesCheck()
+
+            --------------------------------------------
             -- Create a horizontal slider
+            -- slider value is 0-100 so we have to caluclate based on min and max range
+            ---------------------------------------------
             local horizontalSlider = widget.newSlider {
                 x = itemGrp.x - myApp.locatepre.edge,
                 y = myRangetext.y + 3,
@@ -159,49 +153,50 @@ function scene:show( event )
             container:insert( horizontalSlider )
 
              -------------------------------------------------
-             -- Current loc button
+             -- Current loc button pressed return
              -------------------------------------------------
-             local function curlocRelease() 
-                 local function curlocReleaseback() 
 
-                     print ("FUNTION " .. (params.title or "unknown"))
-                                  local locatelaunch = {  
-                                                             title = params.title, 
-                                                             pic=params.pic,
-                                                             originaliconwidth = params.originaliconwidth,
-                                                             originaliconheight = params.originaliconheight,
-                                                             iconwidth = params.iconwidth,      -- height will be scaled appropriately
-                                                             text=params.text,
-                                                             backtext = "<",
-                                                             groupheader = params.groupheader,   -- can override
+             local function curlocReleaseback() 
+                  ------------------------------------------------------
+                  -- have accurate location ?
+                  ------------------------------------------------------
+                  if myApp.gps.haveaccuratelocation == true then
+                      local locatelaunch = {  
+                                         title = params.title, 
+                                         pic=params.pic,
+                                         originaliconwidth = params.originaliconwidth,
+                                         originaliconheight = params.originaliconheight,
+                                         iconwidth = params.iconwidth,      -- height will be scaled appropriately
+                                         text=params.text,
+                                         backtext = "<",
+                                         groupheader = params.groupheader,   -- can override
 
-                                                             locateinfo = {
-                                                                            functionname=params.locateinfo.functionname,
-                                                                            limit=params.locateinfo.limit,
-                                                                            miles=params.locateinfo.miles,
-                                                                            mapping = {name = params.locateinfo.mapping.name, miles = params.locateinfo.mapping.miles},
-                                                                          },
-                                                             navigation = { composer = {
-                                                                          -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
-                                                                         id = params.locateinfo.functionname.."-" ..params.locateinfo.miles.."-" .. params.locateinfo.limit .."-".. myApp.gps.currentlocation.latitude .."-".. myApp.gps.currentlocation.longitude,   
-                                                                         lua="locate",
-                                                                         time=params.navigation.composer.time, 
-                                                                         effect="slideLeft",
-                                                                         effectback="slideRight",
-                                                                      },},
-                                                          }      
+                                         locateinfo = {
+                                                        functionname=params.locateinfo.functionname,
+                                                        limit=params.locateinfo.limit,
+                                                        miles=params.locateinfo.miles,
+                                                        mapping = {name = params.locateinfo.mapping.name, miles = params.locateinfo.mapping.miles},
+                                                      },
+                                         navigation = { composer = {
+                                                      -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
+                                                     id = params.locateinfo.functionname.."-" ..params.locateinfo.miles.."-" .. params.locateinfo.limit .."-".. myApp.gps.currentlocation.latitude .."-".. myApp.gps.currentlocation.longitude,   
+                                                     lua=myApp.locatepre.lua ,
+                                                     time=params.navigation.composer.time, 
+                                                     effect=myApp.locatepre.effect,
+                                                     effectback=myApp.locatepre.effectback,
+                                                  },},
+                                 }      
 
-
-
-                             local parentinfo =  params 
-                             locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
-                             myApp.showSubScreen ({instructions=locatelaunch})
-                   end
-                 myApp.getCurrentLocation({callback=curlocReleaseback})
-                 
-                --transition.to( curlocButton, { time=10, x=2,y=2,delta=true , transition=easing.continuousLoop, onComplete=curlocReleaseContinue } )  
+                         local parentinfo =  params 
+                         locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                         myApp.showSubScreen ({instructions=locatelaunch})
+                    end
              end
+
               
+             ---------------------------------------------
+             -- Use Current Location button
+             ---------------------------------------------
              local curlocButton = widget.newButton {
                     shape=myApp.locatepre.shape,
                     fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.8 }, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
@@ -213,7 +208,7 @@ function scene:show( event )
                     height = myApp.locatepre.btnheight,
                     x = itemGrp.x,
                     y = startY +  itemGrp.height /2 + myApp.locatepre.btnheight /2 + horizontalSlider.height,
-                    onRelease = curlocRelease,
+                    onRelease = function() myApp.getCurrentLocation({callback=curlocReleaseback}) end,
                   }
                container:insert(curlocButton)
 
@@ -263,23 +258,9 @@ function scene:show( event )
                -- container:insert(debugbackButton)
 
 
-
-
-
-
-
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
         --params = event.params           -- params contains the item table 
-
-
-
-
-
-
-
-
-
 
     end
 	
@@ -292,11 +273,7 @@ function scene:hide( event )
     print ("Hide:" .. phase.. " " .. currScene)
 
     if ( phase == "will" ) then
-        -- Called when the scene is on screen (but is about to go off screen).
-        -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.
     elseif ( phase == "did" ) then
-        -- Called immediately after scene goes off screen.
     end
 
 end

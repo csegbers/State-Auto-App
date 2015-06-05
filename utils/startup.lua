@@ -134,6 +134,7 @@ parse:getConfig( function(e) if not e.error then myApp.appName = e.response.para
 function  myApp.getCurrentLocation( event )
         --local getGPS   -- forward reference
         local parms = event or {}
+        myApp.gps.haveaccuratelocation = false
         local function locationHandler ( event )
             Runtime:removeEventListener( "location", locationHandler )  
             myApp.gps.currentlocation = event
@@ -150,14 +151,16 @@ function  myApp.getCurrentLocation( event )
            -- else
                -- myApp.gps.attempts = myApp.gps.maxattempts + 1    -- stop the looping - success
             else
+                 myApp.gps.haveaccuratelocation = true
                  if myApp.debugMode then
                      myApp.gps.currentlocation.latitude = myApp.gps.debug.latitude 
                      myApp.gps.currentlocation.longitude = myApp.gps.debug.longitude 
                   end
             end
-            if parms.callback then
-                parms.callback()
-            end
+            ----------------------------------------------
+            -- Caller wants us to run something ?
+            ----------------------------------------------
+            if parms.callback then  parms.callback() end
         end
 
        -- function getGPS( event )

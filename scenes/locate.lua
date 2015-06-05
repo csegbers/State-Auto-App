@@ -95,21 +95,19 @@ function scene:create(event)
     container:insert(myList )
 
 
-     --local agentpagelink = common.DeepCopy(myApp.locatepage.agentinfo)
-   -- local parentinfo = common.DeepCopy(params)
-    local agentpagelink =  myApp.locateanagent.agentinfo 
-    local parentinfo =  params 
-    agentpagelink.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback=agentpagelink.navigation.composer.effectback}) end
-    local agentbackButton = widget.newButton {
-        label = agentpagelink.title ,
-        labelColor = { default={ 0, 1, 1 }, over={ 0, 0, 0, 0.5 } },
-        fontSize = 30,
-        font = myApp.fontBold,
-        onRelease = function () myApp.showSubScreen ({instructions=agentpagelink}) end,
-     }
-   agentbackButton.y = 150
+--     local agentpagelink =  myApp.locateanagent.agentinfo 
+--     local parentinfo =  params 
+--     agentpagelink.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback=agentpagelink.navigation.composer.effectback}) end
+--     local agentbackButton = widget.newButton {
+--         label = agentpagelink.title ,
+--         labelColor = { default={ 0, 1, 1 }, over={ 0, 0, 0, 0.5 } },
+--         fontSize = 30,
+--         font = myApp.fontBold,
+--         onRelease = function () myApp.showSubScreen ({instructions=agentpagelink}) end,
+--      }
+--    agentbackButton.y = 150
 
-container:insert(agentbackButton)
+-- container:insert(agentbackButton)
 
 
 
@@ -142,10 +140,14 @@ function scene:show( event )
         if (runit or justcreated) then
             myList:deleteAllRows()
         end
+
+        ----------------------------
+        -- now go ahead
+        --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ------------------------------
+        params = event.params           -- params contains the item table 
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
-
-        params = event.params           -- params contains the item table 
         
         print (params.locateinfo.functionname)
         print(myApp.gps.currentlocation.latitude .." " .. myApp.gps.currentlocation.longitude .. " " .. params.locateinfo.limit .. " " .. params.locateinfo.miles ) 
