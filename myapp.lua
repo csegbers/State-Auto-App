@@ -52,6 +52,15 @@ local M = {
                                 latitude=39.896311,
                                 longitude=-82.7674464,
                               },
+                     addresslocate = {
+                                errortitle = "Not Valid Location",
+                                errormessage = "Cannot Determine Location: ",
+                                    },
+                     currentlocate = {
+                                errortitle = "No GPS Signal",
+                                errormessage = "Can't sync with GPS. Error: ",
+                                    },
+                                  
                   },
             login = {
                         loggedin = false,
@@ -143,6 +152,7 @@ local M = {
                                 textbottomedge =2   ,  
                                 shape="roundedRect",
                                 curlocbtntext = "Use Current Location",
+
                                 addressbtntext= "Use Location Entered Below",
                                 btnheight = 35,
                                 milerange = {low=5,high=100},
@@ -151,10 +161,36 @@ local M = {
                                 effectback="slideRight",
                                 addressfieldheight = 50,
                                 addressfieldcornerradius = 6,
-                                addressfieldplaceholder = "Location",
+                                addressfieldplaceholder = "Enter zip, city/state or address",
+                                addresslocate = {
+                                       errortitle = "Location Not Entered", 
+                                       errormessage = "Please Enter A Valid Location",
+                                                },
                                  
                        },
+             locate = {    
 
+                                edge=10,
+                                groupheight = 40,
+                                groupbackground = { r=180/255, g=180/255, b=180/255, a=1 },
+                                groupstrokewidth = 0,
+
+                                textcolor = { r=255/255, g=255/255, b=255/255, a=1 },   
+                                textfontsize=15  ,   
+                                textbottomedge =2   ,
+
+                                tableheight=180,  
+                                row={
+                                       height=60
+                                    },
+                                map = {
+                                          latitudespan = .25,
+                                          longitudespan = .25,
+                                          type = "standard" ,
+                                      },
+
+                                 
+                       },
 
             --========================
             --== Device

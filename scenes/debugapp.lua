@@ -49,15 +49,8 @@ function scene:show( event )
 
 
 
-            local starty = 0
-            
-            local backlogo = display.newImageRect(myApp.imgfld .. myApp.splash.image,305,170)
-            backlogo:scale( .5,.5  )
-            backlogo.x = myApp.cCx
-            starty = backlogo.height * .5 * .5  + 10
-            backlogo.y = starty
-            starty = starty + backlogo.height
-            scrollView:insert(backlogo)
+            local starty = 10
+
 
             local function renderInfo(whatText)
                 starty = starty + 10
@@ -96,7 +89,7 @@ function scene:show( event )
                      else
                         fieldvalue = system.getInfo( v.name )
                      end
-                    renderInfo("Device Info Tile: " .. v.title .. " Value: " .. fieldvalue)
+                    renderInfo(v.title .. " Value: " .. fieldvalue)
                 end  
 
             renderInfo(" ")

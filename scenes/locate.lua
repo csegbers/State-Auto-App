@@ -17,113 +17,63 @@ print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 local params
 local container
 local myList
-local onRowRender    --  forward reference
-local onRowTouch    --  forward reference
 local runit  
 local justcreated  
 local myMap
+local myDesc
 
 
-local function markerListener( event )
-    print("type: ", event.type) -- event type
-    print("markerId: ", event.markerId) -- id of the marker that was touched
-    print("lat: ", event.latitude) -- latitude of the marker
-    print("long: ", event.longitude) -- longitude of the marker
-end
+  ------------------------------------------------------
+  -- Row is rendered
+  ------------------------------------------------------
+local  onRowRender = function ( event )
 
-local function mapLocationHandler(event)
-  myMap:setCenter( event.latitude, event.longitude, false )
-    myMap:setRegion( event.latitude, event.longitude, 0.25, 0.25, false)
-    print("adding office marker")
-    local options = { 
-      title="Corona Labs", 
-      subtitle="World HQ", 
-      --imageFile = 
-     -- {
-      --    filename = "images/coronamarker.png",
-       --   baseDir = system.ResourcesDirectory
-      --},
-        listener=markerListener 
-    }
-  result, errorMessage = myMap:addMarker( event.latitude, event.longitude, options )
-  if result then
-      print("everything went well")
-  else
-      print(errorMessage)
-  end
-end
-------------------------------------------------------
--- Called first time. May not be called again if we dont recyle
-------------------------------------------------------
-function scene:create(event)
- 
-    print ("Create  " .. currScene)
-    local group = self.view
-    params = event.params           -- params contains the item table  
-    print (params.title)
-    container  = common.SceneContainer()
-    group:insert(container )
-    justcreated = true
+         --Set up the localized variables to be passed via the event table
 
+         local row = event.row
+         local id = row.index
+         local params = event.row.params
+         print ("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" .. params.name)
 
-    onRowRender = function ( event )
+         -- row.bg = display.newRect( 0, 0, display.contentWidth, 60 )
+         -- row.bg.anchorX = 0
+         -- row.bg.anchorY = 0
+         -- row.bg:setFillColor( 1, 1, 1 )
+         -- row:insert( row.bg )
 
-           --Set up the localized variables to be passed via the event table
+         if ( event.row.params ) then    
+            row.nameText = display.newText( params.name, 10, 0, native.systemFontBold, 14 )
+            row.nameText.anchorX = 0
+            row.nameText.anchorY = 0.5
+            row.nameText:setFillColor( 0 )
+            row.nameText.y = 20
+            row.nameText.x = 42
 
-           local row = event.row
-           local id = row.index
-           local params = event.row.params
-           print ("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" .. params.name)
-
-           -- row.bg = display.newRect( 0, 0, display.contentWidth, 60 )
-           -- row.bg.anchorX = 0
-           -- row.bg.anchorY = 0
-           -- row.bg:setFillColor( 1, 1, 1 )
-           -- row:insert( row.bg )
-
-           if ( event.row.params ) then    
-              row.nameText = display.newText( params.name, 10, 0, native.systemFontBold, 14 )
-              row.nameText.anchorX = 0
-              row.nameText.anchorY = 0.5
-              row.nameText:setFillColor( 0 )
-              row.nameText.y = 20
-              row.nameText.x = 42
-
-              row.milesText = display.newText( "Miles: " .. string.format( '%.2f', params.miles ), 10, 0, native.systemFont, 14 )
-              row.milesText.anchorX = 0
-              row.milesText.anchorY = 0.5
-              row.milesText:setFillColor( 0.5 )
-              row.milesText.y = 40
-              row.milesText.x = 42
+            row.milesText = display.newText( "Miles: " .. string.format( '%.2f', params.miles ), 10, 0, native.systemFont, 14 )
+            row.milesText.anchorX = 0
+            row.milesText.anchorY = 0.5
+            row.milesText:setFillColor( 0.5 )
+            row.milesText.y = 40
+            row.milesText.x = 42
 
             row.rightArrow = display.newImageRect(myApp.icons, 15 , 40, 40)
             row.rightArrow.x = display.contentWidth - 20
             row.rightArrow.y = row.height / 2
-              -- row.rightArrow = display.newImageRect( "rightarrow.png", 15 , 40, 40 )
-              -- row.rightArrow.x = display.contentWidth - 20
-              -- row.rightArrow.y = row.height / 2
+            -- row.rightArrow = display.newImageRect( "rightarrow.png", 15 , 40, 40 )
+            -- row.rightArrow.x = display.contentWidth - 20
+            -- row.rightArrow.y = row.height / 2
 
-              row:insert( row.nameText )
-              row:insert( row.milesText )
-              row:insert( row.rightArrow )
-           end
-           return true
-        end
-      onRowTouch = function ( event )
-      end
-    myList = widget.newTableView {
-       x = 0 ,
-       y = 100, 
+            row:insert( row.nameText )
+            row:insert( row.milesText )
+            row:insert( row.rightArrow )
+         end
+         return true
+end
 
-       width = myApp.sceneWidth, 
-       height = myApp.sceneHeight/3 ,
-       onRowRender = onRowRender,
-       onRowTouch = onRowTouch,
-       listener = scrollListener,
-     
-    }
-    container:insert(myList )
-
+------------------------------------------------------
+-- Row is touched
+------------------------------------------------------
+local onRowTouch = function ( event )
 
 --     local agentpagelink =  myApp.locateanagent.agentinfo 
 --     local parentinfo =  params 
@@ -141,7 +91,73 @@ function scene:create(event)
 
 
 
+end
 
+
+local function markerListener( event )
+    print("type: ", event.type) -- event type
+    print("markerId: ", event.markerId) -- id of the marker that was touched
+    print("lat: ", event.latitude) -- latitude of the marker
+    print("long: ", event.longitude) -- longitude of the marker
+end
+
+------------------------------------------------------
+-- Called first time. May not be called again if we dont recyle
+------------------------------------------------------
+function scene:create(event)
+ 
+    print ("Create  " .. currScene)
+    justcreated = true
+    local group = self.view
+    params = event.params           -- params contains the item table  
+     
+    container  = common.SceneContainer()
+    group:insert(container )
+
+     ---------------------------------------------
+     -- Header group
+     ---------------------------------------------
+
+     local itemGrp = display.newGroup(  )
+     local startX = 0
+     local startY = 0 -myApp.cH/2 + myApp.locate.groupheight/2  + myApp.sceneStartTop
+
+     local groupwidth = myApp.sceneWidth-myApp.locate.edge
+     local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=myApp.locate.textfontsize})
+     local textHeightSingleLine = dumText.height
+     
+     -------------------------------------------------
+     -- Background
+     -------------------------------------------------
+     local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locate.groupstrokewidth*2,myApp.locate.groupheight, 1 )
+     myRoundedRect:setFillColor(myApp.locate.groupbackground.r,myApp.locate.groupbackground.g,myApp.locate.groupbackground.b,myApp.locate.groupbackground.a )
+     itemGrp:insert(myRoundedRect)
+
+     local startYother = startY- myApp.locate.groupheight/2  
+
+     -------------------------------------------------
+     -- Desc text
+     -------------------------------------------------
+     myDesc = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-myApp.locate.edge*2 ,font= myApp.fontBold, fontSize=myApp.locate.textfontsize,align="center" })
+     myDesc.y=myRoundedRect.y --startYother+myApp.locate.groupheight - (myDesc.height) -  myApp.locate.textbottomedge
+     myDesc:setFillColor( myApp.locate.textcolor.r,myApp.locate.textcolor.g,myApp.locate.textcolor.b,myApp.locate.textcolor.a )
+     itemGrp:insert(myDesc)
+
+     container:insert(itemGrp)
+
+    ------------------------------------------------------
+    -- Table View
+    ------------------------------------------------------
+    myList = widget.newTableView {
+           x=0,
+           y= myApp.cH/2 -  myApp.locate.tableheight/2 - myApp.tabs.tabBarHeight-myApp.locate.edge, 
+           width = myApp.sceneWidth-myApp.locate.edge, 
+           height = myApp.locate.tableheight,
+           onRowRender = onRowRender,
+           onRowTouch = onRowTouch,
+           listener = scrollListener,
+        }
+     container:insert(myList )
 
 end
 
@@ -150,7 +166,9 @@ function scene:show( event )
     local group = self.view
     local phase = event.phase
     print ("Show:" .. phase.. " " .. currScene)
-    --debugpopup("params.navigation.composer.id " .. params.navigation.composer.id .. "event.params.navigation.composer.id ".. event.params.navigation.composer.id )
+    ----------------------------------
+    -- Will Show
+    ----------------------------------
     if ( phase == "will" ) then
 
         ----------------------------
@@ -167,36 +185,38 @@ function scene:show( event )
              end
           end
         end
-        if (runit or justcreated) then
-            myList:deleteAllRows()
-        end
-
+        if (runit or justcreated) then  myList:deleteAllRows() end
         ----------------------------
         -- now go ahead
         --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ------------------------------
         params = event.params           -- params contains the item table 
+
+        ---------------------------------------
+        -- upodate the desc
+        ---------------------------------------
+        myDesc.text = params.locateinfo.desc
+
+    ----------------------------------
+    -- Did Show
+    ----------------------------------
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
         
-        print (params.locateinfo.functionname)
         print(params.locateinfo.lat .." " .. params.locateinfo.lng  .. " " .. params.locateinfo.limit .. " " .. params.locateinfo.miles ) 
 
         if common.testNetworkConnection() and (runit or justcreated) then
            native.setActivityIndicator( true )
 
-
-           myMap = native.newMapView( 0, 0, 100 , 100 ) 
-           myMap.mapType = "standard" -- other mapType options are "satellite" or "hybrid"
+           myMap = native.newMapView( 0, -50, myApp.sceneWidth-myApp.locate.edge , 250 ) 
+           myMap.mapType = myApp.locate.type -- other mapType options are "satellite" or "hybrid"
 
           -- The MapView is just another Corona display object, and can be moved or rotated, etc.
            myMap.x = display.contentCenterX
            myMap.y = display.contentCenterY
 
-           myMap:setCenter( event.latitude, event.longitude, false )
-           myMap:setRegion( event.latitude, event.longitude, 0.25, 0.25, false)
-
-           --myMap:requestLocation( "1900 Embarcadero Road, Palo Alto, CA", mapLocationHandler )
+           myMap:setCenter( params.locateinfo.lat, params.locateinfo.lng, false )
+           myMap:setRegion( params.locateinfo.lat, params.locateinfo.lng, myApp.locate.map.latitudespan, myApp.locate.map.longitudespan, false)
 
 
            parse:run(params.locateinfo.functionname,{["lat"] = params.locateinfo.lat , ["lng"] = params.locateinfo.lng ,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
@@ -204,19 +224,16 @@ function scene:show( event )
                   for i = 1, #e.response.result do
                       print("NAME" .. e.response.result[i][params.locateinfo.mapping.name])
 
-
-
-
                      myList:insertRow{
-                        rowHeight = 50,
+                        rowHeight = myApp.locate.row.height,
                         isCategory = false,
                         rowColor = { 1, 1, 1 },
                         lineColor = { 220/255 },
 
-                              params = {
+                         params = {
                            name = e.response.result[i][params.locateinfo.mapping.name],
                            miles = e.response.result[i][params.locateinfo.mapping.miles],
-                        }
+                                  }
                         }
 
                       local options = { 
@@ -229,14 +246,13 @@ function scene:show( event )
                         --},
                           listener=markerListener 
                       }
-                      print ("dddddd" .. params.locateinfo.mapping.geo)
                       print ("JHIUHIHIUHUI" .. e.response.result[i][params.locateinfo.mapping.geo].latitude)
                       myMap:addMarker( e.response.result[i][params.locateinfo.mapping.geo].latitude, e.response.result[i][params.locateinfo.mapping.geo].longitude, options )
 
                      
 
                   end
-
+                  if #e.response.result > 0 then myList:scrollToIndex( 1 ) end
 
             end end )
         end

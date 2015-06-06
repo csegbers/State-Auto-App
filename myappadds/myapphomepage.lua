@@ -31,6 +31,7 @@ local homepage = {
                                            originaliconheight = 77,
                                            iconwidth = 120,      -- height will be scaled appropriately
                                            text="Locate agents nearby or from an address",
+                                           desc="Agents",
                                            backtext = "<",
                                            --groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
                                            locateinfo = {
@@ -50,6 +51,7 @@ local homepage = {
                                        broasast = {title = "Certified Repair Shops", 
                                                    pic="qsg.png",
                                                    text="Locate certified repair shops nearby or from an address",
+                                                   desc="Certified Repair Shops",
                                                    backtext = "<",
                                                   locateinfo = {
                                                           functionname="getbodyshopsnearby",

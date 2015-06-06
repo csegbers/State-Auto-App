@@ -94,7 +94,7 @@ function scene:show( event )
                  local myIcon = display.newImageRect(myApp.imgfld .. params.pic, params.originaliconwidth or myApp.locatepre.iconwidth ,params.originaliconheight or myApp.locatepre.iconheight )
                  common.fitImage( myIcon, params.iconwidth or myApp.locatepre.iconwidth   )
                  myIcon.x = startX
-                 myIcon.y = startYother + itemGrp.height/2 - 10
+                 myIcon.y = startYother + itemGrp.height/2 - 20
                  itemGrp:insert(myIcon)
              end
 
@@ -161,7 +161,7 @@ function scene:show( event )
              -- Current loc button pressed return
              -------------------------------------------------
 
-             local function launchLocateScene(parms) 
+             local function launchLocateScene(inputparms) 
                       local locatelaunch = {  
                                          title = params.title, 
                                          pic=params.pic,
@@ -173,21 +173,28 @@ function scene:show( event )
                                          groupheader = params.groupheader,   -- can override
 
                                          locateinfo = {
+                                                        desc = inputparms.desc,
                                                         functionname=params.locateinfo.functionname,
                                                         limit=params.locateinfo.limit,
                                                         miles=params.locateinfo.miles,
-                                                        lat = parms.lat,
-                                                        lng = parms.lng,
-                                                        mapping = {name = params.locateinfo.mapping.name, miles = params.locateinfo.mapping.miles, geo=params.locateinfo.mapping.geo},
+                                                        lat = inputparms.lat,
+                                                        lng = inputparms.lng,
+                                                        mapping = {
+                                                                   name = params.locateinfo.mapping.name, 
+                                                                   miles = params.locateinfo.mapping.miles, 
+                                                                   geo=params.locateinfo.mapping.geo,
+                                                                  },
                                                       },
-                                         navigation = { composer = {
-                                                      -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
-                                                     id = params.locateinfo.functionname.."-" ..params.locateinfo.miles.."-" .. params.locateinfo.limit .."-".. parms.lat .."-".. parms.lng,   
-                                                     lua=myApp.locatepre.lua ,
-                                                     time=params.navigation.composer.time, 
-                                                     effect=myApp.locatepre.effect,
-                                                     effectback=myApp.locatepre.effectback,
-                                                  },},
+                                         navigation = { 
+                                               composer = {
+                                                              -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
+                                                             id = params.locateinfo.functionname.."-" ..params.locateinfo.miles.."-" .. params.locateinfo.limit .."-".. inputparms.lat .."-".. inputparms.lng,   
+                                                             lua=myApp.locatepre.lua ,
+                                                             time=params.navigation.composer.time, 
+                                                             effect=myApp.locatepre.effect,
+                                                             effectback=myApp.locatepre.effectback,
+                                                          },
+                                                     },
                                  }      
 
                          local parentinfo =  params 
@@ -202,7 +209,7 @@ function scene:show( event )
                   -- have accurate location ?
                   ------------------------------------------------------
                   if myApp.gps.haveaccuratelocation == true then
-                       launchLocateScene{lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
+                       launchLocateScene{desc=string.format (params.desc ..  " within %i miles of your current location.",params.locateinfo.miles), lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
                   end
 
              end
@@ -214,7 +221,7 @@ function scene:show( event )
                   ------------------------------------------------------
                   if ( event.isError ) then
                   else
-                       launchLocateScene{lat=event.latitude,lng=event.longitude}
+                       launchLocateScene{desc=string.format (params.desc  ..  " within %i miles of location %s.",params.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
                   end
               end  
 
@@ -224,7 +231,7 @@ function scene:show( event )
              ---------------------------------------------
               curlocButton = widget.newButton {
                     shape=myApp.locatepre.shape,
-                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.8 }, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
+                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.7}, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
                     label = myApp.locatepre.curlocbtntext,
                     labelColor = { default={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b }, over={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b, .75 } },
                     fontSize = myApp.locatepre.headerfontsize,
@@ -246,7 +253,7 @@ function scene:show( event )
              ---------------------------------------------
               addressButton = widget.newButton {
                     shape=myApp.locatepre.shape,
-                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.8 }, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
+                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.7 }, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
                     label = myApp.locatepre.addressbtntext,
                     labelColor = { default={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b }, over={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b, .75 } },
                     fontSize = myApp.locatepre.headerfontsize,
@@ -258,7 +265,7 @@ function scene:show( event )
                     onRelease = function() 
                                       local inputtext = addressField.textField.text or ""
                                       if inputtext == "" then
-                                         native.showAlert( "Location Not Entered", "Please Enter A Valid Location", { "Okay" } )
+                                         native.showAlert( myApp.locatepre.addresslocate.errortitle, myApp.locatepre.addresslocate.errormessage, { "Okay" } )
                                       else
                                          myApp.getAddressLocation({address=addressField.textField.text,callback=addressReleaseback}) 
                                       end
@@ -341,28 +348,28 @@ function scene:show( event )
 
                 end
             end
-        addressField = widget.newTextField({
-            width = itemGrp.width,
-            height = myApp.locatepre.addressfieldheight,
-            cornerRadius = myApp.locatepre.addressfieldcornerradius,
-            strokeWidth = 0,
-            text = "",
-            fontSize = myApp.locatepre.textfontsize,
-            placeholder = myApp.locatepre.addressfieldplaceholder,
-            font = myApp.fontBold,
-            labelWidth = 0,
-            --labelFont = "HelveticaNeue",
-            --labelFontSize = 14,
-            --labelWidth = 60,
-            listener = textFieldHandler,
-            --label = "Location"
-        })
-        -- Hide the native part of this until we need to show it on the screen.
+            addressField = widget.newTextField({
+                width = itemGrp.width,
+                height = myApp.locatepre.addressfieldheight,
+                cornerRadius = myApp.locatepre.addressfieldcornerradius,
+                strokeWidth = 0,
+                text = "",
+                fontSize = myApp.locatepre.textfontsize,
+                placeholder = myApp.locatepre.addressfieldplaceholder,
+                font = myApp.fontBold,
+                labelWidth = 0,
+                --labelFont = "HelveticaNeue",
+                --labelFontSize = 14,
+                --labelWidth = 60,
+                listener = textFieldHandler,
+                --label = "Location"
+            })
+            -- Hide the native part of this until we need to show it on the screen.
 
-        addressField.x = myApp.cW/2
-        addressField.y = addressButton.y + addressButton.height + myApp.locatepre.edge*2 + container.y
- 
-        group:insert(addressField)      -- insertng into container messes up
+            addressField.x = myApp.cW/2
+            addressField.y = addressButton.y + addressButton.height + myApp.locatepre.edge*2 + container.y
+     
+            group:insert(addressField)      -- insertng into container messes up
 
     end
 	
@@ -395,6 +402,16 @@ end
 function scene:myparams( event )
        return params
 end
+
+---------------------------------------------------
+-- use if someone wants us to transition away
+-- for navigational appearnaces
+-- used from the more button
+---------------------------------------------------
+function scene:morebutton( parms )
+     transition.to(  addressField, {  time=parms.time,delta=true, x = parms.x , transition=parms.transition})
+end
+
 
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )

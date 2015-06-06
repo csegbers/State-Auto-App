@@ -144,7 +144,7 @@ function  myApp.getCurrentLocation( event )
                -- myApp.gps.attempts = myApp.gps.attempts + 1
                -- print ("locationHandler" .. myApp.gps.attempts)
               --  if ( myApp.gps.attempts > myApp.gps.maxattempts ) then
-                    native.showAlert( "No GPS Signal", "Can't sync with GPS. Error: " .. (myApp.gps.currentlocation.errorMessage or "Unknown"), { "Okay" } )
+                    native.showAlert( myApp.gps.currentlocate.errortitle, myApp.gps.currentlocate.errormessage .. (myApp.gps.currentlocation.errorMessage or "Unknown"), { "Okay" } )
                -- else
 
                    -- timer.performWithDelay( myApp.gps.timebetweenattempts,  getGPS )
@@ -207,12 +207,10 @@ function  myApp.getAddressLocation( event )
             myMap = nil
 
             if ( event.isError ) then
-                native.showAlert( "Not Valid Location", "Cannot Deytermine Location: " .. (event.errorMessage or "Unknown"), { "Okay" } )
+                native.showAlert( myApp.gps.addresslocate.errortitle, myApp.gps.addresslocate.errormessage .. (event.errorMessage or "Unknown"), { "Okay" } )
             else
-                 native.showAlert( "ocation", "lat: " ..  event.latitude .. "  Long "..  event.longitude , { "Okay" } )
-             
+                 if myApp.debugMode then native.showAlert( "Location for " .. parms.address, "lat: " ..  event.latitude .. "  Long "..  event.longitude , { "Okay" } ) end
             end
-
             ----------------------------------------------
             -- Caller wants us to run something ?
             ----------------------------------------------
