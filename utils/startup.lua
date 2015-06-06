@@ -59,7 +59,7 @@ end
 -- pop up messgae
 ------------------------------------------------------- 
 function debugpopup(whatstr) 
-  if myApp.debugMode then native.showAlert( myApp.appName ,whatstr )  end
+  if myApp.debugMode then native.showAlert( myApp.appName ,whatstr ,{"ok"})  end
 end
 
 print "In startup.lua"

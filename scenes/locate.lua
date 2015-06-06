@@ -21,6 +21,7 @@ local runit
 local justcreated  
 local myMap
 local myDesc
+local itemGrp
 
 
   ------------------------------------------------------
@@ -42,28 +43,34 @@ local  onRowRender = function ( event )
          -- row:insert( row.bg )
 
          if ( event.row.params ) then    
-            row.nameText = display.newText( params.name, 10, 0, native.systemFontBold, 14 )
+            row.nameText = display.newText( params.name, 0, 0, myApp.fontBold, myApp.locate.row.nametextfontsize )
             row.nameText.anchorX = 0
             row.nameText.anchorY = 0.5
-            row.nameText:setFillColor( 0 )
-            row.nameText.y = 20
-            row.nameText.x = 42
+            row.nameText:setFillColor( myApp.locate.row.nametextColor )
+            row.nameText.y = myApp.locate.row.nametexty
+            row.nameText.x = myApp.locate.row.nametextx
 
-            row.milesText = display.newText( "Miles: " .. string.format( '%.2f', params.miles ), 10, 0, native.systemFont, 14 )
+            --local addressline = (params.street or "") .. "\n" .. (params.city or "") .. ", " .. (params.state or "") .. " " .. (params.zip or "") 
+            row.addressText = display.newText( params.address, 0, 0, row.width / 2,0,myApp.fontBold, myApp.locate.row.addresstextfontsize  )
+            row.addressText.anchorX = 0
+            row.addressText.anchorY = 0.5
+            row.addressText:setFillColor( myApp.locate.row.addressColor )
+            row.addressText.y = myApp.locate.row.addresstexty
+            row.addressText.x = myApp.locate.row.addresstextx
+
+            row.milesText = display.newText( "Miles: " .. string.format( '%.2f', params.miles ), 0, 0, myApp.fontBold, myApp.locate.row.milestextfontsize )
             row.milesText.anchorX = 0
             row.milesText.anchorY = 0.5
-            row.milesText:setFillColor( 0.5 )
-            row.milesText.y = 40
-            row.milesText.x = 42
+            row.milesText:setFillColor( myApp.locate.row.milesColor )
+            row.milesText.y = myApp.locate.row.milestexty
+            row.milesText.x = myApp.locate.row.milestextx
 
-            row.rightArrow = display.newImageRect(myApp.icons, 15 , 40, 40)
-            row.rightArrow.x = display.contentWidth - 20
+            row.rightArrow = display.newImageRect(myApp.icons, 15 , myApp.locate.row.arrowwidth, myApp.locate.row.arrowheight)
+            row.rightArrow.x = row.width - myApp.locate.row.arrowwidth/2
             row.rightArrow.y = row.height / 2
-            -- row.rightArrow = display.newImageRect( "rightarrow.png", 15 , 40, 40 )
-            -- row.rightArrow.x = display.contentWidth - 20
-            -- row.rightArrow.y = row.height / 2
 
             row:insert( row.nameText )
+            row:insert( row.addressText )
             row:insert( row.milesText )
             row:insert( row.rightArrow )
          end
@@ -73,7 +80,7 @@ end
 ------------------------------------------------------
 -- Row is touched
 ------------------------------------------------------
-local onRowTouch = function ( event )
+--local onRowTouch = function ( event )
 
 --     local agentpagelink =  myApp.locateanagent.agentinfo 
 --     local parentinfo =  params 
@@ -91,15 +98,66 @@ local onRowTouch = function ( event )
 
 
 
+--end
+
+
+local onRowTouch = function( event )
+        local row = event.row
+        if myMap then myMap:setCenter( row.params.lat, row.params.lng ,true ) end
+        
+        if event.phase == "press"  then     
+
+                print ("press")
+        elseif event.phase == "tap" then
+               print ("tap")
+        elseif event.phase == "swipeLeft" then
+
+               print ("sl")
+        elseif event.phase == "swipeRight" then
+               print ("sr")
+ 
+        elseif event.phase == "release" then
+               print ("release")
+               debugpopup ("released " .. row.params.id)
+            -- force row re-render on next TableView update
+            
+        end
+    return true
 end
 
 
-local function markerListener( event )
+local function markerSelected( event, params )
     print("type: ", event.type) -- event type
     print("markerId: ", event.markerId) -- id of the marker that was touched
     print("lat: ", event.latitude) -- latitude of the marker
     print("long: ", event.longitude) -- longitude of the marker
+    myList:scrollToIndex( params.rowindex )
 end
+
+local function buildMap( event )
+   native.setActivityIndicator( true ) 
+   local tableViewRows = myList._view._rows
+
+     for k, row in ipairs(tableViewRows) do
+
+         local options = { 
+                  title=row.params.name, 
+                  subtitle=(row.params.street or "") .. " " .. (row.params.city or "") .. ", " .. (row.params.state or "") .. " " .. (row.params.zip or "") , 
+                  --imageFile = 
+                 -- {
+                  --    filename = "images/coronamarker.png",
+                   --   baseDir = system.ResourcesDirectory
+                  --},
+                   listener=function(event) markerSelected(event, {id=row.params.id,rowindex = row.index})  end ,
+                }
+         myMap:addMarker( row.params.lat, row.params.lng, options )
+
+     end
+
+   native.setActivityIndicator( false ) 
+end
+
+
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -116,9 +174,10 @@ function scene:create(event)
 
      ---------------------------------------------
      -- Header group
+     -- text gets set in Show evvent
      ---------------------------------------------
 
-     local itemGrp = display.newGroup(  )
+     itemGrp = display.newGroup(  )
      local startX = 0
      local startY = 0 -myApp.cH/2 + myApp.locate.groupheight/2  + myApp.sceneStartTop
 
@@ -205,57 +264,72 @@ function scene:show( event )
         
         print(params.locateinfo.lat .." " .. params.locateinfo.lng  .. " " .. params.locateinfo.limit .. " " .. params.locateinfo.miles ) 
 
-        if common.testNetworkConnection() and (runit or justcreated) then
+        if common.testNetworkConnection()  then
+
+           -----------------------------------
+           -- always do the map even if criteria is same since it gets destrpyed every scene change
+           ------------------------------------
            native.setActivityIndicator( true )
 
-           myMap = native.newMapView( 0, -50, myApp.sceneWidth-myApp.locate.edge , 250 ) 
-           myMap.mapType = myApp.locate.type -- other mapType options are "satellite" or "hybrid"
+           local mapheight = myApp.sceneHeight-myList.height-itemGrp.height-myApp.locate.edge*2
+           myMap = native.newMapView( 0, 0, myApp.sceneWidth-myApp.locate.edge , mapheight  ) 
+           myMap.mapType = myApp.locate.map.type -- other mapType options are "satellite" or "hybrid"
 
           -- The MapView is just another Corona display object, and can be moved or rotated, etc.
-           myMap.x = display.contentCenterX
-           myMap.y = display.contentCenterY
+           myMap.x = myApp.cCx
+           myMap.y = myApp.sceneStartTop + itemGrp.height  + myApp.locate.edge+ mapheight/2 + myApp.locate.edge/2
 
            myMap:setCenter( params.locateinfo.lat, params.locateinfo.lng, false )
            myMap:setRegion( params.locateinfo.lat, params.locateinfo.lng, myApp.locate.map.latitudespan, myApp.locate.map.longitudespan, false)
 
+           if (runit or justcreated) then
+               parse:run(params.locateinfo.functionname,{["lat"] = params.locateinfo.lat , ["lng"] = params.locateinfo.lng ,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles},
+                   function(e) 
+                      
+                      if not e.error then  
 
-           parse:run(params.locateinfo.functionname,{["lat"] = params.locateinfo.lat , ["lng"] = params.locateinfo.lng ,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles}, function(e) native.setActivityIndicator( false ) if not e.error then  
+                          for i = 1, #e.response.result do
+                              print("NAME" .. e.response.result[i][params.locateinfo.mapping.name])
 
-                  for i = 1, #e.response.result do
-                      print("NAME" .. e.response.result[i][params.locateinfo.mapping.name])
+                             myList:insertRow{
+                                rowHeight = myApp.locate.row.height,
+                                isCategory = false,
+                                rowColor = myApp.locate.row.rowColor,
+                                lineColor = myApp.locate.row.lineColor,
 
-                     myList:insertRow{
-                        rowHeight = myApp.locate.row.height,
-                        isCategory = false,
-                        rowColor = { 1, 1, 1 },
-                        lineColor = { 220/255 },
+                                params = {
+                                             id = e.response.result[i][params.locateinfo.mapping.id],
+                                             name = e.response.result[i][params.locateinfo.mapping.name],
+                                             miles = e.response.result[i][params.locateinfo.mapping.miles],
+                                             lat = e.response.result[i][params.locateinfo.mapping.geo].latitude,
+                                             lng = e.response.result[i][params.locateinfo.mapping.geo].longitude,
+                                             street = e.response.result[i][params.locateinfo.mapping.street],                           
+                                             city = e.response.result[i][params.locateinfo.mapping.city],
+                                             state = e.response.result[i][params.locateinfo.mapping.state],
+                                             zip = e.response.result[i][params.locateinfo.mapping.zip],
+                                             address = (e.response.result[i][params.locateinfo.mapping.street] or "") .. "\n" .. (e.response.result[i][params.locateinfo.mapping.city] or "") .. ", " .. (e.response.result[i][params.locateinfo.mapping.state] or "") .. " " .. (e.response.result[i][params.locateinfo.mapping.zip] or "") 
 
-                         params = {
-                           name = e.response.result[i][params.locateinfo.mapping.name],
-                           miles = e.response.result[i][params.locateinfo.mapping.miles],
-                                  }
-                        }
+                                          }
+                                }
 
-                      local options = { 
-                        title=e.response.result[i][params.locateinfo.mapping.name], 
-                        subtitle="Subtitle", 
-                        --imageFile = 
-                       -- {
-                        --    filename = "images/coronamarker.png",
-                         --   baseDir = system.ResourcesDirectory
-                        --},
-                          listener=markerListener 
-                      }
-                      print ("JHIUHIHIUHUI" .. e.response.result[i][params.locateinfo.mapping.geo].latitude)
-                      myMap:addMarker( e.response.result[i][params.locateinfo.mapping.geo].latitude, e.response.result[i][params.locateinfo.mapping.geo].longitude, options )
+                          end
 
-                     
-
-                  end
-                  if #e.response.result > 0 then myList:scrollToIndex( 1 ) end
-
-            end end )
-        end
+                          native.setActivityIndicator( false ) 
+                          if #e.response.result > 0 then 
+                            myList:scrollToIndex( 1 ) 
+                            buildMap()
+                          end
+                         
+                      end  -- end of error check
+                  end )  -- end of parse call
+            else
+              buildMap()
+            end  -- end of runit or justcreated
+            -----------------------------------------------
+            -- always do the map even if same criteria coming in
+            -----------------------------------------------
+            
+        end    -- end of network connection check
         justcreated = false
 
     end
@@ -290,6 +364,15 @@ end
 
 function scene:myparams( event )
        return params
+end
+
+---------------------------------------------------
+-- use if someone wants us to transition away
+-- for navigational appearnaces
+-- used from the more button
+---------------------------------------------------
+function scene:morebutton( parms )
+     transition.to(  myMap, {  time=parms.time,delta=true, x = parms.x , transition=parms.transition})
 end
 
 scene:addEventListener( "create", scene )

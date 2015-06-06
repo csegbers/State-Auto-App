@@ -180,9 +180,14 @@ function scene:show( event )
                                                         lat = inputparms.lat,
                                                         lng = inputparms.lng,
                                                         mapping = {
+                                                                   id = params.locateinfo.mapping.id, 
                                                                    name = params.locateinfo.mapping.name, 
                                                                    miles = params.locateinfo.mapping.miles, 
                                                                    geo=params.locateinfo.mapping.geo,
+                                                                   street=params.locateinfo.mapping.street,
+                                                                   city=params.locateinfo.mapping.city,
+                                                                   state=params.locateinfo.mapping.state,
+                                                                   zip=params.locateinfo.mapping.zip,
                                                                   },
                                                       },
                                          navigation = { 
@@ -221,7 +226,7 @@ function scene:show( event )
                   ------------------------------------------------------
                   if ( event.isError ) then
                   else
-                       launchLocateScene{desc=string.format (params.desc  ..  " within %i miles of location %s.",params.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
+                       launchLocateScene{desc=string.format (params.desc  ..  " within %i miles of %s.",params.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
                   end
               end  
 
@@ -261,7 +266,7 @@ function scene:show( event )
                     width = itemGrp.width,
                     height = myApp.locatepre.btnheight,
                     x = itemGrp.x,
-                    y = curlocButton.y +  myApp.locatepre.btnheight  + myApp.locatepre.edge*2,
+                    y = curlocButton.y +  myApp.locatepre.btnheight  + myApp.locatepre.edge,
                     onRelease = function() 
                                       local inputtext = addressField.textField.text or ""
                                       if inputtext == "" then
@@ -354,7 +359,7 @@ function scene:show( event )
                 cornerRadius = myApp.locatepre.addressfieldcornerradius,
                 strokeWidth = 0,
                 text = "",
-                fontSize = myApp.locatepre.textfontsize,
+                fontSize = myApp.locatepre.addresstextfontsize,
                 placeholder = myApp.locatepre.addressfieldplaceholder,
                 font = myApp.fontBold,
                 labelWidth = 0,
@@ -384,6 +389,7 @@ function scene:hide( event )
     if ( phase == "will" ) then
         addressField:removeSelf()
         addressField = nil
+        native.setKeyboardFocus( nil )
     elseif ( phase == "did" ) then
     end
 

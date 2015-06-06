@@ -154,6 +154,7 @@ local M = {
                                 curlocbtntext = "Use Current Location",
 
                                 addressbtntext= "Use Location Entered Below",
+                                addresstextfontsize=14  , 
                                 btnheight = 35,
                                 milerange = {low=5,high=100},
                                 lua="locate",
@@ -181,7 +182,23 @@ local M = {
 
                                 tableheight=180,  
                                 row={
-                                       height=60
+                                       height=60,
+                                       rowColor = { 1, 1, 1 },
+                                       lineColor = { 220/255 },
+                                       nametextfontsize=16  , 
+                                       nametexty = 15,
+                                       nametextx = 10,
+                                       nametextColor = 0,
+                                       addresstextfontsize = 10,
+                                       addresstexty= 40,
+                                       addresstextx= 10,
+                                       addressColor = 0.5,
+                                       milestextfontsize = 13,
+                                       milesColor = 0.5,
+                                       milestexty = 45,
+                                       milestextx = 210,
+                                       arrowwidth = 40,
+                                       arrowheight = 40,
                                     },
                                 map = {
                                           latitudespan = .25,
