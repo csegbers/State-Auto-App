@@ -152,7 +152,7 @@ local myList = widget.newTableView {
            row.nameText.anchorX = 0
            row.nameText.anchorY = 0.5
            row.nameText:setFillColor( myApp.moreinfo.row.textcolor )
-           row.nameText.y = myApp.moreinfo.row.height / 2
+           row.nameText.y = row.height / 2
            row.nameText.x = myApp.moreinfo.row.indent
            row:insert( row.nameText )
            return true
@@ -170,10 +170,28 @@ table.sort(a)
 -- Generate the rows
 --------------------------------------------- 
 for i,k in ipairs(a) do 
+
+    local isCategory = false
+    local defaultcolor ={myApp.sceneBackgroundmorecolor.r,myApp.sceneBackgroundmorecolor.g,myApp.sceneBackgroundmorecolor.b}
+    local rowHeight = myApp.moreinfo.row.height
+    local rowColor = { default=defaultcolor, over=myApp.moreinfo.row.over }
+    local lineColor =  myApp.moreinfo.row.linecolor
+    if myApp.moreinfo.items[k].includeline == false then lineColor = defaultcolor end
+
+    -- Make some rows categories
+    if ( myApp.moreinfo.items[k].isCategory or false) then
+        isCategory = true
+        rowHeight = myApp.moreinfo.row.catheight
+        rowColor = myApp.moreinfo.row.catcolor
+        lineColor = defaultcolor
+    end
+
+
 	   myList:insertRow({
-	      rowHeight = myApp.moreinfo.row.height, 
-	      rowColor =  { default={myApp.sceneBackgroundmorecolor.r,myApp.sceneBackgroundmorecolor.g,myApp.sceneBackgroundmorecolor.b}, over=myApp.moreinfo.row.over },
-	      lineColor = myApp.moreinfo.row.linecolor,
+	      rowHeight = rowHeight, 
+	      rowColor =  rowColor,
+	      lineColor = lineColor,
+        isCategory = isCategory,
 	      params = { title = myApp.moreinfo.items[k].title,key = k,}
 	   })
  end

@@ -19,14 +19,22 @@ local moreinfo = {
                       row = {
                               over={ 1, 0.5, 0, 0.2 },
                               linecolor={ 200/255 },
-                              height = 50,
+                              height = 40,
                               indent = 25,
                               textcolor = 1,
-                              textfontsize=14 
+                              textfontsize=14 ,
+                              catheight = 25,
+                              catcolor = { default={ 100/255, 130/255, 180/255, 0.7} },
                             },
                       items = {
+
+                               AAlogin = {
+                                   title = "Login", 
+                                   isCategory = true,
+                                      },
                               alocate = {
-                                   title = "Locate an Agent more", 
+                                   includeline  = false,       -- needed if prior is header otherwise it looks bad 
+                                   title = "Login", 
                                    pic="trustedchoice.png",
                                    originaliconwidth = 196,
                                    originaliconheight = 77,
@@ -47,23 +55,11 @@ local moreinfo = {
                                                effectback="slideRight",
                                             },},
                                        },
-                               broasast = {title = "Terms", 
-                                           pic="truck.png",
-                                           text="Flat tire, out of gas ? We can help",
-                                           backtext = "<",
-                                          htmlinfo = {
-                                                  htmlfile="terms.html" ,
-                                                  dir = system.ResourceDirectory ,
-                                                },
-                                          navigation = { composer = {
-                                               id = "term",
-                                               lua="webview",
-                                               time=250, 
-                                               effect="slideLeft",
-                                               effectback="slideRight",
-                                            },},
-                                         },
-                                bzoasast = {title = "Help", 
+                               bb0head = {
+                                   title = "Support", 
+                                   isCategory = true,
+                                      },
+                               bb1 = {title = "Help", 
                                            pic="truck.png",
                                            text="Flat tire, out of gas ? We can help",
                                            backtext = "<",
@@ -79,38 +75,41 @@ local moreinfo = {
                                                effectback="slideRight",
                                             },},
                                          },
-                               css = {title = "Debug", 
-                                          pic="truck.png",
-                                          text="Flat tire, out of gas ? We can help really help",
+                               bb2 = {title = "Terms", 
+                                           pic="truck.png",
+                                           text="Flat tire, out of gas ? We can help",
                                            backtext = "<",
-                                          locateinfo = {
-                                                  functionname="getagenciesnearby",
-                                                  limit=2,
-                                                  miles=50,
-                                                },
-                                          navigation = { tabbar = {
-                                               id = "xxxmore",
-                                               key="gdebug",
-                                            },},
-                                      },
-                                  dtt= {title = "Yahoo Web", 
-                                    pic="truck.png",
-                                    text="Sample web page",
-                                    backtext = "<",
-                                          pic="truck.png",
                                           htmlinfo = {
-                                                  url="http://www.yahoo.com/" ,
+                                                  htmlfile="terms.html" ,
+                                                  dir = system.ResourceDirectory ,
                                                 },
                                           navigation = { composer = {
-                                               id = "yahooweb6",
+                                               id = "term",
                                                lua="webview",
                                                time=250, 
                                                effect="slideLeft",
                                                effectback="slideRight",
                                             },},
-                                            
-                                      },
+                                         },
+
+                                bb3 = {title = "Help", 
+                                           pic="truck.png",
+                                           text="Flat tire, out of gas ? We can help",
+                                           backtext = "<",
+                                          htmlinfo = {
+                                                  htmlfile="help.html" ,
+                                                  dir = system.ResourceDirectory ,
+                                                },
+                                          navigation = { composer = {
+                                               id = "help",
+                                               lua="webview",
+                                               time=250, 
+                                               effect="slideLeft",
+                                               effectback="slideRight",
+                                            },},
+                                         },
                                    dtt= {title = "Privacy", 
+                                    includeline  = false,
                                     pic="truck.png",
                                     text="Sample web page",
                                     backtext = "<",
@@ -128,14 +127,59 @@ local moreinfo = {
                                             },},
                                             
                                       },
-
-                                  edd= {title = "External Launch", 
+                               xx0 = {
+                                   title = "Settings", 
+                                   isCategory = true,
+                                      },
+                               xx1 = {
+                                   includeline  = false,       -- needed if prior is header otherwise it looks bad 
+                                   title = "Test", 
+                                   pic="trustedchoice.png",
+                                   originaliconwidth = 196,
+                                   originaliconheight = 77,
+                                   iconwidth = 120,      -- height will be scaled appropriately
+                                   text="Locate agents nearby or from an address",
+                                   backtext = "<",
+                                  -- groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
+                                   locateinfo = {
+                                                  limit=100,
+                                                  miles=25,
+                                                  object = "Agency", --- used for mapping and other web services
+                                                },
+                                   navigation = { composer = {
+                                               id = "alocatemore",
+                                               lua="locatepre",
+                                               time=250, 
+                                               effect="slideLeft",
+                                               effectback="slideRight",
+                                            },},
+                                       },
+                               zz0 = {
+                                   title = "Extras", 
+                                   isCategory = true,
+                                      },
+                               zz1= {title = "External Launch", 
                                     pic="truck.png",
                                     text="xxxxxx",
                                     backtext = "<",
                                           pic="truck.png",
                                           navigation = { systemurl = { url="tel:614-915-9769"},},
                                             
+                                      },
+
+                                 zz2 = {title = "Debug", 
+                                          pic="truck.png",
+                                          text="Flat tire, out of gas ? We can help really help",
+                                           backtext = "<",
+                                          locateinfo = {
+                                                  functionname="getagenciesnearby",
+                                                  limit=2,
+                                                  miles=50,
+                                                },
+                                          navigation = { tabbar = {
+                                               id = "xxxmore",
+                                               key="gdebug",
+                                            },},
                                       },
                               },  --items
 

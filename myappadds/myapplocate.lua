@@ -109,8 +109,8 @@ local M = {
                                        arrowheight = 40,
                                     },
                                 map = {
-                                          latitudespan = .25,
-                                          longitudespan = .25,
+                                          latitudespan = .1,
+                                          longitudespan = .1,
                                           type = "standard" ,
                                       },
 

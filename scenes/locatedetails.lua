@@ -90,7 +90,7 @@ local onRowTouch = function( event )
  
         elseif event.phase == "release" then
                print ("release")
- 
+  
             -- force row re-render on next TableView update
             
         end
@@ -102,7 +102,7 @@ local function buildMap( event )
       native.setActivityIndicator( true ) 
 
       local mapheight = myApp.sceneHeight-myList.height-itemGrp.height-myApp.locatedetails.edge*2
-      myMap = native.newMapView( 0, 0, myApp.sceneWidth-myApp.locatedetails.edge , mapheight  ) 
+      myMap = native.newMapView( 0, 0, myApp.sceneWidth-myApp.locatedetails.edge , mapheight  )   -- cause
       if myMap and myObject then
          myMap.mapType = myApp.locatedetails.map.type -- other mapType options are "satellite" or "hybrid"
 
@@ -110,14 +110,14 @@ local function buildMap( event )
          myMap.x = myApp.cCx
          myMap.y = myApp.sceneStartTop + itemGrp.height  + myApp.locatedetails.edge+ mapheight/2 + myApp.locatedetails.edge/2
 
-         myMap:setCenter( myObject[objectgroup.mapping.geo].myObject[objectgroup.mapping.geo].longitude, false )
-         myMap:setRegion( myObject[objectgroup.mapping.geo].myObject[objectgroup.mapping.geo].longitude, myApp.locatedetails.map.latitudespan, myApp.locatedetails.map.longitudespan, false)
+         myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, false )
+         myMap:setRegion( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, myApp.locatedetails.map.latitudespan, myApp.locatedetails.map.longitudespan, false)
       
          local options = { 
                   title=myObject[objectgroup.mapping.name], 
                   subtitle=(myObject[objectgroup.mapping.street] or "") .. " " .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") , 
                    }
-         myMap:addMarker( myObject[objectgroup.mapping.geo].myObject[objectgroup.mapping.geo].longitude, options )
+         myMap:addMarker( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, options )
       end
       native.setActivityIndicator( false ) 
 end
@@ -237,8 +237,9 @@ function scene:show( event )
            ------------------------------------
            native.setActivityIndicator( true )
 
+
            if (runit or justcreated) then
-               debugpopup ("looking for " .. params.objecttype .." " .. params.objectqueryvalue)
+               --debugpopup ("looking for " .. params.objecttype .." " .. params.objectqueryvalue)
                parse:run(objectgroup.functionname.details,
                    {
                       [objectgroup.mapping.id] =  params.objectqueryvalue,  
