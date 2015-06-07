@@ -48,8 +48,12 @@ function scene:show( event )
                     native.setActivityIndicator( false )
                 end
             end
-
+            -------------------------------------
+            -- note this wont show in windows simulator but 
+            -- doesnt error. 
+            -------------------------------------
             webView = native.newWebView( myApp.sceneWidth / 2, myApp.sceneHeight  /2 + myApp.sceneStartTop,myApp.sceneWidth,myApp.sceneHeight )
+            
             webView.isVisible = false
             --webView:reload()
             webView:addEventListener( "urlRequest", webListener )
@@ -59,7 +63,7 @@ function scene:show( event )
             else
                 webView:request( myApp.htmlfld .. params.htmlinfo.htmlfile , params.htmlinfo.dir )
             end
-
+            
     end	
 
 end

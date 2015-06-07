@@ -1,0 +1,123 @@
+
+-------------------------------------------------------
+-- Store variables used across the entire app 
+-------------------------------------------------------
+local M = { 
+
+             locatepre = {    
+
+                                edge=10,
+                                groupheight = 130,
+                                groupheaderheight = 40,
+                                groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
+                                groupstrokewidth = 1,
+                                groupheader = { r=25/255, g=75/255, b=150/255, a=1 },
+                                iconwidth = 60,    -- can be overidden in item
+                                iconheight = 60,   -- can be overidden in item
+                                headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
+                                headerfontsize = 17,  
+                                textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                                textfontsize=16  ,   
+                                textbottomedge =2   ,  
+                                shape="roundedRect",
+                                curlocbtntext = "Use Current Location",
+
+                                addressbtntext= "Use Location Entered Below",
+                                addresstextfontsize=14  , 
+                                btnheight = 35,
+                                milerange = {low=5,high=100},
+                                lua="locate",
+                                effect="slideLeft",
+                                effectback="slideRight",
+                                addressfieldheight = 50,
+                                addressfieldcornerradius = 6,
+                                addressfieldplaceholder = "Enter zip, city/state or address",
+                                addresslocate = {
+                                       errortitle = "Location Not Entered", 
+                                       errormessage = "Please Enter A Valid Location",
+                                                },
+                                 
+                       },
+             locate = {    
+
+                                edge=10,
+                                groupheight = 40,
+                                groupbackground = { r=180/255, g=180/255, b=180/255, a=1 },
+                                groupstrokewidth = 0,
+
+                                textcolor = { r=255/255, g=255/255, b=255/255, a=1 },   
+                                textfontsize=15  ,   
+                                textbottomedge =2   ,
+
+                                tableheight=180,  
+                                row={
+                                       height=60,
+                                       rowColor = { 1, 1, 1 },
+                                       lineColor = { 220/255 },
+                                       nametextfontsize=16  , 
+                                       nametexty = 15,
+                                       nametextx = 10,
+                                       nametextColor = 0,
+                                       addresstextfontsize = 10,
+                                       addresstexty= 40,
+                                       addresstextx= 10,
+                                       addressColor = 0.5,
+                                       milestextfontsize = 13,
+                                       milesColor = 0.5,
+                                       milestexty = 45,
+                                       milestextx = 210,
+                                       arrowwidth = 40,
+                                       arrowheight = 40,
+                                    },
+                                map = {
+                                          latitudespan = .25,
+                                          longitudespan = .25,
+                                          type = "standard" ,
+                                      },
+
+                                 
+                       },
+             locatedetails = {    
+
+                                edge=10,
+                                groupheight = 40,
+                                groupbackground = { r=180/255, g=180/255, b=180/255, a=1 },
+                                groupstrokewidth = 0,
+
+                                textcolor = { r=255/255, g=255/255, b=255/255, a=1 },   
+                                textfontsize=15  ,   
+                                textbottomedge =2   ,
+
+                                tableheight=180,  
+                                row={
+                                       height=60,
+                                       rowColor = { 1, 1, 1 },
+                                       lineColor = { 220/255 },
+                                       nametextfontsize=16  , 
+                                       nametexty = 15,
+                                       nametextx = 10,
+                                       nametextColor = 0,
+                                       addresstextfontsize = 10,
+                                       addresstexty= 40,
+                                       addresstextx= 10,
+                                       addressColor = 0.5,
+                                       milestextfontsize = 13,
+                                       milesColor = 0.5,
+                                       milestexty = 45,
+                                       milestextx = 210,
+                                       arrowwidth = 40,
+                                       arrowheight = 40,
+                                    },
+                                map = {
+                                          latitudespan = .25,
+                                          longitudespan = .25,
+                                          type = "standard" ,
+                                      },
+
+                                 
+                       },
+
+     }
+                        
+        
+return M

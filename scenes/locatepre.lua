@@ -169,31 +169,22 @@ function scene:show( event )
                                          originaliconheight = params.originaliconheight,
                                          iconwidth = params.iconwidth,      -- height will be scaled appropriately
                                          text=params.text,
-                                         backtext = "<",
-                                         groupheader = params.groupheader,   -- can override
-
+                                         backtext = params.backtext,
+ 
                                          locateinfo = {
                                                         desc = inputparms.desc,
-                                                        functionname=params.locateinfo.functionname,
+                                                        functionname=myApp.mappings.objects[params.locateinfo.object].functionname.locate,
                                                         limit=params.locateinfo.limit,
                                                         miles=params.locateinfo.miles,
+                                                        object=params.locateinfo.object,
                                                         lat = inputparms.lat,
                                                         lng = inputparms.lng,
-                                                        mapping = {
-                                                                   id = params.locateinfo.mapping.id, 
-                                                                   name = params.locateinfo.mapping.name, 
-                                                                   miles = params.locateinfo.mapping.miles, 
-                                                                   geo=params.locateinfo.mapping.geo,
-                                                                   street=params.locateinfo.mapping.street,
-                                                                   city=params.locateinfo.mapping.city,
-                                                                   state=params.locateinfo.mapping.state,
-                                                                   zip=params.locateinfo.mapping.zip,
-                                                                  },
+                                                        mapping= myApp.mappings.objects[params.locateinfo.object].mapping,
                                                       },
                                          navigation = { 
                                                composer = {
                                                               -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
-                                                             id = params.locateinfo.functionname.."-" ..params.locateinfo.miles.."-" .. params.locateinfo.limit .."-".. inputparms.lat .."-".. inputparms.lng,   
+                                                             id = params.locateinfo.object.."-" ..params.locateinfo.miles.."-" .. params.locateinfo.limit .."-".. inputparms.lat .."-".. inputparms.lng,   
                                                              lua=myApp.locatepre.lua ,
                                                              time=params.navigation.composer.time, 
                                                              effect=myApp.locatepre.effect,
@@ -214,7 +205,7 @@ function scene:show( event )
                   -- have accurate location ?
                   ------------------------------------------------------
                   if myApp.gps.haveaccuratelocation == true then
-                       launchLocateScene{desc=string.format (params.desc ..  " within %i miles of your current location.",params.locateinfo.miles), lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
+                       launchLocateScene{desc=string.format (myApp.mappings.objects[params.locateinfo.object].desc.plural ..  " within %i miles of your current location.",params.locateinfo.miles), lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
                   end
 
              end
@@ -226,7 +217,7 @@ function scene:show( event )
                   ------------------------------------------------------
                   if ( event.isError ) then
                   else
-                       launchLocateScene{desc=string.format (params.desc  ..  " within %i miles of %s.",params.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
+                       launchLocateScene{desc=string.format (myApp.mappings.objects[params.locateinfo.object].desc.plural  ..  " within %i miles of %s.",params.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
                   end
               end  
 

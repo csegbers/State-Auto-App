@@ -101,6 +101,42 @@ end
 --end
 
 
+ local function launchLocateDetailsScene(queryvalue) 
+
+          local objecttype = params.locateinfo.object    -- Agency, BodyShop etc...
+          local objectgroup = myApp.mappings.objects[objecttype]
+          local objectqueryvalue = queryvalue
+
+          local locatedetails = {  
+                     objecttype = objecttype,
+                     objectqueryvalue = queryvalue,
+                     title = objectgroup.desc.singular, 
+                     pic=params.pic,
+                     originaliconwidth = params.originaliconwidth,
+                     originaliconheight = params.originaliconheight,
+                     iconwidth = params.iconwidth,      -- height will be scaled appropriately
+                     backtext = objectgroup.backtext,
+
+                     navigation = { 
+                           composer = {
+                                          -- this id setting this way we will rerun if different than prior request either object type, value etc etc...
+                                         id = objecttype.."-" ..queryvalue,   
+                                         lua=objectgroup.navigation.composer.lua ,
+                                         time=objectgroup.navigation.composer.time, 
+                                         effect=objectgroup.navigation.composer.effect,
+                                         effectback=objectgroup.navigation.composer.effectback,
+                                      },
+                                 },
+                     }      
+
+             local parentinfo =  params 
+             locatedetails.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+             myApp.showSubScreen ({instructions=locatedetails})
+
+ end
+
+
+
 local onRowTouch = function( event )
         local row = event.row
         if myMap then myMap:setCenter( row.params.lat, row.params.lng ,true ) end
@@ -118,7 +154,7 @@ local onRowTouch = function( event )
  
         elseif event.phase == "release" then
                print ("release")
-               debugpopup ("released " .. row.params.id)
+               launchLocateDetailsScene( row.params.id)
             -- force row re-render on next TableView update
             
         end
@@ -136,8 +172,11 @@ end
 
 local function buildMap( event )
    native.setActivityIndicator( true ) 
+   ---------------------------------------------
+   -- loop thru results and mark
+   ---------------------------------------------
    local tableViewRows = myList._view._rows
-
+   if myMap then
      for k, row in ipairs(tableViewRows) do
 
          local options = { 
@@ -153,7 +192,7 @@ local function buildMap( event )
          myMap:addMarker( row.params.lat, row.params.lng, options )
 
      end
-
+   end
    native.setActivityIndicator( false ) 
 end
 
@@ -273,23 +312,32 @@ function scene:show( event )
 
            local mapheight = myApp.sceneHeight-myList.height-itemGrp.height-myApp.locate.edge*2
            myMap = native.newMapView( 0, 0, myApp.sceneWidth-myApp.locate.edge , mapheight  ) 
-           myMap.mapType = myApp.locate.map.type -- other mapType options are "satellite" or "hybrid"
+           if myMap then
+             myMap.mapType = myApp.locate.map.type -- other mapType options are "satellite" or "hybrid"
 
-          -- The MapView is just another Corona display object, and can be moved or rotated, etc.
-           myMap.x = myApp.cCx
-           myMap.y = myApp.sceneStartTop + itemGrp.height  + myApp.locate.edge+ mapheight/2 + myApp.locate.edge/2
+            -- The MapView is just another Corona display object, and can be moved or rotated, etc.
+             myMap.x = myApp.cCx
+             myMap.y = myApp.sceneStartTop + itemGrp.height  + myApp.locate.edge+ mapheight/2 + myApp.locate.edge/2
 
-           myMap:setCenter( params.locateinfo.lat, params.locateinfo.lng, false )
-           myMap:setRegion( params.locateinfo.lat, params.locateinfo.lng, myApp.locate.map.latitudespan, myApp.locate.map.longitudespan, false)
-
+             myMap:setCenter( params.locateinfo.lat, params.locateinfo.lng, false )
+             myMap:setRegion( params.locateinfo.lat, params.locateinfo.lng, myApp.locate.map.latitudespan, myApp.locate.map.longitudespan, false)
+           end
            if (runit or justcreated) then
-               parse:run(params.locateinfo.functionname,{["lat"] = params.locateinfo.lat , ["lng"] = params.locateinfo.lng ,["limit"] = params.locateinfo.limit, ["miles"] = params.locateinfo.miles},
+               parse:run(params.locateinfo.functionname,
+                  {
+                   ["lat"] = params.locateinfo.lat , 
+                   ["lng"] = params.locateinfo.lng ,
+                   ["limit"] = params.locateinfo.limit, 
+                   ["miles"] = params.locateinfo.miles
+                   },
+                   ------------------------------------------------------------
+                   -- Callback inline function
+                   ------------------------------------------------------------
                    function(e) 
-                      
                       if not e.error then  
-
                           for i = 1, #e.response.result do
-                              print("NAME" .. e.response.result[i][params.locateinfo.mapping.name])
+                              local resgroup = e.response.result[i]
+                              print("NAME" .. resgroup[params.locateinfo.mapping.name])
 
                              myList:insertRow{
                                 rowHeight = myApp.locate.row.height,
@@ -298,37 +346,37 @@ function scene:show( event )
                                 lineColor = myApp.locate.row.lineColor,
 
                                 params = {
-                                             id = e.response.result[i][params.locateinfo.mapping.id],
-                                             name = e.response.result[i][params.locateinfo.mapping.name],
-                                             miles = e.response.result[i][params.locateinfo.mapping.miles],
-                                             lat = e.response.result[i][params.locateinfo.mapping.geo].latitude,
-                                             lng = e.response.result[i][params.locateinfo.mapping.geo].longitude,
-                                             street = e.response.result[i][params.locateinfo.mapping.street],                           
-                                             city = e.response.result[i][params.locateinfo.mapping.city],
-                                             state = e.response.result[i][params.locateinfo.mapping.state],
-                                             zip = e.response.result[i][params.locateinfo.mapping.zip],
-                                             address = (e.response.result[i][params.locateinfo.mapping.street] or "") .. "\n" .. (e.response.result[i][params.locateinfo.mapping.city] or "") .. ", " .. (e.response.result[i][params.locateinfo.mapping.state] or "") .. " " .. (e.response.result[i][params.locateinfo.mapping.zip] or "") 
+                                             objectId = resgroup.objectId,
+                                             id = resgroup[params.locateinfo.mapping.id],
+                                             name = resgroup[params.locateinfo.mapping.name],
+                                             miles = resgroup[params.locateinfo.mapping.miles],
+                                             lat = resgroup[params.locateinfo.mapping.geo].latitude,
+                                             lng = resgroup[params.locateinfo.mapping.geo].longitude,
+                                             street = resgroup[params.locateinfo.mapping.street],                           
+                                             city = resgroup[params.locateinfo.mapping.city],
+                                             state = resgroup[params.locateinfo.mapping.state],
+                                             zip = resgroup[params.locateinfo.mapping.zip],
+                                             address = (resgroup[params.locateinfo.mapping.street] or "") .. "\n" .. (resgroup[params.locateinfo.mapping.city] or "") .. ", " .. (resgroup[params.locateinfo.mapping.state] or "") .. " " .. (resgroup[params.locateinfo.mapping.zip] or "") 
 
-                                          }
-                                }
+                                          }  -- params
+                                }   --myList:insertRow
 
                           end
 
                           native.setActivityIndicator( false ) 
                           if #e.response.result > 0 then 
                             myList:scrollToIndex( 1 ) 
-                            buildMap()
+                            buildMap()   -- always need to do
                           end
-                         
+                      else
+                        native.setActivityIndicator( false ) 
+                       --buildMap()     no need to do. Nothing to mark
                       end  -- end of error check
                   end )  -- end of parse call
             else
-              buildMap()
+              native.setActivityIndicator( false ) 
+              buildMap()   -- always need to do
             end  -- end of runit or justcreated
-            -----------------------------------------------
-            -- always do the map even if same criteria coming in
-            -----------------------------------------------
-            
         end    -- end of network connection check
         justcreated = false
 

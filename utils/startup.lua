@@ -218,7 +218,7 @@ function  myApp.getAddressLocation( event )
 
         end
         
-        myMap:requestLocation( parms.address, addressHandler )
+        if myMap then myMap:requestLocation( parms.address, addressHandler ) end
  
 end
 
