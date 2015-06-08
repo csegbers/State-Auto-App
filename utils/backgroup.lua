@@ -154,6 +154,7 @@ local myList = widget.newTableView {
            row.nameText:setFillColor( myApp.moreinfo.row.textcolor )
            row.nameText.y = row.height / 2
            row.nameText.x = myApp.moreinfo.row.indent
+           if row.isCategory then row.nameText.x = myApp.moreinfo.row.indent/2 end
            row:insert( row.nameText )
            return true
       end

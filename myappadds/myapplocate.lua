@@ -44,6 +44,7 @@ local M = {
                                 groupheight = 40,
                                 groupbackground = { r=180/255, g=180/255, b=180/255, a=1 },
                                 groupstrokewidth = 0,
+                                cornerradius = 3,
 
                                 textcolor = { r=255/255, g=255/255, b=255/255, a=1 },   
                                 textfontsize=15  ,   
@@ -80,33 +81,30 @@ local M = {
              locatedetails = {    
 
                                 edge=10,
-                                groupheight = 40,
-                                groupbackground = { r=180/255, g=180/255, b=180/255, a=1 },
+                                groupheight = 100,
+                                groupbackground = { r=220/255, g=220/255, b=220/255, a=1 },
                                 groupstrokewidth = 0,
+                                cornerradius = 3,
 
-                                textcolor = { r=255/255, g=255/255, b=255/255, a=1 },   
-                                textfontsize=15  ,   
+                                textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                                textfontsize=18  ,   
                                 textbottomedge =2   ,
+                                textfontsizeaddress=14  ,  
+                                textcoloraddress = { r=130/255, g=130/255, b=130/255, a=1 },   
 
                                 tableheight=180,  
                                 row={
-                                       height=60,
+                                       height=40,
                                        rowColor = { 1, 1, 1 },
                                        lineColor = { 220/255 },
-                                       nametextfontsize=16  , 
-                                       nametexty = 15,
-                                       nametextx = 10,
-                                       nametextColor = 0,
-                                       addresstextfontsize = 10,
-                                       addresstexty= 40,
-                                       addresstextx= 10,
-                                       addressColor = 0.5,
-                                       milestextfontsize = 13,
-                                       milesColor = 0.5,
-                                       milestexty = 45,
-                                       milestextx = 210,
-                                       arrowwidth = 40,
-                                       arrowheight = 40,
+                                       desctextfontsize=14  , 
+                                       desctexty = 20,
+                                       desctextx = 55,
+                                       desctextColor = 0,
+
+                                       iconwidth = 35,
+                                       iconheight = 35,
+
                                     },
                                 map = {
                                           latitudespan = .1,

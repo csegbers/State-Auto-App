@@ -24,7 +24,7 @@ local moreinfo = {
                               textcolor = 1,
                               textfontsize=14 ,
                               catheight = 25,
-                              catcolor = { default={ 100/255, 130/255, 180/255, 0.7} },
+                              catcolor = { default={ 180 /255, 200/255, 230/255, 0.7} },
                             },
                       items = {
 

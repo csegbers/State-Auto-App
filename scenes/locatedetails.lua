@@ -20,15 +20,15 @@ local myList
 local runit  
 local justcreated  
 local myMap
-local myDesc
+local myName
+local myAddress
 local itemGrp
 local myObject     -- response object from the services call or nil if no hit
 local objectgroup -- pointer to the mappings stuff
 
-
-  ------------------------------------------------------
-  -- Row is rendered
-  ------------------------------------------------------
+------------------------------------------------------
+-- Row is rendered
+------------------------------------------------------
 local  onRowRender = function ( event )
 
          --Set up the localized variables to be passed via the event table
@@ -36,43 +36,38 @@ local  onRowRender = function ( event )
          local row = event.row
          local id = row.index
          local params = event.row.params
-         print ("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" .. params.name)
-
-         -- row.bg = display.newRect( 0, 0, display.contentWidth, 60 )
-         -- row.bg.anchorX = 0
-         -- row.bg.anchorY = 0
-         -- row.bg:setFillColor( 1, 1, 1 )
-         -- row:insert( row.bg )
 
          if ( event.row.params ) then    
-            row.nameText = display.newText( params.name, 0, 0, myApp.fontBold, myApp.locatedetails.row.nametextfontsize )
-            row.nameText.anchorX = 0
-            row.nameText.anchorY = 0.5
-            row.nameText:setFillColor( myApp.locatedetails.row.nametextColor )
-            row.nameText.y = myApp.locatedetails.row.nametexty
-            row.nameText.x = myApp.locatedetails.row.nametextx
+            row.descText = display.newText( params.desc, 0, 0, myApp.fontBold, myApp.locatedetails.row.desctextfontsize )
+            row.descText.anchorX = 0
+            row.descText.anchorY = 0.5
+            row.descText:setFillColor( myApp.locatedetails.row.desctextColor )
+            row.descText.y = myApp.locatedetails.row.desctexty
+            row.descText.x = myApp.locatedetails.row.desctextx
 
-            --local addressline = (params.street or "") .. "\n" .. (params.city or "") .. ", " .. (params.state or "") .. " " .. (params.zip or "") 
-            row.addressText = display.newText( params.address, 0, 0, row.width / 2,0,myApp.fontBold, myApp.locatedetails.row.addresstextfontsize  )
-            row.addressText.anchorX = 0
-            row.addressText.anchorY = 0.5
-            row.addressText:setFillColor( myApp.locatedetails.row.addressColor )
-            row.addressText.y = myApp.locatedetails.row.addresstexty
-            row.addressText.x = myApp.locatedetails.row.addresstextx
+            row:insert( row.descText )
 
-            row.rightArrow = display.newImageRect(myApp.icons, 15 , myApp.locatedetails.row.arrowwidth, myApp.locatedetails.row.arrowheight)
-            row.rightArrow.x = row.width - myApp.locatedetails.row.arrowwidth/2
-            row.rightArrow.y = row.height / 2
+             -------------------------------------------------
+             -- Icon ?
+             -------------------------------------------------
 
-            row:insert( row.nameText )
-            row:insert( row.addressText )
-            row:insert( row.rightArrow )
+            local iconimage = myApp.objecttypes[params.fieldtype].image
+            if iconimage then
+                 row.myIcon = display.newImageRect(myApp.imgfld .. iconimage,  myApp.locatedetails.row.iconwidth , myApp.locatedetails.row.iconheight )
+                 common.fitImage( row.myIcon,  myApp.locatedetails.row.iconwidth   )
+                 row.myIcon.y = myApp.locatedetails.row.height / 2
+                 row.myIcon.x = myApp.locatedetails.row.iconwidth/2 + myApp.locatedetails.edge
+                 row:insert( row.myIcon )
+            end
+
+
          end
          return true
 end
  
-
-
+------------------------------------------------------
+-- what launch object ?
+------------------------------------------------------
 local onRowTouch = function( event )
         local row = event.row
         if myMap then myMap:setCenter( row.params.lat, row.params.lng ,true ) end
@@ -98,6 +93,9 @@ local onRowTouch = function( event )
 end
 
 
+------------------------------------------------------
+-- The map. centered and marked for the 1 item
+------------------------------------------------------
 local function buildMap( event )
       native.setActivityIndicator( true ) 
 
@@ -134,8 +132,8 @@ function scene:create(event)
     local group = self.view
     params = event.params           -- params contains the item table  
      
-    container  = common.SceneContainer()
-    group:insert(container )
+     container  = common.SceneContainer()
+     group:insert(container )
 
      ---------------------------------------------
      -- Header group
@@ -148,31 +146,43 @@ function scene:create(event)
 
      local groupwidth = myApp.sceneWidth-myApp.locatedetails.edge
      local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsize})
+
      local textHeightSingleLine = dumText.height
      
      -------------------------------------------------
      -- Background
      -------------------------------------------------
-     local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locatedetails.groupstrokewidth*2,myApp.locatedetails.groupheight, 1 )
+     local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locatedetails.groupstrokewidth*2,myApp.locatedetails.groupheight, myApp.locatedetails.cornerradius )
      myRoundedRect:setFillColor(myApp.locatedetails.groupbackground.r,myApp.locatedetails.groupbackground.g,myApp.locatedetails.groupbackground.b,myApp.locatedetails.groupbackground.a )
      itemGrp:insert(myRoundedRect)
 
      local startYother = startY- myApp.locatedetails.groupheight/2  
 
      -------------------------------------------------
-     -- Desc text
+     -- Name text - will be set in show
      -------------------------------------------------
-     myDesc = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-myApp.locatedetails.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsize,align="left" })
-     myDesc.y=myRoundedRect.y --startYother+myApp.locatedetails.groupheight - (myDesc.height) -  myApp.locatedetails.textbottomedge
-     myDesc:setFillColor( myApp.locatedetails.textcolor.r,myApp.locatedetails.textcolor.g,myApp.locatedetails.textcolor.b,myApp.locatedetails.textcolor.a )
-     itemGrp:insert(myDesc)
+     myName = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-myApp.locatedetails.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsize,align="left" })
+     --myName.y=myRoundedRect.y --startYother+myApp.locatedetails.groupheight - (myName.height) -  myApp.locatedetails.textbottomedge
+     myName.anchorY = 0
+     myName.y = myRoundedRect.y - myRoundedRect.height/2 + myApp.locatedetails.edge/2
+     myName:setFillColor( myApp.locatedetails.textcolor.r,myApp.locatedetails.textcolor.g,myApp.locatedetails.textcolor.b,myApp.locatedetails.textcolor.a )
+     itemGrp:insert(myName)
+
+     -------------------------------------------------
+     -- address text - will be set in show
+     -------------------------------------------------
+     myAddress = display.newText( {text="", x=10 , y=0, height=0,width=groupwidth-myApp.locatedetails.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsizeaddress,align="left" })
+     myAddress.anchorY = 0
+     myAddress.y = myRoundedRect.y - myRoundedRect.height/2 + myApp.locatedetails.edge
+     myAddress:setFillColor( myApp.locatedetails.textcoloraddress.r,myApp.locatedetails.textcoloraddress.g,myApp.locatedetails.textcoloraddress.b,myApp.locatedetails.textcoloraddress.a )
+     itemGrp:insert(myAddress)
 
      container:insert(itemGrp)
 
-    ------------------------------------------------------
-    -- Table View
-    ------------------------------------------------------
-    myList = widget.newTableView {
+     ------------------------------------------------------
+     -- Table View
+     ------------------------------------------------------
+     myList = widget.newTableView {
            x=0,
            y= myApp.cH/2 -  myApp.locatedetails.tableheight/2 - myApp.tabs.tabBarHeight-myApp.locatedetails.edge, 
            width = myApp.sceneWidth-myApp.locatedetails.edge, 
@@ -214,7 +224,8 @@ function scene:show( event )
         ------------------------------------------------
         if (runit or justcreated) then 
             myObject = nil
-            myDesc.text = ""  
+            myName.text = ""  
+            myAddress.text = ""  
             myList:deleteAllRows()
         end
         ----------------------------
@@ -237,7 +248,6 @@ function scene:show( event )
            ------------------------------------
            native.setActivityIndicator( true )
 
-
            if (runit or justcreated) then
                --debugpopup ("looking for " .. params.objecttype .." " .. params.objectqueryvalue)
                parse:run(objectgroup.functionname.details,
@@ -249,36 +259,55 @@ function scene:show( event )
                    ------------------------------------------------------------
                    function(e) 
                       if not e.error then  
+                          local haveitems = false
                           if #e.response.result > 0 then
                               myObject = e.response.result[1]
                               print("NAME" .. myObject[objectgroup.mapping.name])
-                              myDesc.text = myObject[objectgroup.mapping.name]
+                              myName.text = myObject[objectgroup.mapping.name]
+                              myAddress.text = (myObject[objectgroup.mapping.street] or "") .. "\n" .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") 
+                              myAddress.y = myName.y+ myName.height + 10
 
-                             myList:insertRow{
-                                rowHeight = myApp.locatedetails.row.height,
-                                isCategory = false,
-                                rowColor = myApp.locatedetails.row.rowColor,
-                                lineColor = myApp.locatedetails.row.lineColor,
+                              ---------------------------------------------
+                              -- Sort (key is critical !!)
+                              -- what laucnh objects are availble ? See if those fields came down via the service.
+                              -- they may not always exist
+                              --------------------------------------------- 
+                              local a = {}
+                              for n in pairs(objectgroup.launchobjects) do table.insert(a, n) end
+                              table.sort(a)
 
-                                params = {
-                                             objectId = myObject.objectId,
-                                             id = myObject[objectgroup.mapping.id],
-                                             name = myObject[objectgroup.mapping.name],
-                                             miles = myObject[objectgroup.mapping.miles],
-                                             lat = myObject[objectgroup.mapping.geo].latitude,
-                                             lng = myObject[objectgroup.mapping.geo].longitude,
-                                             street = myObject[objectgroup.mapping.street],                           
-                                             city = myObject[objectgroup.mapping.city],
-                                             state = myObject[objectgroup.mapping.state],
-                                             zip = myObject[objectgroup.mapping.zip],
-                                             address = (myObject[objectgroup.mapping.street] or "") .. "\n" .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") 
+                              ---------------------------------------------
+                              -- Generate the rows for potential object launches like phne email
+                              --------------------------------------------- 
+                              for i,k in ipairs(a) do 
+ 
+                                  ---------------------------
+                                  -- is the field there  in the response?
+                                  ---------------------------
+                                  if myObject[objectgroup.launchobjects[k].field] then
+                                       haveitems = true
+ 
+                                       myList:insertRow{
+                                          rowHeight = myApp.locatedetails.row.height,
+                                          isCategory = false,
+                                          rowColor = myApp.locatedetails.row.rowColor,
+                                          lineColor = myApp.locatedetails.row.lineColor,
 
-                                          }  -- params
-                                }   --myList:insertRow
+                                          params = {
+                                                       fieldtype = objectgroup.launchobjects[k].type,  -- will point to object table
+                                                       desc = myObject[objectgroup.launchobjects[k].field],      -- actual field vale
+                                                    }  -- params
+                                          }   --myList:insertRow
+
+
+                                  end   -- does field exist
+                              end   --loop
+
+
 
                           end  -- end of results >0
 
-                          if #e.response.result > 0 then 
+                          if haveitems then 
                             myList:scrollToIndex( 1 ) 
                           end
                       end  -- end of error check

@@ -35,6 +35,31 @@ local mappings = {
                                         zip="agencyZip",
                                         logo="agencyLogo",
                                      },
+                          ---------------------------
+                          -- Object id are used for alphabetical sorting
+                          ---------------------------
+                          launchobjects = {
+                                        a = {
+                                               type="phone",
+                                               field="agencyPhone",
+                                            },
+                                        b = {
+                                               type="email",
+                                               field="agencyEmail",
+                                            },
+                                        c = {
+                                               type="web",
+                                               field="agencyWWW",
+                                            },  
+                                        d = {
+                                               type="facebook",
+                                               field="agencyFacebook",
+                                            },   
+                                        e = {
+                                               type="twitter",
+                                               field="agencyTwitter",
+                                            },                                           
+                                     },                                     
                             },
                    BodyShop = {    -- name must match actual aobject name in parse
                           backtext = "<",
@@ -66,6 +91,25 @@ local mappings = {
                                         zip="Zip",   
                                         logo="BodyShopLogo",
                                      },
+
+                           ---------------------------
+                          -- Object id are used for alphabetical sorting
+                          ---------------------------
+                          launchobjects = {
+                                        a = {
+                                               type="phone",
+                                               field="PhoneNumber",
+                                            },
+                                        b = {
+                                               type="email",
+                                               field="BodyShopEMail",    -- yes, EMail. Dont ask
+                                            },
+                                        c = {
+                                               type="web",
+                                               field="BodyShopWebSite",
+                                            },  
+                                          
+                                     },                                    
                             },
  
                },   --objects

@@ -227,7 +227,7 @@ function scene:create(event)
      -------------------------------------------------
      -- Background
      -------------------------------------------------
-     local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locate.groupstrokewidth*2,myApp.locate.groupheight, 1 )
+     local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locate.groupstrokewidth*2,myApp.locate.groupheight, myApp.locate.cornerradius )
      myRoundedRect:setFillColor(myApp.locate.groupbackground.r,myApp.locate.groupbackground.g,myApp.locate.groupbackground.b,myApp.locate.groupbackground.a )
      itemGrp:insert(myRoundedRect)
 

@@ -39,6 +39,29 @@ local M = {
             sceneBackgroundmorecolor = { r=25/255, g=75/255, b=150/255, a=1 },
             scenemaskFile = "",
             splash = {image = "splash.jpg", delay = 150, },
+
+            objecttypes = {
+                        phone = {
+                              launch="phone",
+                              image="phone.png",
+                            },
+                        email = {
+                              launch="email",
+                              image="email.png",
+                            },
+                        web = {
+                              launch="web",
+                              image="web.png",
+                            },
+                        facebook = {
+                              launch="web",
+                              image="facebook.png",
+                            },
+                        twitter = {
+                              launch="web",
+                              image="facebook.png",
+                            },
+                      },
  
             gps = {
                      --timer = 30000,                           --30 seconds

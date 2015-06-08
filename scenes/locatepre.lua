@@ -66,7 +66,7 @@ function scene:show( event )
              -------------------------------------------------
              -- Background
              -------------------------------------------------
-             local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locatepre.groupstrokewidth*2,myApp.locatepre.groupheight, 1 )
+             local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locatepre.groupstrokewidth*2,myApp.locatepre.groupheight, 1)
              myRoundedRect:setFillColor(myApp.locatepre.groupbackground.r,myApp.locatepre.groupbackground.g,myApp.locatepre.groupbackground.b,myApp.locatepre.groupbackground.a )
              myRoundedRect.strokeWidth = myApp.locatepre.groupstrokewidth
              myRoundedRect:setStrokeColor( headcolor.r,headcolor.g,headcolor.b ) 
