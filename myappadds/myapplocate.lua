@@ -81,7 +81,7 @@ local M = {
              locatedetails = {    
 
                                 edge=10,
-                                groupheight = 100,
+                                groupheight = 90,
                                 groupbackground = { r=220/255, g=220/255, b=220/255, a=1 },
                                 groupstrokewidth = 0,
                                 cornerradius = 3,
@@ -94,16 +94,22 @@ local M = {
 
                                 tableheight=180,  
                                 row={
-                                       height=40,
+                                       height=60,
                                        rowColor = { 1, 1, 1 },
                                        lineColor = { 220/255 },
-                                       desctextfontsize=14  , 
-                                       desctexty = 20,
-                                       desctextx = 55,
-                                       desctextColor = 0,
+                                       titletextfontsize=16  , 
+                                       titletexty = 20,
+                                       titletextx = 60,
+                                       titletextColor = 0,
+                                       desctextfontsize=12  , 
+                                       desctexty = 40,
+                                       desctextx = 60,
+                                       desctextColor = 0.5,
 
-                                       iconwidth = 35,
-                                       iconheight = 35,
+                                       iconwidth = 40,
+                                       iconheight = 40,
+
+                                       includedirections = true,
 
                                     },
                                 map = {

@@ -38,13 +38,23 @@ local  onRowRender = function ( event )
          local params = event.row.params
 
          if ( event.row.params ) then    
-            row.descText = display.newText( params.desc, 0, 0, myApp.fontBold, myApp.locatedetails.row.desctextfontsize )
+ 
+            row.titleText = display.newText( myApp.objecttypes[params.fieldtype].title, 0, 0, myApp.fontBold, myApp.locatedetails.row.titletextfontsize )
+            row.titleText.anchorX = 0
+            row.titleText.anchorY = 0.5
+            row.titleText:setFillColor( myApp.locatedetails.row.titletextcolor )
+            row.titleText.y = myApp.locatedetails.row.titletexty
+            row.titleText.x = myApp.locatedetails.row.titletextx
+
+            row.descText = display.newText( params.value, 0, 0, myApp.fontBold, myApp.locatedetails.row.desctextfontsize )
             row.descText.anchorX = 0
             row.descText.anchorY = 0.5
             row.descText:setFillColor( myApp.locatedetails.row.desctextColor )
             row.descText.y = myApp.locatedetails.row.desctexty
             row.descText.x = myApp.locatedetails.row.desctextx
 
+
+            row:insert( row.titleText )
             row:insert( row.descText )
 
              -------------------------------------------------
@@ -70,22 +80,22 @@ end
 ------------------------------------------------------
 local onRowTouch = function( event )
         local row = event.row
-        if myMap then myMap:setCenter( row.params.lat, row.params.lng ,true ) end
+        local params = row.params
         
         if event.phase == "press"  then     
 
-                print ("press")
         elseif event.phase == "tap" then
-               print ("tap")
+              
         elseif event.phase == "swipeLeft" then
 
-               print ("sl")
         elseif event.phase == "swipeRight" then
-               print ("sr")
  
         elseif event.phase == "release" then
-               print ("release")
-  
+
+                --string.format("%s %q", "Hello", "Lua user!") 
+                --local obgrp = myApp.objecttypes[row.params.fieldtype]
+                 --print ("MYNAV " .. tbl.navigation.systemurl.url)
+                myApp.navigationCommon({navigation = { systemurl = { url=string.format( myApp.objecttypes[row.params.fieldtype].navigation.systemurl.url,  row.params.value )},},})
             -- force row re-render on next TableView update
             
         end
@@ -171,9 +181,9 @@ function scene:create(event)
      -------------------------------------------------
      -- address text - will be set in show
      -------------------------------------------------
-     myAddress = display.newText( {text="", x=10 , y=0, height=0,width=groupwidth-myApp.locatedetails.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsizeaddress,align="left" })
+     myAddress = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-myApp.locatedetails.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsizeaddress,align="left" })
      myAddress.anchorY = 0
-     myAddress.y = myRoundedRect.y - myRoundedRect.height/2 + myApp.locatedetails.edge
+     myAddress.y = 0 -- myRoundedRect.y - myRoundedRect.height/2 + myApp.locatedetails.edge/2
      myAddress:setFillColor( myApp.locatedetails.textcoloraddress.r,myApp.locatedetails.textcoloraddress.g,myApp.locatedetails.textcoloraddress.b,myApp.locatedetails.textcoloraddress.a )
      itemGrp:insert(myAddress)
 
@@ -265,7 +275,7 @@ function scene:show( event )
                               print("NAME" .. myObject[objectgroup.mapping.name])
                               myName.text = myObject[objectgroup.mapping.name]
                               myAddress.text = (myObject[objectgroup.mapping.street] or "") .. "\n" .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") 
-                              myAddress.y = myName.y+ myName.height + 10
+                              myAddress.y = myName.y+ myName.height  
 
                               ---------------------------------------------
                               -- Sort (key is critical !!)
@@ -276,30 +286,44 @@ function scene:show( event )
                               for n in pairs(objectgroup.launchobjects) do table.insert(a, n) end
                               table.sort(a)
 
+
+                              local insertObject = function ( rowparms )
+                                    haveitems = true
+                                    myList:insertRow{
+                                      rowHeight = myApp.locatedetails.row.height,
+                                      isCategory = false,
+                                      rowColor = myApp.locatedetails.row.rowColor,
+                                      lineColor = myApp.locatedetails.row.lineColor,
+
+                                      params = rowparms, --{
+                                                  -- fieldtype = rowparms.fieldtype,  -- will point to object table
+                                                 --  desc = rowparms.desc,      -- actual field vale
+                                               -- }  -- params
+                                      }   --myList:insertRow
+                              end
+
+                              ---------------------------------------------
+                              -- Generate a get directions row ?
+                              --------------------------------------------- 
+                              if myApp.locatedetails.row.includedirections then
+                                 local address = (myObject[objectgroup.mapping.street] or "") .. " " .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "")   --.. " " .. (myObject[objectgroup.mapping.zip] or ""
+                                 local addresswithzip = address .. " " .. (myObject[objectgroup.mapping.zip] or "")
+                                 insertObject({
+                                        fieldtype = "directions",
+                                        value = address, 
+                                        fulladdress = addresswithzip,
+                                        })
+                              end
+
                               ---------------------------------------------
                               -- Generate the rows for potential object launches like phne email
                               --------------------------------------------- 
                               for i,k in ipairs(a) do 
- 
                                   ---------------------------
                                   -- is the field there  in the response?
                                   ---------------------------
-                                  if myObject[objectgroup.launchobjects[k].field] then
-                                       haveitems = true
- 
-                                       myList:insertRow{
-                                          rowHeight = myApp.locatedetails.row.height,
-                                          isCategory = false,
-                                          rowColor = myApp.locatedetails.row.rowColor,
-                                          lineColor = myApp.locatedetails.row.lineColor,
-
-                                          params = {
-                                                       fieldtype = objectgroup.launchobjects[k].type,  -- will point to object table
-                                                       desc = myObject[objectgroup.launchobjects[k].field],      -- actual field vale
-                                                    }  -- params
-                                          }   --myList:insertRow
-
-
+                                  if myObject[objectgroup.launchobjects[k].field] then  
+                                     insertObject({fieldtype = objectgroup.launchobjects[k].type,value = myObject[objectgroup.launchobjects[k].field], })
                                   end   -- does field exist
                               end   --loop
 

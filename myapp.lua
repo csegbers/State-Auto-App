@@ -44,24 +44,40 @@ local M = {
                         phone = {
                               launch="phone",
                               image="phone.png",
+                              title="Phone",
+                              navigation = { systemurl = { url="tel:%s" },},
                             },
                         email = {
                               launch="email",
                               image="email.png",
+                              title="Email",
+                              navigation = { systemurl = { url="mailto:%s" },},
                             },
                         web = {
                               launch="web",
                               image="web.png",
+                              title="Web Site",
+                              navigation = { systemurl = { url="%s" },},
                             },
                         facebook = {
                               launch="web",
                               image="facebook.png",
+                              title="Facebook",
+                              navigation = { systemurl = { url="%s" },},
                             },
                         twitter = {
                               launch="web",
-                              image="facebook.png",
+                              image="twitter.png",
+                              title="Twitter",
+                              navigation = { systemurl = { url="%s" },},
                             },
-                      },
+                        directions = {
+                              launch="directions",
+                              image="map.png",
+                              title="Get Directions",
+                              navigation = { systemurl = { url="%s" },},
+                            },
+                           },    --objecttypes
  
             gps = {
                      --timer = 30000,                           --30 seconds
