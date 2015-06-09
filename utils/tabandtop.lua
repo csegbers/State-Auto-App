@@ -403,7 +403,23 @@ function myApp.navigationCommon(parms, parentinfo)
                myApp.showScreen({instructions=myApp.tabs.btns[v.navigation.tabbar.key]})
             else
                if v.navigation.systemurl then
-                  system.openURL( v.navigation.systemurl.url )
+                  local url = v.navigation.systemurl.url
+                  if string.sub(url, 1, 4):upper() == "TEL:" then
+                      -------------------------------
+                      -- strip out non digits
+                      -------------------------------
+                      url = "tel:" .. (string.gsub( url, "[^0-9]", "" )  or "")
+                  else
+                      if string.sub(url, 1, 7):upper() == "MAILTO:" then
+                      else
+                         if string.sub(url, 1, 4):upper() ~= "HTTP" then
+                            url = "http://" .. url
+                         end
+                      end
+                  end
+                 -- debugpopup(url)
+                  system.openURL(url) 
+
                end
             end
        end
