@@ -14,7 +14,7 @@ local common = require( myApp.utilsfld .. "common" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
-local params
+local sceneparams
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -23,7 +23,7 @@ function scene:create(event)
 
     print ("Create  " .. currScene)
     local group = self.view
-    params = event.params or {}
+    sceneparams = event.params or {}
 
     local container  = common.SceneContainer()
     group:insert(container )
@@ -63,7 +63,7 @@ function scene:create(event)
                                     },
                                  } 
 
-        local parentinfo =  params 
+        local parentinfo =  sceneparams 
         debuglink.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
         local debugbackButton = widget.newButton {
             label = "Debug Link" ,
@@ -85,7 +85,7 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
-        params = event.params           -- params contains the item table 
+        sceneparams = event.params           -- params contains the item table 
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
         
@@ -120,7 +120,7 @@ end
 -- for navigational appearnaces
 ---------------------------------------------------
 function scene:myparams( event )
-       return params
+       return sceneparams
 end
 
 scene:addEventListener( "create", scene )

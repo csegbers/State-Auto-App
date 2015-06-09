@@ -14,7 +14,7 @@ local common = require( myApp.utilsfld .. "common" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
-local params
+local sceneparams
 local container
 local myList
 local runit  
@@ -61,7 +61,7 @@ local  onRowRender = function ( event )
              -- Icon ?
              -------------------------------------------------
 
-            local iconimage = myApp.objecttypes[params.fieldtype].image
+            local iconimage = myApp.objecttypes[params.fieldtype].pic
             if iconimage then
                  row.myIcon = display.newImageRect(myApp.imgfld .. iconimage,  myApp.locatedetails.row.iconwidth , myApp.locatedetails.row.iconheight )
                  common.fitImage( row.myIcon,  myApp.locatedetails.row.iconwidth   )
@@ -92,11 +92,46 @@ local onRowTouch = function( event )
  
         elseif event.phase == "release" then
 
-                --string.format("%s %q", "Hello", "Lua user!") 
-                --local obgrp = myApp.objecttypes[row.params.fieldtype]
-                 --print ("MYNAV " .. tbl.navigation.systemurl.url)
-                myApp.navigationCommon({navigation = { systemurl = { url=string.format( myApp.objecttypes[row.params.fieldtype].navigation.systemurl.url,  row.params.value )},},})
-            -- force row re-render on next TableView update
+           local obgroup = myApp.objecttypes[row.params.fieldtype]
+           local navgroup = obgroup.navigation
+           if navgroup then
+               -----------------------------
+               -- launching "external ? ""
+               ---------------------------- 
+               if navgroup.systemurl then 
+                  myApp.navigationCommon( {navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
+               else
+                    if navgroup.composer then
+                        locatelaunch =                          
+                             {
+                                title = obgroup.title, 
+                                text=myName.text,
+                                backtext = obgroup.backtext ,
+                                forwardtext = obgroup.forwardtext ,
+                                pic=obgroup.pic,
+                                htmlinfo = { 
+                                              url=row.params.value ,
+                                           },
+                                navigation = 
+                                 { 
+                                    composer = 
+                                        { 
+                                           id = row.params.value ,
+                                           lua=navgroup.composer.lua,
+                                           time=navgroup.composer.time, 
+                                           effect=navgroup.composer.effect,
+                                           effectback=navgroup.composer.effectback,              
+                                        }
+                                ,}
+                            ,}
+                            
+                         local parentinfo =  sceneparams 
+                         locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                         myApp.showSubScreen ({instructions=locatelaunch})
+                    end   -- if composer
+               end  -- if systemurl
+           end   -- if navigation
+
             
         end
     return true
@@ -140,7 +175,7 @@ function scene:create(event)
     print ("Create  " .. currScene)
     justcreated = true
     local group = self.view
-    params = event.params           -- params contains the item table  
+    sceneparams = event.params            
      
      container  = common.SceneContainer()
      group:insert(container )
@@ -216,15 +251,15 @@ function scene:show( event )
     ----------------------------------
     if ( phase == "will" ) then   
         ----------------------------
-        -- params at this point contains prior
+        -- sceneparams at this point contains prior
         -- KEEP IT THAT WAY !!!!!
         --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ------------------------------
         -- Called when the scene is still off screen (but is about to come on screen).
         runit = true
-        if params and justcreated == false then
-          if  params.navigation.composer then
-             if params.navigation.composer.id == event.params.navigation.composer.id then
+        if sceneparams and justcreated == false then
+          if  sceneparams.navigation.composer then
+             if sceneparams.navigation.composer.id == event.params.navigation.composer.id then
                runit = false
              end
           end
@@ -242,15 +277,15 @@ function scene:show( event )
         -- now go ahead
         --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ------------------------------
-        params = event.params           -- params contains the item table 
+        sceneparams = event.params            
 
     ----------------------------------
     -- Did Show
     ----------------------------------
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
-        objectgroup = myApp.mappings.objects[params.objecttype]     
-        print(params.objecttype .." " .. params.objectqueryvalue    ) 
+        objectgroup = myApp.mappings.objects[sceneparams.objecttype]     
+        print(sceneparams.objecttype .." " .. sceneparams.objectqueryvalue    ) 
 
         if common.testNetworkConnection()  then
            -----------------------------------
@@ -259,10 +294,10 @@ function scene:show( event )
            native.setActivityIndicator( true )
 
            if (runit or justcreated) then
-               --debugpopup ("looking for " .. params.objecttype .." " .. params.objectqueryvalue)
+               --debugpopup ("looking for " .. sceneparams.objecttype .." " .. sceneparams.objectqueryvalue)
                parse:run(objectgroup.functionname.details,
                    {
-                      [objectgroup.mapping.id] =  params.objectqueryvalue,  
+                      [objectgroup.mapping.id] =  sceneparams.objectqueryvalue,  
                    },
                    ------------------------------------------------------------
                    -- Callback inline function
@@ -382,7 +417,7 @@ end
 
 
 function scene:myparams( event )
-       return params
+       return sceneparams
 end
 
 ---------------------------------------------------

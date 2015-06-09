@@ -13,7 +13,7 @@ local login = require( myApp.classfld .. "classlogin" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
-local params
+local sceneparams
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -23,7 +23,7 @@ local params
 function scene:create(event)
     print ("Create  " .. currScene)
 	local group = self.view
-    params = event.params or {}
+    sceneparams = event.params or {}
 
      local background = display.newRect(0,0,myApp.cW,100)
     background:setFillColor(155/myApp.colorDivisor, 255/myApp.colorDivisor, 255/myApp.colorDivisor, 255/myApp.colorDivisor)
@@ -46,7 +46,7 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
-          params = event.params           -- params contains the item table 
+          sceneparams = event.params           -- params contains the item table 
     elseif ( phase == "did" ) then
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
@@ -80,7 +80,7 @@ function scene:destroy( event )
 end
 
 function scene:myparams( event )
-       return params
+       return sceneparams
 end
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )

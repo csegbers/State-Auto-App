@@ -11,12 +11,17 @@ local common = require( myApp.utilsfld .. "common" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("In " .. currScene .. " Scene")
 
-local params
+local sceneparams
+local scrollView
+local container
 
 function scene:create(event)
   print ("Create  " .. currScene)
     local group = self.view
-    params = event.params or {}
+    sceneparams = event.params or {}
+
+    container = common.SceneContainer()
+    group:insert(container)
  
 
 end
@@ -29,14 +34,10 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
-         params = event.params           -- params contains the item table 
+         sceneparams = event.params           -- params contains the item table 
             local group = self.view
-           local container = common.SceneContainer()
-            group:insert(container)
 
-
-
-            local scrollView = widget.newScrollView
+            scrollView = widget.newScrollView
                 {
                     x = 0,
                     y = 0,
@@ -116,6 +117,10 @@ function scene:hide( event )
         -- Example: stop timers, stop animation, stop audio, etc.
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
+             if scrollView   then 
+                scrollView:removeSelf()
+               scrollView = nil
+            end
     end
 
 end
@@ -126,7 +131,7 @@ function scene:destroy( event )
 end
 
 function scene:myparams( event )
-       return params
+       return sceneparams
 end
 
 scene:addEventListener( "create", scene )

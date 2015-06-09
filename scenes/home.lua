@@ -12,7 +12,7 @@ local common = require( myApp.utilsfld .. "common" )
 local login = require( myApp.classfld .. "classlogin" )
 
 local currScene = (composer.getSceneName( "current" ) or "unknown")
-local params
+local sceneparams
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -22,7 +22,7 @@ local params
 function scene:create(event)
 
     print ("Create  " .. currScene)
-    params = event.params or {}
+    sceneparams = event.params or {}
     local group = self.view
     local container = common.SceneContainer()
     group:insert(container)
@@ -209,7 +209,7 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
-        params = event.params           -- params contains the item table 
+        sceneparams = event.params           -- params contains the item table 
        
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
@@ -251,7 +251,7 @@ function scene:destroy( event )
 end
 
 function scene:myparams( event )
-       return params
+       return sceneparams
 end
 
 scene:addEventListener( "create", scene )

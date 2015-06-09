@@ -14,7 +14,7 @@ local common = require( myApp.utilsfld .. "common" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
-local params
+local sceneparams
 local container
 local myList
 local runit  
@@ -77,33 +77,12 @@ local  onRowRender = function ( event )
          return true
 end
 
-------------------------------------------------------
--- Row is touched
-------------------------------------------------------
---local onRowTouch = function ( event )
-
---     local agentpagelink =  myApp.locateanagent.agentinfo 
---     local parentinfo =  params 
---     agentpagelink.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback=agentpagelink.navigation.composer.effectback}) end
---     local agentbackButton = widget.newButton {
---         label = agentpagelink.title ,
---         labelColor = { default={ 0, 1, 1 }, over={ 0, 0, 0, 0.5 } },
---         fontSize = 30,
---         font = myApp.fontBold,
---         onRelease = function () myApp.showSubScreen ({instructions=agentpagelink}) end,
---      }
---    agentbackButton.y = 150
-
--- container:insert(agentbackButton)
-
-
-
---end
+ 
 
 
  local function launchLocateDetailsScene(queryvalue) 
 
-          local objecttype = params.locateinfo.object    -- Agency, BodyShop etc...
+          local objecttype = sceneparams.locateinfo.object    -- Agency, BodyShop etc...
           local objectgroup = myApp.mappings.objects[objecttype]
           local objectqueryvalue = queryvalue
 
@@ -111,10 +90,10 @@ end
                      objecttype = objecttype,
                      objectqueryvalue = queryvalue,
                      title = objectgroup.desc.singular, 
-                     pic=params.pic,
-                     originaliconwidth = params.originaliconwidth,
-                     originaliconheight = params.originaliconheight,
-                     iconwidth = params.iconwidth,      -- height will be scaled appropriately
+                     pic=sceneparams.pic,
+                     originaliconwidth = sceneparams.originaliconwidth,
+                     originaliconheight = sceneparams.originaliconheight,
+                     iconwidth = sceneparams.iconwidth,      -- height will be scaled appropriately
                      backtext = objectgroup.backtext,
 
                      navigation = { 
@@ -129,7 +108,7 @@ end
                                  },
                      }      
 
-             local parentinfo =  params 
+             local parentinfo =  sceneparams 
              locatedetails.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
              myApp.showSubScreen ({instructions=locatedetails})
 
@@ -206,7 +185,7 @@ function scene:create(event)
     print ("Create  " .. currScene)
     justcreated = true
     local group = self.view
-    params = event.params           -- params contains the item table  
+    sceneparams = event.params           -- params contains the item table  
      
     container  = common.SceneContainer()
     group:insert(container )
@@ -270,15 +249,15 @@ function scene:show( event )
     if ( phase == "will" ) then
 
         ----------------------------
-        -- params at this point contains prior
+        -- sceneparams at this point contains prior
         -- KEEP IT THAT WAY !!!!!
         --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ------------------------------
         -- Called when the scene is still off screen (but is about to come on screen).
         runit = true
-        if params and justcreated == false then
-          if  params.navigation.composer then
-             if params.navigation.composer.id == event.params.navigation.composer.id then
+        if sceneparams and justcreated == false then
+          if  sceneparams.navigation.composer then
+             if sceneparams.navigation.composer.id == event.params.navigation.composer.id then
                runit = false
              end
           end
@@ -288,12 +267,12 @@ function scene:show( event )
         -- now go ahead
         --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ------------------------------
-        params = event.params           -- params contains the item table 
+        sceneparams = event.params           -- params contains the item table 
 
         ---------------------------------------
         -- upodate the desc
         ---------------------------------------
-        myDesc.text = params.locateinfo.desc
+        myDesc.text = sceneparams.locateinfo.desc
 
     ----------------------------------
     -- Did Show
@@ -301,7 +280,7 @@ function scene:show( event )
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
         
-        print(params.locateinfo.lat .." " .. params.locateinfo.lng  .. " " .. params.locateinfo.limit .. " " .. params.locateinfo.miles ) 
+        print(sceneparams.locateinfo.lat .." " .. sceneparams.locateinfo.lng  .. " " .. sceneparams.locateinfo.limit .. " " .. sceneparams.locateinfo.miles ) 
 
         if common.testNetworkConnection()  then
 
@@ -319,16 +298,16 @@ function scene:show( event )
              myMap.x = myApp.cCx
              myMap.y = myApp.sceneStartTop + itemGrp.height  + myApp.locate.edge+ mapheight/2 + myApp.locate.edge/2
 
-             myMap:setCenter( params.locateinfo.lat, params.locateinfo.lng, false )
-             myMap:setRegion( params.locateinfo.lat, params.locateinfo.lng, myApp.locate.map.latitudespan, myApp.locate.map.longitudespan, false)
+             myMap:setCenter( sceneparams.locateinfo.lat, sceneparams.locateinfo.lng, false )
+             myMap:setRegion( sceneparams.locateinfo.lat, sceneparams.locateinfo.lng, myApp.locate.map.latitudespan, myApp.locate.map.longitudespan, false)
            end
            if (runit or justcreated) then
-               parse:run(params.locateinfo.functionname,
+               parse:run(sceneparams.locateinfo.functionname,
                   {
-                   ["lat"] = params.locateinfo.lat , 
-                   ["lng"] = params.locateinfo.lng ,
-                   ["limit"] = params.locateinfo.limit, 
-                   ["miles"] = params.locateinfo.miles
+                   ["lat"] = sceneparams.locateinfo.lat , 
+                   ["lng"] = sceneparams.locateinfo.lng ,
+                   ["limit"] = sceneparams.locateinfo.limit, 
+                   ["miles"] = sceneparams.locateinfo.miles
                    },
                    ------------------------------------------------------------
                    -- Callback inline function
@@ -337,7 +316,7 @@ function scene:show( event )
                       if not e.error then  
                           for i = 1, #e.response.result do
                               local resgroup = e.response.result[i]
-                              print("NAME" .. resgroup[params.locateinfo.mapping.name])
+                              print("NAME" .. resgroup[sceneparams.locateinfo.mapping.name])
 
                              myList:insertRow{
                                 rowHeight = myApp.locate.row.height,
@@ -347,16 +326,16 @@ function scene:show( event )
 
                                 params = {
                                              objectId = resgroup.objectId,
-                                             id = resgroup[params.locateinfo.mapping.id],
-                                             name = resgroup[params.locateinfo.mapping.name],
-                                             miles = resgroup[params.locateinfo.mapping.miles],
-                                             lat = resgroup[params.locateinfo.mapping.geo].latitude,
-                                             lng = resgroup[params.locateinfo.mapping.geo].longitude,
-                                             street = resgroup[params.locateinfo.mapping.street],                           
-                                             city = resgroup[params.locateinfo.mapping.city],
-                                             state = resgroup[params.locateinfo.mapping.state],
-                                             zip = resgroup[params.locateinfo.mapping.zip],
-                                             address = (resgroup[params.locateinfo.mapping.street] or "") .. "\n" .. (resgroup[params.locateinfo.mapping.city] or "") .. ", " .. (resgroup[params.locateinfo.mapping.state] or "") .. " " .. (resgroup[params.locateinfo.mapping.zip] or "") 
+                                             id = resgroup[sceneparams.locateinfo.mapping.id],
+                                             name = resgroup[sceneparams.locateinfo.mapping.name],
+                                             miles = resgroup[sceneparams.locateinfo.mapping.miles],
+                                             lat = resgroup[sceneparams.locateinfo.mapping.geo].latitude,
+                                             lng = resgroup[sceneparams.locateinfo.mapping.geo].longitude,
+                                             street = resgroup[sceneparams.locateinfo.mapping.street],                           
+                                             city = resgroup[sceneparams.locateinfo.mapping.city],
+                                             state = resgroup[sceneparams.locateinfo.mapping.state],
+                                             zip = resgroup[sceneparams.locateinfo.mapping.zip],
+                                             address = (resgroup[sceneparams.locateinfo.mapping.street] or "") .. "\n" .. (resgroup[sceneparams.locateinfo.mapping.city] or "") .. ", " .. (resgroup[sceneparams.locateinfo.mapping.state] or "") .. " " .. (resgroup[sceneparams.locateinfo.mapping.zip] or "") 
 
                                           }  -- params
                                 }   --myList:insertRow
@@ -411,7 +390,7 @@ end
 
 
 function scene:myparams( event )
-       return params
+       return sceneparams
 end
 
 ---------------------------------------------------

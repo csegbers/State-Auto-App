@@ -14,7 +14,7 @@ local common = require( myApp.utilsfld .. "common" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
-local params
+local sceneparams
 local webView
 
 ------------------------------------------------------
@@ -24,7 +24,7 @@ function scene:create(event)
 
     print ("Create  " .. currScene)
     local group = self.view
-    params = event.params or {}
+    sceneparams = event.params or {}
 
 end
 
@@ -33,13 +33,12 @@ function scene:show( event )
     local group = self.view
     local phase = event.phase
     print ("Show:" .. phase.. " " .. currScene)
-    params = event.params or {}
+    sceneparams = event.params or {}
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
     elseif ( phase == "did" ) then
             parse:logEvent( "Scene", { ["name"] = currScene} )
-            params = event.params           -- params contains the item table 
 
             local function webListener( event )
                 if event.type == "loaded" then
@@ -57,11 +56,15 @@ function scene:show( event )
             webView.isVisible = false
             --webView:reload()
             webView:addEventListener( "urlRequest", webListener )
-            if params.htmlinfo.url then
+            --debugpopup(sceneparams.htmlinfo.url )
+            local url = sceneparams.htmlinfo.url
+
+            if sceneparams.htmlinfo.url then
+                if string.sub(url, 1, 4):upper() ~= "HTTP" then  url = "http://" .. url end
                 native.setActivityIndicator( true )
-                webView:request( params.htmlinfo.url )
+                webView:request( url )
             else
-                webView:request( myApp.htmlfld .. params.htmlinfo.htmlfile , params.htmlinfo.dir )
+                webView:request( myApp.htmlfld .. sceneparams.htmlinfo.htmlfile , sceneparams.htmlinfo.dir )
             end
             
     end	
@@ -96,7 +99,7 @@ end
 -- for navigational appearnaces
 ---------------------------------------------------
 function scene:myparams( event )
-       return params
+       return sceneparams
 end
 
 ---------------------------------------------------

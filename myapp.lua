@@ -43,37 +43,56 @@ local M = {
             objecttypes = {
                         phone = {
                               launch="phone",
-                              image="phone.png",
+                              pic="phone.png",
                               title="Phone",
                               navigation = { systemurl = { url="tel:%s" },},
                             },
                         email = {
                               launch="email",
-                              image="email.png",
+                              pic="email.png",
                               title="Email",
                               navigation = { systemurl = { url="mailto:%s" },},
                             },
                         web = {
                               launch="web",
-                              image="web.png",
+                              pic="web.png",
                               title="Web Site",
-                              navigation = { systemurl = { url="%s" },},
+                              --navigation = { systemurl = { url="%s" },},
+
+
+                              text="Sample web page",
+                              backtext = "<",
+                              forwardtext = ">",
+                                    htmlinfo = {
+                                            url="",    --- dyanamically changed
+                                          },
+                                    navigation = { composer = {
+                                         id = "", --- dyanamically changed
+                                         lua="webview",
+                                         time=250, 
+                                         effect="slideLeft",
+                                         effectback="slideRight",
+                                      },},
+
+
+
+
                             },
                         facebook = {
                               launch="web",
-                              image="facebook.png",
+                              pic="facebook.png",
                               title="Facebook",
                               navigation = { systemurl = { url="%s" },},
                             },
                         twitter = {
                               launch="web",
-                              image="twitter.png",
+                              pic="twitter.png",
                               title="Twitter",
                               navigation = { systemurl = { url="%s" },},
                             },
                         directions = {
                               launch="directions",
-                              image="map.png",
+                              pic="map.png",
                               title="Get Directions",
                               navigation = { systemurl = { url="%s" },},
                             },

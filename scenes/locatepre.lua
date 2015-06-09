@@ -15,7 +15,7 @@ local common = require( myApp.utilsfld .. "common" )
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
-local params
+local sceneparams
 local container
 local addressField
 local itemGrp
@@ -29,7 +29,7 @@ function scene:create(event)
 
     print ("Create  " .. currScene)
     local group = self.view
-    params = event.params or {}
+    sceneparams = event.params or {}
 
 end
 
@@ -43,7 +43,7 @@ function scene:show( event )
              --------------------------
              -- Setting params needed on the "Will" phase !!!!
              --------------------------
-             params = event.params or {}          -- params contains the item table 
+             sceneparams = event.params or {}          -- params contains the item table 
              -- Called when the scene is still off screen (but is about to come on screen).
              display.remove( container )           -- wont exist initially no biggie
              container = nil
@@ -56,7 +56,7 @@ function scene:show( event )
              ---------------------------------------------
 
              itemGrp = display.newGroup(  )
-             local headcolor = params.groupheader or myApp.locatepre.groupheader
+             local headcolor = sceneparams.groupheader or myApp.locatepre.groupheader
              local startX = 0
              local startY = 0 -myApp.cH/2 + myApp.locatepre.groupheight/2 + myApp.locatepre.edge*2 + myApp.sceneStartTop
              local groupwidth = myApp.sceneWidth-myApp.locatepre.edge*2
@@ -83,16 +83,16 @@ function scene:show( event )
              -------------------------------------------------
              -- Header text
              -------------------------------------------------
-             local myText = display.newText( params.title, startX, startYother,  myApp.fontBold, myApp.locatepre.headerfontsize )
+             local myText = display.newText( sceneparams.title, startX, startYother,  myApp.fontBold, myApp.locatepre.headerfontsize )
              myText:setFillColor( myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b,myApp.locatepre.headercolor.a )
              itemGrp:insert(myText)
 
              -------------------------------------------------
              -- Icon ?
              -------------------------------------------------
-             if params.pic then
-                 local myIcon = display.newImageRect(myApp.imgfld .. params.pic, params.originaliconwidth or myApp.locatepre.iconwidth ,params.originaliconheight or myApp.locatepre.iconheight )
-                 common.fitImage( myIcon, params.iconwidth or myApp.locatepre.iconwidth   )
+             if sceneparams.pic then
+                 local myIcon = display.newImageRect(myApp.imgfld .. sceneparams.pic, sceneparams.originaliconwidth or myApp.locatepre.iconwidth ,sceneparams.originaliconheight or myApp.locatepre.iconheight )
+                 common.fitImage( myIcon, sceneparams.iconwidth or myApp.locatepre.iconwidth   )
                  myIcon.x = startX
                  myIcon.y = startYother + itemGrp.height/2 - 20
                  itemGrp:insert(myIcon)
@@ -101,7 +101,7 @@ function scene:show( event )
              -------------------------------------------------
              -- Desc text
              -------------------------------------------------
-             local myDesc = display.newText( {text=params.text, x=startX , y=0, height=0,width=groupwidth-myApp.locatepre.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatepre.textfontsize,align="center" })
+             local myDesc = display.newText( {text=sceneparams.text, x=startX , y=0, height=0,width=groupwidth-myApp.locatepre.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatepre.textfontsize,align="center" })
              myDesc.y=startYother+myApp.locatepre.groupheight - (myDesc.height/2) -  myApp.locatepre.textbottomedge
              myDesc:setFillColor( myApp.locatepre.textcolor.r,myApp.locatepre.textcolor.g,myApp.locatepre.textcolor.b,myApp.locatepre.textcolor.a )
              itemGrp:insert(myDesc)
@@ -127,11 +127,11 @@ function scene:show( event )
              container:insert(myMilestext)
 
             local function milesCheck()
-                if params.locateinfo.miles > myApp.locatepre.milerange.high then
-                    params.locateinfo.miles = myApp.locatepre.milerange.high
+                if sceneparams.locateinfo.miles > myApp.locatepre.milerange.high then
+                    sceneparams.locateinfo.miles = myApp.locatepre.milerange.high
                 else
-                    if params.locateinfo.miles < myApp.locatepre.milerange.low then
-                        params.locateinfo.miles = myApp.locatepre.milerange.low
+                    if sceneparams.locateinfo.miles < myApp.locatepre.milerange.low then
+                        sceneparams.locateinfo.miles = myApp.locatepre.milerange.low
                     end
                 end
             end
@@ -147,14 +147,14 @@ function scene:show( event )
                 width = itemGrp.width - myRangetext.width - myMilestext.width - myApp.locatepre.edge*5,
                 id = "miles",
                 orientation = "horizontal",
-                value = (params.locateinfo.miles-myApp.locatepre.milerange.low)  / myApp.locatepre.milerange.high * 100,
+                value = (sceneparams.locateinfo.miles-myApp.locatepre.milerange.low)  / myApp.locatepre.milerange.high * 100,
                 listener = function(event) 
-                             params.locateinfo.miles = ((event.value/100) * myApp.locatepre.milerange.high) +  myApp.locatepre.milerange.low 
+                             sceneparams.locateinfo.miles = ((event.value/100) * myApp.locatepre.milerange.high) +  myApp.locatepre.milerange.low 
                              milesCheck()
-                             myMilestext.text = params.locateinfo.miles .. " Miles"
+                             myMilestext.text = sceneparams.locateinfo.miles .. " Miles"
                           end,
             }
-            myMilestext.text = params.locateinfo.miles .. " Miles"
+            myMilestext.text = sceneparams.locateinfo.miles .. " Miles"
             container:insert( horizontalSlider )
 
              -------------------------------------------------
@@ -163,37 +163,37 @@ function scene:show( event )
 
              local function launchLocateScene(inputparms) 
                       local locatelaunch = {  
-                                         title = params.title, 
-                                         pic=params.pic,
-                                         originaliconwidth = params.originaliconwidth,
-                                         originaliconheight = params.originaliconheight,
-                                         iconwidth = params.iconwidth,      -- height will be scaled appropriately
-                                         text=params.text,
-                                         backtext = params.backtext,
+                                         title = sceneparams.title, 
+                                         pic=sceneparams.pic,
+                                         originaliconwidth = sceneparams.originaliconwidth,
+                                         originaliconheight = sceneparams.originaliconheight,
+                                         iconwidth = sceneparams.iconwidth,      -- height will be scaled appropriately
+                                         text=sceneparams.text,
+                                         backtext = sceneparams.backtext,
  
                                          locateinfo = {
                                                         desc = inputparms.desc,
-                                                        functionname=myApp.mappings.objects[params.locateinfo.object].functionname.locate,
-                                                        limit=params.locateinfo.limit,
-                                                        miles=params.locateinfo.miles,
-                                                        object=params.locateinfo.object,
+                                                        functionname=myApp.mappings.objects[sceneparams.locateinfo.object].functionname.locate,
+                                                        limit=sceneparams.locateinfo.limit,
+                                                        miles=sceneparams.locateinfo.miles,
+                                                        object=sceneparams.locateinfo.object,
                                                         lat = inputparms.lat,
                                                         lng = inputparms.lng,
-                                                        mapping= myApp.mappings.objects[params.locateinfo.object].mapping,
+                                                        mapping= myApp.mappings.objects[sceneparams.locateinfo.object].mapping,
                                                       },
                                          navigation = { 
                                                composer = {
                                                               -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
-                                                             id = params.locateinfo.object.."-" ..params.locateinfo.miles.."-" .. params.locateinfo.limit .."-".. inputparms.lat .."-".. inputparms.lng,   
+                                                             id = sceneparams.locateinfo.object.."-" ..sceneparams.locateinfo.miles.."-" .. sceneparams.locateinfo.limit .."-".. inputparms.lat .."-".. inputparms.lng,   
                                                              lua=myApp.locatepre.lua ,
-                                                             time=params.navigation.composer.time, 
+                                                             time=sceneparams.navigation.composer.time, 
                                                              effect=myApp.locatepre.effect,
                                                              effectback=myApp.locatepre.effectback,
                                                           },
                                                      },
                                  }      
 
-                         local parentinfo =  params 
+                         local parentinfo =  sceneparams 
                          locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
                          myApp.showSubScreen ({instructions=locatelaunch})
 
@@ -205,7 +205,7 @@ function scene:show( event )
                   -- have accurate location ?
                   ------------------------------------------------------
                   if myApp.gps.haveaccuratelocation == true then
-                       launchLocateScene{desc=string.format (myApp.mappings.objects[params.locateinfo.object].desc.plural ..  " within %i miles of your current location.",params.locateinfo.miles), lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
+                       launchLocateScene{desc=string.format (myApp.mappings.objects[sceneparams.locateinfo.object].desc.plural ..  " within %i miles of your current location.",sceneparams.locateinfo.miles), lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
                   end
 
              end
@@ -217,7 +217,7 @@ function scene:show( event )
                   ------------------------------------------------------
                   if ( event.isError ) then
                   else
-                       launchLocateScene{desc=string.format (myApp.mappings.objects[params.locateinfo.object].desc.plural  ..  " within %i miles of %s.",params.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
+                       launchLocateScene{desc=string.format (myApp.mappings.objects[sceneparams.locateinfo.object].desc.plural  ..  " within %i miles of %s.",sceneparams.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
                   end
               end  
 
@@ -245,7 +245,7 @@ function scene:show( event )
 
               
              ---------------------------------------------
-             -- Use Current Location button
+             -- Use location entered button
              ---------------------------------------------
               addressButton = widget.newButton {
                     shape=myApp.locatepre.shape,
@@ -318,7 +318,7 @@ function scene:show( event )
 
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
-        --params = event.params           -- params contains the item table 
+        --sceneparams = event.params           -- params contains the item table 
             local function textFieldHandler( event )
                 --
                 -- event.text only exists during the editing phase to show what's being edited.  
@@ -397,7 +397,7 @@ end
 -- for navigational appearnaces
 ---------------------------------------------------
 function scene:myparams( event )
-       return params
+       return sceneparams
 end
 
 ---------------------------------------------------
