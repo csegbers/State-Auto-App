@@ -98,38 +98,42 @@ local onRowTouch = function( event )
                -----------------------------
                -- launching "external ? ""
                ---------------------------- 
-               if navgroup.systemurl then 
-                  myApp.navigationCommon( {navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
-               else
-                    if navgroup.composer then
-                        locatelaunch =                          
-                             {
-                                title = obgroup.title, 
-                                text=myName.text,
-                                backtext = obgroup.backtext ,
-                                forwardtext = obgroup.forwardtext ,
-                                pic=obgroup.pic,
-                                htmlinfo = { 
-                                              url=row.params.value ,
-                                           },
-                                navigation = 
-                                 { 
-                                    composer = 
-                                        { 
-                                           id = row.params.value ,
-                                           lua=navgroup.composer.lua,
-                                           time=navgroup.composer.time, 
-                                           effect=navgroup.composer.effect,
-                                           effectback=navgroup.composer.effectback,              
-                                        }
+               if navgroup.directions then  
+                   myApp.navigationDirections ({launch = obgroup.launch, navigation = { directions = { address=string.format( (navgroup.directions.address or ""),  row.params.fulladdress )},},} )
+               else 
+                   if navgroup.systemurl then 
+                      myApp.navigationCommon( {launch = obgroup.launch, navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
+                   else
+                        if navgroup.composer then
+                            locatelaunch =                          
+                                 {
+                                    title = obgroup.title, 
+                                    text=myName.text,
+                                    backtext = obgroup.backtext ,
+                                    forwardtext = obgroup.forwardtext ,
+                                    pic=obgroup.pic,
+                                    htmlinfo = { 
+                                                  url=row.params.value ,
+                                               },
+                                    navigation = 
+                                     { 
+                                        composer = 
+                                            { 
+                                               id = row.params.value ,
+                                               lua=navgroup.composer.lua,
+                                               time=navgroup.composer.time, 
+                                               effect=navgroup.composer.effect,
+                                               effectback=navgroup.composer.effectback,              
+                                            }
+                                    ,}
                                 ,}
-                            ,}
-                            
-                         local parentinfo =  sceneparams 
-                         locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
-                         myApp.showSubScreen ({instructions=locatelaunch})
-                    end   -- if composer
-               end  -- if systemurl
+                                
+                             local parentinfo =  sceneparams 
+                             locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                             myApp.showSubScreen ({instructions=locatelaunch})
+                        end   -- if composer
+                   end  -- if systemurl
+               end -- directions
            end   -- if navigation
 
             

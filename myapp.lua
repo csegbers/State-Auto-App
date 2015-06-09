@@ -39,6 +39,7 @@ local M = {
             sceneBackgroundmorecolor = { r=25/255, g=75/255, b=150/255, a=1 },
             scenemaskFile = "",
             splash = {image = "splash.jpg", delay = 150, },
+            promptforphonecalls = true,
 
             objecttypes = {
                         phone = {
@@ -79,13 +80,13 @@ local M = {
 
                             },
                         facebook = {
-                              launch="web",
+                              launch="facebook",
                               pic="facebook.png",
                               title="Facebook",
                               navigation = { systemurl = { url="%s" },},
                             },
                         twitter = {
-                              launch="web",
+                              launch="twitter",
                               pic="twitter.png",
                               title="Twitter",
                               navigation = { systemurl = { url="%s" },},
@@ -94,7 +95,7 @@ local M = {
                               launch="directions",
                               pic="map.png",
                               title="Get Directions",
-                              navigation = { systemurl = { url="%s" },},
+                              navigation = { directions = { address="%s" },},
                             },
                            },    --objecttypes
  

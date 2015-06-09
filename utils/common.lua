@@ -17,6 +17,16 @@ local M = { }
 --    return t2
 -- end
 
+function M.urlencode(str)
+   if (str) then
+      str = string.gsub (str, "\n", "\r\n")
+      str = string.gsub (str, "([^%w ])",
+         function (c) return string.format ("%%%02X", string.byte(c)) end)
+      str = string.gsub (str, " ", "+")
+   end
+   return str    
+end
+
 function M.SceneBackground(colortbl)
     local colortable = colortbl or myApp.sceneBackgroundcolor
     local background = display.newRect(0,0,myApp.cW, myApp.cH)

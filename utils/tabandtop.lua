@@ -403,29 +403,66 @@ function myApp.navigationCommon(parms, parentinfo)
                myApp.showScreen({instructions=myApp.tabs.btns[v.navigation.tabbar.key]})
             else
                if v.navigation.systemurl then
+                  local dothenavigation = true
                   local url = v.navigation.systemurl.url
+
+                  local function goUrl()
+                      if dothenavigation then 
+                         system.openURL(url) 
+                      end
+                  end
+
                   if string.sub(url, 1, 4):upper() == "TEL:" then
                       -------------------------------
                       -- strip out non digits
                       -------------------------------
-                      url = "tel:" .. (string.gsub( url, "[^0-9]", "" )  or "")
+                      local digitsonly = (string.gsub( url, "[^0-9]", "" )  or "")
+                      url = "tel:" .. digitsonly
+                      if myApp.promptforphonecalls then
+                           -- Show alert with two buttons
+                          native.showAlert( myApp.appName, "Call " .. url .. " ?" , { "OK", "Cancel" },  function( event ) if event.action == "clicked" then   local i = event.index if i == 2 then dothenavigation = false end goUrl() end end)
+                     else
+                          goUrl()
+                     end    -- promptforphonecalls
                   else
                       if string.sub(url, 1, 7):upper() == "MAILTO:" then
                       else
                          if string.sub(url, 1, 4):upper() ~= "HTTP" then
-                            url = "http://" .. url
+                            url = "http://" .. common.urlencode(url)
                          end
                       end
+                      goUrl()
                   end
                  -- debugpopup(url)
-                  system.openURL(url) 
 
-               end
-            end
-       end
+
+               end  --v.navigation.systemurl
+            end  --v.navigation.tabbar
+       end   --v.navigation.composer 
 
 
 end
+
+
+function myApp.navigationDirections(parms)
+       local v = parms
+       local function navdirReleaseback() 
+              ------------------------------------------------------
+              -- have accurate location ?
+              ------------------------------------------------------
+              if myApp.gps.haveaccuratelocation == true then
+                  --debugpopup ("comgooglemaps://?saddr=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. "&daddr=" .. common.urlencode(v.navigation.directions.address) .. "&directionsmode=transit")
+                 local didOpenGoogleMaps = system.openURL("comgooglemaps://?saddr=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. "&daddr=" .. common.urlencode(v.navigation.directions.address) .. "&directionsmode=transit")
+                 if ( didOpenGoogleMaps == false ) then  --defer to Apple Maps
+                    system.openURL("http://maps.apple.com/?daddr=" .. common.urlencode(v.navigation.directions.address) .. "&saddr=Current%20Location")
+                 end
+              end
+       end     
+       if v.navigation.directions  then
+            myApp.getCurrentLocation({callback=navdirReleaseback}) 
+       end   --v.navigation.directions 
+end
+-- system.openURL("comgooglemaps://?saddr=lat,lng&daddr=xxx&directionsmode=transit")
 
 function myApp.Login(parms)
     print "IN overlay"
