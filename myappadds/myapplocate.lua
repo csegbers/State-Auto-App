@@ -21,8 +21,9 @@ local M = {
                                 textbottomedge =2   ,  
                                 shape="roundedRect",
                                 curlocbtntext = "Use Current Location",
-
                                 addressbtntext= "Use Location Entered Below",
+                                btndefaultcoloralpha = 0.7,
+                                btnovercoloralpha = 0.3,
                                 addresstextfontsize=14  , 
                                 btnheight = 35,
                                 milerange = {low=5,high=100},
@@ -39,7 +40,8 @@ local M = {
                                  
                        },
              locate = {    
-
+                                animation=true,
+                                animationtime=300,
                                 edge=10,
                                 groupheight = 40,
                                 groupbackground = { r=180/255, g=180/255, b=180/255, a=1 },
@@ -79,7 +81,8 @@ local M = {
                                  
                        },
              locatedetails = {    
-
+                                animation=true,
+                                animationtime=300,
                                 edge=10,
                                 groupheight = 90,
                                 groupbackground = { r=220/255, g=220/255, b=220/255, a=1 },

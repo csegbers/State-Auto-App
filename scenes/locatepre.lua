@@ -227,7 +227,7 @@ function scene:show( event )
              ---------------------------------------------
               curlocButton = widget.newButton {
                     shape=myApp.locatepre.shape,
-                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.7}, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
+                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, myApp.locatepre.btndefaultcoloralpha}, over={ headcolor.r, headcolor.g, headcolor.b, myApp.locatepre.btnovercoloralpha } },
                     label = myApp.locatepre.curlocbtntext,
                     labelColor = { default={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b }, over={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b, .75 } },
                     fontSize = myApp.locatepre.headerfontsize,
@@ -249,7 +249,7 @@ function scene:show( event )
              ---------------------------------------------
               addressButton = widget.newButton {
                     shape=myApp.locatepre.shape,
-                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, 0.7 }, over={ headcolor.r, headcolor.g, headcolor.b, 0.6 } },
+                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, myApp.locatepre.btndefaultcoloralpha }, over={ headcolor.r, headcolor.g, headcolor.b, myApp.locatepre.btnovercoloralpha } },
                     label = myApp.locatepre.addressbtntext,
                     labelColor = { default={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b }, over={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b, .75 } },
                     fontSize = myApp.locatepre.headerfontsize,
@@ -349,7 +349,7 @@ function scene:show( event )
                 height = myApp.locatepre.addressfieldheight,
                 cornerRadius = myApp.locatepre.addressfieldcornerradius,
                 strokeWidth = 0,
-                text = "",
+                text = sceneparams.address,
                 fontSize = myApp.locatepre.addresstextfontsize,
                 placeholder = myApp.locatepre.addressfieldplaceholder,
                 font = myApp.fontBold,
@@ -378,6 +378,7 @@ function scene:hide( event )
     print ("Hide:" .. phase.. " " .. currScene)
 
     if ( phase == "will" ) then
+        sceneparams.address=addressField.textField.text
         addressField:removeSelf()
         addressField = nil
         native.setKeyboardFocus( nil )

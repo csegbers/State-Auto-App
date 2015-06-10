@@ -22,6 +22,7 @@ local justcreated
 local myMap
 local myDesc
 local itemGrp
+local curmyListy 
 
 
   ------------------------------------------------------
@@ -262,7 +263,13 @@ function scene:show( event )
              end
           end
         end
-        if (runit or justcreated) then  myList:deleteAllRows() end
+        if (runit or justcreated) then 
+            myList:deleteAllRows()
+            if myApp.locate.animation then
+               curmyListy = myList.y
+               myList.y = myList.y + myList.height
+            end
+        end
         ----------------------------
         -- now go ahead
         --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -314,6 +321,9 @@ function scene:show( event )
                    ------------------------------------------------------------
                    function(e) 
                       if not e.error then  
+                          if myApp.locate.animation then
+                             transition.to(  myList, { time=myApp.locate.animationtime, y = curmyListy , transition=easing.outQuint})
+                          end
                           for i = 1, #e.response.result do
                               local resgroup = e.response.result[i]
                               print("NAME" .. resgroup[sceneparams.locateinfo.mapping.name])

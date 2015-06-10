@@ -420,7 +420,8 @@ function myApp.navigationCommon(parms, parentinfo)
                       url = "tel:" .. digitsonly
                       if myApp.promptforphonecalls then
                            -- Show alert with two buttons
-                          native.showAlert( myApp.appName, "Call " .. url .. " ?" , { "OK", "Cancel" },  function( event ) if event.action == "clicked" then   local i = event.index if i == 2 then dothenavigation = false end goUrl() end end)
+                          local disphone = ("(" .. string.sub(digitsonly, 1,3) .. ") " .. string.sub(digitsonly, 4,6) .. "-" .. string.sub(digitsonly, 7) )
+                          native.showAlert( myApp.appName, "Call " .. disphone .. " ?" , { "OK", "Cancel" },  function( event ) if event.action == "clicked" then   local i = event.index if i == 2 then dothenavigation = false end goUrl() end end)
                      else
                           goUrl()
                      end    -- promptforphonecalls

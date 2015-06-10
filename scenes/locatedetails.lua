@@ -25,6 +25,8 @@ local myAddress
 local itemGrp
 local myObject     -- response object from the services call or nil if no hit
 local objectgroup -- pointer to the mappings stuff
+local curitemGrpy  
+local curmyListy 
 
 ------------------------------------------------------
 -- Row is rendered
@@ -248,6 +250,7 @@ function scene:show( event )
 
     local group = self.view
     local phase = event.phase
+
     print ("Show:" .. phase.. " " .. currScene)
 
     ----------------------------------
@@ -276,6 +279,12 @@ function scene:show( event )
             myName.text = ""  
             myAddress.text = ""  
             myList:deleteAllRows()
+            if myApp.locatedetails.animation then
+               curitemGrpy = itemGrp.y
+               curmyListy = myList.y
+               itemGrp.y = itemGrp.y - itemGrp.height
+               myList.y = myList.y + myList.height
+            end
         end
         ----------------------------
         -- now go ahead
@@ -315,7 +324,10 @@ function scene:show( event )
                               myName.text = myObject[objectgroup.mapping.name]
                               myAddress.text = (myObject[objectgroup.mapping.street] or "") .. "\n" .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") 
                               myAddress.y = myName.y+ myName.height  
-
+                              if myApp.locatedetails.animation then
+                                  transition.to(  itemGrp, { time=myApp.locatedetails.animationtime, y = curitemGrpy , transition=easing.outQuint})
+                                  transition.to(  myList, { time=myApp.locatedetails.animationtime, y = curmyListy , transition=easing.outQuint})
+                              end
                               ---------------------------------------------
                               -- Sort (key is critical !!)
                               -- what laucnh objects are availble ? See if those fields came down via the service.
