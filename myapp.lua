@@ -4,7 +4,9 @@
 -------------------------------------------------------
 local M = { 
             debugMode = true,
-            appName = "Insured App Initial" ,
+            appName = "State Auto Insured App" ,
+            appNameSmall = "Insured App" ,
+            urlScheme = "rockhillapp",
             cW = display.contentWidth,
             cH = display.contentHeight,
             cCx = display.contentCenterX,
@@ -52,7 +54,13 @@ local M = {
                               launch="email",
                               pic="email.png",
                               title="Email",
-                              navigation = { systemurl = { url="mailto:%s" },},
+                              navigation = { popup = { type="mail" ,options={to="%s" },},},
+                            },
+                        sms = {
+                              launch="sms",
+                              pic="sms.png",
+                              title="SMS Text",
+                              navigation = { popup = { type="sms" ,options={to="%s" },},},
                             },
                         web = {
                               launch="web",
@@ -98,6 +106,30 @@ local M = {
                               navigation = { directions = { address="%s" },},
                             },
                            },    --objecttypes
+
+            maps = {
+                      --googlemapapp = "comgooglemaps-x-callback://",
+                      google = 
+                             { 
+                                 app = "comgooglemaps-x-callback://",
+                                 directions = {
+                                                 additions = "&directionsmode=driving",
+                                              },
+                                 search = {
+                                                 additions = "&zoom=14",
+                                              },
+                            },
+                      apple = 
+                             {
+                                 app = "http://maps.apple.com/",
+                                 directions = {
+                                                 additions = "",
+                                              },
+                                 search = {
+                                                 additions = "",   --&spn=.50
+                                              },
+                             },
+                   },
  
             gps = {
                      --timer = 30000,                           --30 seconds
@@ -121,15 +153,22 @@ local M = {
                                     },
                                   
                   },
-            login = {
-                        loggedin = false,
-                        lua = "login",
-                        options = {
-                                      isModal = true,
-                                      effect = "fromTop",
-                                      time = 1000,
-                                       params = { }
-                                   },
+            authentication = {
+                                  loggedin = false
+                              },
+            otherscenes = { 
+                      login = {
+                                  loggedin = false,
+
+                                  navigation = { composer = {
+                                             id = "login",
+                                             isModal = true,
+                                             lua="login",
+                                             overlay=true,
+                                             time=500, 
+                                             effect="fromTop",
+                                          },},
+                              },
                     },
             composer = {
                           recycleOnSceneChange = false,

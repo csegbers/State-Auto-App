@@ -77,7 +77,7 @@ myApp.tSbch = display.topStatusBarContentHeight
 myApp.sceneStartTop = myApp.titleBarHeight + myApp.tSbch  
 myApp.sceneWidth = myApp.cW
 myApp.sceneHeight = myApp.cH - myApp.sceneStartTop - myApp.tabs.tabBarHeight
-myApp.login.loggedin = false
+myApp.authentication.loggedin = false
 myApp.justLaunched = true
 myApp.moreinfo.direction = "left"
 if (display.pixelHeight/display.pixelWidth) > 1.5 then  myApp.isTall = true end
@@ -223,6 +223,7 @@ function  myApp.getAddressLocation( event )
 end
 
 function myApp.onSystemEvent( event )
+   local launchURL
    if event.type == "applicationStart" then
         print("onSystemEvent start")
     elseif event.type == "applicationExit" then
@@ -231,6 +232,12 @@ function myApp.onSystemEvent( event )
         print("onSystemEvent suspend")
     elseif event.type == "applicationResume" then
         print("onSystemEvent resume")
+    elseif event.type == "applicationOpen" then
+        print("onSystemEvent open")
+        if event.url then
+            launchURL = event.url
+            debugpopup( "AppOpened - Launched in from another app - " .. launchURL ) -- output: coronasdkapp://mycustomstring
+        end
     end
 end
 

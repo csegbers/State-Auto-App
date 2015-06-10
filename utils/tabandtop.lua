@@ -271,13 +271,15 @@ function myApp.showScreen(parms)
     return true
 end
 
+
+
 --------------------------------------------------
 -- Show sub screen. Add function
 -- parms - instructions(table) 
 --         instructions table must have a composer table
 --------------------------------------------------
-function myApp.showSubScreen(parms)
-        local tnt = parms.instructions
+function myApp.showSubScreenRegular(parms)
+        local tnt = parms.instructions or {}
 
         ----------------------------------------------
         -- As screen calls screen calls screen... the parms
@@ -383,10 +385,35 @@ function myApp.showSubScreen(parms)
 end
 
 
+--------------------------------------------------
+-- Show sub screen. Add function
+-- parms - instructions(table) 
+--         instructions table must have a composer table
+--------------------------------------------------
+function myApp.showSubScreen(parms)
+        local tnt = parms.instructions or {}
+        if tnt.navigation.composer.otherscenes then
+            --debugpopup (myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation.composer.time)
+            tnt.navigation = myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation
+            --print (myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation.composer.time)
+        end
+        if tnt.navigation.composer.overlay then
+            composer.showOverlay(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time,effect=tnt.navigation.composer.effect,isModal=tnt.navigation.composer.isModal})
+        else
+            myApp.showSubScreenRegular(parms)
+        end
+end
+
 
 function myApp.navigationCommon(parms, parentinfo)
        local v = parms
+       -----------------------------------
+       -- composer
+       -----------------------------------
        if v.navigation.composer  then
+          if v.navigation.composer.otherscenes then
+            v.navigation = myApp.otherscenes[v.navigation.composer.otherscenes].navigation
+          end
           if ((composer.getSceneName( "current" )  == (myApp.scenesfld .. v.navigation.composer.lua))
               and (composer.getScene( composer.getSceneName( "current" ) ).myparams().navigation.composer.id == v.navigation.composer.id)) then
            else
@@ -399,9 +426,15 @@ function myApp.navigationCommon(parms, parentinfo)
              myApp.showSubScreen ({instructions=v})   
           end
        else
+           -----------------------------------
+           -- tabbar
+           -----------------------------------
             if v.navigation.tabbar then
                myApp.showScreen({instructions=myApp.tabs.btns[v.navigation.tabbar.key]})
             else
+               -----------------------------------
+               -- systemurl
+               -----------------------------------
                if v.navigation.systemurl then
                   local dothenavigation = true
                   local url = v.navigation.systemurl.url
@@ -411,7 +444,9 @@ function myApp.navigationCommon(parms, parentinfo)
                          system.openURL(url) 
                       end
                   end
-
+                  -----------------------------------
+                  -- phone call ? SHould we prompt
+                  -----------------------------------
                   if string.sub(url, 1, 4):upper() == "TEL:" then
                       -------------------------------
                       -- strip out non digits
@@ -426,17 +461,36 @@ function myApp.navigationCommon(parms, parentinfo)
                           goUrl()
                      end    -- promptforphonecalls
                   else
-                      if string.sub(url, 1, 7):upper() == "MAILTO:" then
-                      else
-                         if string.sub(url, 1, 4):upper() ~= "HTTP" then
-                            url = "http://" .. common.urlencode(url)
-                         end
-                      end
-                      goUrl()
+                     -----------------------------------
+                     -- http request should be only thing left
+                     -----------------------------------
+                     if string.sub(url, 1, 4):upper() ~= "HTTP" then
+                        url = "http://" .. common.urlencode(url)
+                     end
+                     goUrl()
+                  end   -- tele
+
+               else  --- else on systemurl
+                  -------------------------------
+                  -- directions
+                  -------------------------------
+                  if v.navigation.directions then
+                     myApp.navigationDirections(v)
+                  else
+                      -------------------------------
+                       -- search
+                      -------------------------------
+                      if v.navigation.search then
+                           myApp.navigationSearch(v)
+                       else
+                           -------------------------------
+                           -- popup like email or sms
+                           -------------------------------
+                           if v.navigation.popup then
+                              native.showPopup( v.navigation.popup.type, v.navigation.popup.options )
+                           end
+                       end
                   end
-                 -- debugpopup(url)
-
-
                end  --v.navigation.systemurl
             end  --v.navigation.tabbar
        end   --v.navigation.composer 
@@ -444,6 +498,27 @@ function myApp.navigationCommon(parms, parentinfo)
 
 end
 
+function myApp.navigationSearch(parms)
+       local v = parms
+       local function navseaReleaseback() 
+              ------------------------------------------------------
+              -- have accurate location ?
+              ------------------------------------------------------
+              if myApp.gps.haveaccuratelocation == true then
+                  debugpopup (myApp.maps.google.app .. "?q=" .. common.urlencode(v.navigation.search.q) .. "&center=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. (myApp.maps.google.search.additions or "") .. "&x-success=" .. myApp.urlScheme .. "://?resume=true" .. "&x-source=" .. common.urlencode(myApp.appNameSmall))
+                 local didOpenGoogleMaps = system.openURL(myApp.maps.google.app .. "?q=" .. common.urlencode(v.navigation.search.q) .. "&center=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. (myApp.maps.google.search.additions or "") .. "&x-success=" .. myApp.urlScheme .. "://?resume=true" .. "&x-source=" .. common.urlencode(myApp.appNameSmall))
+                 --local didOpenGoogleMaps = system.openURL(myApp.maps.google.app .. "?q=" .. common.urlencode(v.navigation.search.q) .. (myApp.maps.google.search.additions or "") .. "&x-success=" .. myApp.urlScheme .. "://?resume=true" .. "&x-source=" .. common.urlencode(myApp.appNameSmall))
+                 if ( didOpenGoogleMaps == false ) then  --defer to Apple Maps
+                    --debugpopup(myApp.maps.apple.app .. "?q=" .. common.urlencode(v.navigation.search.q) .. "&sll=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude )
+                    system.openURL(myApp.maps.apple.app .. "?q=" .. common.urlencode(v.navigation.search.q) .. "&sll=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. (myApp.maps.apple.search.additions or "") )
+                 end
+              end
+       end     
+       if v.navigation.search  then
+            --system.openURL("comgooglemaps://?q=Pizza&center=39.896311,-82.76")
+            myApp.getCurrentLocation({callback=navseaReleaseback}) 
+       end   --v.navigation.directions 
+end
 
 function myApp.navigationDirections(parms)
        local v = parms
@@ -452,10 +527,10 @@ function myApp.navigationDirections(parms)
               -- have accurate location ?
               ------------------------------------------------------
               if myApp.gps.haveaccuratelocation == true then
-                  --debugpopup ("comgooglemaps://?saddr=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. "&daddr=" .. common.urlencode(v.navigation.directions.address) .. "&directionsmode=transit")
-                 local didOpenGoogleMaps = system.openURL("comgooglemaps://?saddr=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. "&daddr=" .. common.urlencode(v.navigation.directions.address) .. "&directionsmode=transit")
+                 --debugpopup (myApp.maps.googlemapapp .. "?saddr=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. "&daddr=" .. common.urlencode(v.navigation.directions.address) .. "&directionsmode=transit" .. "&x-success=" .. myApp.urlScheme .. "://?resume=true" .. "&x-source=" .. myApp.appName)
+                 local didOpenGoogleMaps = system.openURL(myApp.maps.google.app .. "?saddr=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. "&daddr=" .. common.urlencode(v.navigation.directions.address) .. (myApp.maps.google.directions.additions .. "") .. "&x-success=" .. myApp.urlScheme .. "://?resume=true" .. "&x-source=" .. common.urlencode(myApp.appNameSmall))
                  if ( didOpenGoogleMaps == false ) then  --defer to Apple Maps
-                    system.openURL("http://maps.apple.com/?daddr=" .. common.urlencode(v.navigation.directions.address) .. "&saddr=Current%20Location")
+                    system.openURL(myApp.maps.apple.app .. "?daddr=" .. common.urlencode(v.navigation.directions.address) .. "&saddr=" .. myApp.gps.currentlocation.latitude .. "," .. myApp.gps.currentlocation.longitude .. (myApp.maps.apple.directions.additions .. ""))
                  end
               end
        end     
@@ -465,11 +540,6 @@ function myApp.navigationDirections(parms)
 end
 -- system.openURL("comgooglemaps://?saddr=lat,lng&daddr=xxx&directionsmode=transit")
 
-function myApp.Login(parms)
-    print "IN overlay"
-    composer.showOverlay(myApp.scenesfld .. myApp.login.lua, myApp.login.options)
-    return true
-end
 
 ------------------------------------------------------
 print ("tabandtop: OUT")

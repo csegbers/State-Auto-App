@@ -63,51 +63,54 @@ local homepage = {
                                          effectback="slideRight",
                                       },},
                                    },
-                          css = {title = "debug", 
-                              pic="truck.png",
-                              text="Flat tire, out of gas ? We can help really help",
-                              backtext = "<",
-                                    pic="truck.png",
-
-                               navigation = { tabbar = {
-                                         id = "xxxxx",
-                                         key="gdebug",
-                                      },},
-                                },
+                          ccc = {title = "Roadside Assistance", pic="towing.png",text="Locate nearby towing services" ,
+                               navigation = { search = { q="Towing" },},
+                                      
+                                  },
                           dss = {title = "State Auto Web", 
-                              pic="truck.png",
+                              pic="web.png",
                               text="Sample web page",
                               backtext = "<",
                               forwardtext = ">",
-                                    pic="truck.png",
-                                    htmlinfo = {
-                                            url="http://www.stateauto.com/" ,
-                                          },
-                                    navigation = { composer = {
-                                         id = "stateautoweb",
-                                         lua="webview",
-                                         time=250, 
-                                         effect="slideLeft",
-                                         effectback="slideRight",
-                                      },},
-                                      
+                              htmlinfo = {
+                                      url="http://www.stateauto.com/" ,
+                                    },
+                              navigation = { composer = {
+                                   id = "stateautoweb",
+                                   lua="webview",
+                                   time=250, 
+                                   effect="slideLeft",
+                                   effectback="slideRight",
+                                },},
+                                
                                 },
                             dtt= {title = "CNN Launch separate", 
-                              pic="truck.png",
+                              pic="web.png",
                               text="Sample web page",
                               backtext = "<",
-                                    pic="truck.png",
-                                    navigation = { systemurl = {
-                                         url="http://www.cnn.com/"
-                                      },},
+                              navigation = { systemurl = {
+                                   url="http://www.cnn.com/"
+                                },},
                                       
                                 },
-                           et3t = {title = "Phone Call", pic="truck.png",text="Flat tire, out of gas ? We can help" ,
+                          eb44 = {title = "Nearby gas stations", pic="gas.png",text="locate nearby gas stations" ,
+                               navigation = { search = { q="Gas Station" },},
+                                      
+                                  },
+                           ec3t = {title = "Directions to segbers", pic="map.png",text="Get directions to segber shouse" ,
+                               navigation = { directions = { address="12293 Mallard Pond Ct Pickerington Ohio 43147" },},
+                                      
+                                  },
+                           et3t = {title = "Phone Call", pic="phone.png",text="Flat tire, out of gas ? We can help" ,
                                navigation = { systemurl = { url="tel:614-915-9769"},},
                                       
                                   },
-                         fttt = {title = "Mail", pic="truck.png",text="Flat tire, out of gas ? We can help", 
-                               navigation = { systemurl = { url="mailto:nobody@mycompany.com?subject=hi%20there"},},
+                           ey3t = {title = "Text", pic="sms.png",text="send a text" ,
+                               navigation = { popup = { type="sms",options= {to="614-915-9769"},},},
+                                      
+                                  },
+                         fttt = {title = "Mail", pic="email.png",text="Flat tire, out of gas ? We can help", 
+                               navigation = { popup = { type="mail", options= {to="nobody@mycompany.com", subject="hi there"},},},
                                  },
                      },   --items
             }

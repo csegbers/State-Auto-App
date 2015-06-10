@@ -54,19 +54,7 @@ function scene:create(event)
         -------------------------------------------
         local function onObjectTouchAction(  )
             myApp.navigationCommon(homepageitem)
-            -- if homepageitem.navigation.composer then
-            --    local parentinfo = params 
-            --    homepageitem.callBack = function() myApp.showScreen({instructions=parentinfo,effectback=homepageitem.navigation.composer.effectback}) end
-            --    myApp.showSubScreen ({instructions=homepageitem})  
-            -- else
-            --    if homepageitem.navigation.tabbar then
-            --       myApp.showScreen({instructions=myApp.tabs.btns[homepageitem.navigation.tabbar.key]})
-            --    else
-            --       if homepageitem.navigation.systemurl then
-            --          system.openURL( homepageitem.navigation.systemurl.url )
-            --       end
-            --    end
-            -- end
+
         end       
         ---------------------------------------------
         -- simulate a pressing of a button
@@ -219,11 +207,11 @@ function scene:show( event )
             -- Insert code here to make the scene come alive.
             -- Example: start timers, begin animation, play audio, etc.
 
-         -- if myApp.login.loggedin == false and myApp.justLaunched == true then
-         --    myApp.justLaunched = false
-         --    timer.performWithDelay(10, myApp.Login)  --- cant just launch if we recycle composer for some reason
+         if myApp.authentication.loggedin == false and myApp.justLaunched == true then
+            myApp.justLaunched = false
+            timer.performWithDelay(10, myApp.showSubScreen({instructions=myApp.otherscenes.login}))  --- cant just launch if we recycle composer for some reason
 
-         -- end
+         end
     end
 	
 

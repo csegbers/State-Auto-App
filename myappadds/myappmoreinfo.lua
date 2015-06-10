@@ -48,11 +48,7 @@ local moreinfo = {
                                                   object = "Agency", --- used for mapping and other web services
                                                 },
                                    navigation = { composer = {
-                                               id = "alocatemore",
-                                               lua="locatepre",
-                                               time=250, 
-                                               effect="slideLeft",
-                                               effectback="slideRight",
+                                               otherscenes = "login",
                                             },},
                                        },
                                bb0head = {

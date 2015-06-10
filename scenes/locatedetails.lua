@@ -83,6 +83,15 @@ end
 local onRowTouch = function( event )
         local row = event.row
         local params = row.params
+        local obgroup = myApp.objecttypes[row.params.fieldtype]
+        local navgroup = obgroup.navigation
+
+        -----------------------
+        -- center the map if we got off wack
+        ------------------------
+        if navgroup.directions  then
+            if myMap and myObject then myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude ,true ) end
+        end
         
         if event.phase == "press"  then     
 
@@ -94,47 +103,50 @@ local onRowTouch = function( event )
  
         elseif event.phase == "release" then
 
-           local obgroup = myApp.objecttypes[row.params.fieldtype]
-           local navgroup = obgroup.navigation
+
            if navgroup then
                -----------------------------
                -- launching "external ? ""
                ---------------------------- 
                if navgroup.directions then  
-                   myApp.navigationDirections ({launch = obgroup.launch, navigation = { directions = { address=string.format( (navgroup.directions.address or ""),  row.params.fulladdress )},},} )
+                   myApp.navigationCommon ({launch = obgroup.launch, navigation = { directions = { address=string.format( (navgroup.directions.address or ""),  row.params.fulladdress )},},} )
                else 
-                   if navgroup.systemurl then 
-                      myApp.navigationCommon( {launch = obgroup.launch, navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
+                   if navgroup.popup then 
+                     myApp.navigationCommon ({launch = obgroup.launch, navigation = { popup = { type = navgroup.popup.type, options ={to=string.format( (navgroup.popup.options.to or ""),  row.params.value )},},} ,})
                    else
-                        if navgroup.composer then
-                            locatelaunch =                          
-                                 {
-                                    title = obgroup.title, 
-                                    text=myName.text,
-                                    backtext = obgroup.backtext ,
-                                    forwardtext = obgroup.forwardtext ,
-                                    pic=obgroup.pic,
-                                    htmlinfo = { 
-                                                  url=row.params.value ,
-                                               },
-                                    navigation = 
-                                     { 
-                                        composer = 
-                                            { 
-                                               id = row.params.value ,
-                                               lua=navgroup.composer.lua,
-                                               time=navgroup.composer.time, 
-                                               effect=navgroup.composer.effect,
-                                               effectback=navgroup.composer.effectback,              
-                                            }
+                       if navgroup.systemurl then 
+                          myApp.navigationCommon( {launch = obgroup.launch, navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
+                       else
+                            if navgroup.composer then
+                                locatelaunch =                          
+                                     {
+                                        title = obgroup.title, 
+                                        text=myName.text,
+                                        backtext = obgroup.backtext ,
+                                        forwardtext = obgroup.forwardtext ,
+                                        pic=obgroup.pic,
+                                        htmlinfo = { 
+                                                      url=row.params.value ,
+                                                   },
+                                        navigation = 
+                                         { 
+                                            composer = 
+                                                { 
+                                                   id = row.params.value ,
+                                                   lua=navgroup.composer.lua,
+                                                   time=navgroup.composer.time, 
+                                                   effect=navgroup.composer.effect,
+                                                   effectback=navgroup.composer.effectback,              
+                                                }
+                                        ,}
                                     ,}
-                                ,}
-                                
-                             local parentinfo =  sceneparams 
-                             locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
-                             myApp.showSubScreen ({instructions=locatelaunch})
-                        end   -- if composer
-                   end  -- if systemurl
+                                    
+                                 local parentinfo =  sceneparams 
+                                 locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                                 myApp.showSubScreen ({instructions=locatelaunch})
+                            end   -- if composer
+                       end  -- if systemurl
+                   end   -- popup
                end -- directions
            end   -- if navigation
 

@@ -15,6 +15,16 @@ widget.setTheme(myApp.theme)
 require( myApp.utilsfld .. "backgroup" )   -- set the backgroup
 require( myApp.utilsfld .. "tabandtop" )   -- set the top and bottom sections
 
+-----------------------------------------
+-- launched from somehwre else ?
+-----------------------------------------
+local launchArgs = ...
+local launchURL
+if launchArgs and launchArgs.url then
+   launchURL = launchArgs.url
+   debugpopup("Launched in from another app - " .. launchURL)
+end
+
 ---------------------------------------------------
 --  Sort everything in the correct z-index order
 ----------------------------------------------------
