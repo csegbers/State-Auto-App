@@ -39,12 +39,17 @@ function scene:show( event )
         -- Called when the scene is still off screen (but is about to come on screen).
     elseif ( phase == "did" ) then
             parse:logEvent( "Scene", { ["name"] = currScene} )
+            local pagewasloaded = false
 
             local function webListener( event )
-                if event.type == "loaded" then
+                if event.type == "loaded" or event.type == "timeout"  and pagewasloaded == false then
+                    pagewasloaded = true
                     webView.isVisible = true
                     webView:removeEventListener( "urlRequest", webListener)
                     native.setActivityIndicator( false )
+                    if  event.type == "timeout"  then
+                        native.showAlert( myApp.appName ,myApp.webview.timeoutmessage ,{"ok"}) 
+                    end
                 end
             end
             -------------------------------------
@@ -59,6 +64,7 @@ function scene:show( event )
             --debugpopup(sceneparams.htmlinfo.url )
             local url = sceneparams.htmlinfo.url
 
+            timer.performWithDelay(myApp.webview.pageloadwaittime, function() webListener({type="timeout"}) end) 
             if sceneparams.htmlinfo.url then
                 if string.sub(url, 1, 4):upper() ~= "HTTP" then  url = "http://" .. url end
                 native.setActivityIndicator( true )
@@ -102,6 +108,15 @@ function scene:myparams( event )
        return sceneparams
 end
 
+
+---------------------------------------------------
+-- if an overlay is happening to us
+-- type (hide show)
+-- phase (will did)
+---------------------------------------------------
+function scene:overlay( parms )
+     print ("overlay happening on top of " .. currScene .. " " .. parms.type .. " " .. parms.phase)
+end
 ---------------------------------------------------
 -- use if someone wants us to transition away
 -- for navigational appearnaces

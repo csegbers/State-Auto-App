@@ -136,7 +136,9 @@ function  myApp.getCurrentLocation( event )
         --local getGPS   -- forward reference
         local parms = event or {}
         myApp.gps.haveaccuratelocation = false
+        native.setActivityIndicator( true ) 
         local function locationHandler ( event )
+            native.setActivityIndicator( false ) 
             Runtime:removeEventListener( "location", locationHandler )  
             myApp.gps.currentlocation = event
             if ( myApp.gps.currentlocation.errorCode or ( myApp.gps.currentlocation.latitude == 0 and myApp.gps.currentlocation.longitude == 0 ) ) then
@@ -199,26 +201,40 @@ end
 function  myApp.getAddressLocation( event )
         local parms = event or {}
         print ("Calulating lat.lg for: " .. parms.address)
+
+        local callbackexecuted = false
+        native.setActivityIndicator( true ) 
         local myMap = native.newMapView( -100, -100, 20, 20 ) -- keep out the way
 
         local function addressHandler ( event )
+            if callbackexecuted == false then
+                callbackexecuted = true
+                native.setActivityIndicator( false ) 
+                myMap:removeSelf()
+                myMap = nil
 
-            myMap:removeSelf()
-            myMap = nil
-
-            if ( event.isError ) then
-                native.showAlert( myApp.gps.addresslocate.errortitle, myApp.gps.addresslocate.errormessage .. (event.errorMessage or "Unknown"), { "Okay" } )
-            else
-                 if myApp.debugMode then native.showAlert( "Location for " .. parms.address, "lat: " ..  event.latitude .. "  Long "..  event.longitude , { "Okay" } ) end
+                if ( event.isError ) then
+                    native.showAlert( myApp.gps.addresslocate.errortitle, myApp.gps.addresslocate.errormessage .. (event.errorMessage or "Unknown"), { "Okay" } )
+                else
+                     if myApp.debugMode then native.showAlert( "Location for " .. parms.address, "lat: " ..  event.latitude .. "  Long "..  event.longitude , { "Okay" } ) end
+                end
+                ----------------------------------------------
+                -- Caller wants us to run something ?
+                ----------------------------------------------
+                if parms.callback then  parms.callback(event) end     
             end
-            ----------------------------------------------
-            -- Caller wants us to run something ?
-            ----------------------------------------------
-            if parms.callback then  parms.callback(event) end     
-
         end
-        
-        if myMap then myMap:requestLocation( parms.address, addressHandler ) end
+
+        timer.performWithDelay(myApp.gps.addresslocate.loadwaittime, 
+                         function() 
+                            if callbackexecuted == false then 
+                                callbackexecuted = true 
+                                native.setActivityIndicator( false ) 
+                                native.showAlert( myApp.appName ,myApp.gps.addresslocate.timeoutmessage ,{"ok"}) 
+                            end 
+                          end
+                     ) 
+        if myMap then myMap:requestLocation( parms.address, addressHandler ) else native.setActivityIndicator( false )  end
  
 end
 

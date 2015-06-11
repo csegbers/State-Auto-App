@@ -10,7 +10,7 @@ local common = require( myApp.utilsfld .. "common" )
 
 local login = require( myApp.classfld .. "classlogin" )
 
-local currScene = (composer.getSceneName( "current" ) or "unknown")
+local currScene = "login"
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
 local sceneparams
@@ -25,10 +25,10 @@ function scene:create(event)
 	local group = self.view
     sceneparams = event.params or {}
 
-     local background = display.newRect(0,0,myApp.cW,100)
+     local background = display.newRect(0,0,myApp.cW-20,200)
     background:setFillColor(155/myApp.colorDivisor, 255/myApp.colorDivisor, 255/myApp.colorDivisor, 255/myApp.colorDivisor)
     background.x = myApp.cW / 2
-    background.y = myApp.cH / 2
+    background.y = myApp.cH / 3
     group:insert(background)
         -- self.login = login.new({ 
         --                          id=1,
@@ -43,6 +43,12 @@ function scene:show( event )
     local group = self.view
     local phase = event.phase
     print ("Show:" .. phase.. " " .. currScene)
+
+    -----------------------------
+    -- call incase the parent needs to do any action
+    ------------------------------
+    pcall(function() event.parent:overlay({type="show",phase = phase} ) end)
+
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
@@ -64,6 +70,11 @@ function scene:hide( event )
     local phase = event.phase
     print ("Hide:" .. phase.. " " .. currScene)
 
+    -----------------------------
+    -- call incase the parent needs to do any action
+    ------------------------------
+    pcall(function() event.parent:overlay({type="hide",phase = phase} ) end)
+
     if ( phase == "will" ) then
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
@@ -82,6 +93,14 @@ end
 function scene:myparams( event )
        return sceneparams
 end
+---------------------------------------------------
+-- use if someone wants us to transition away
+-- for navigational appearnaces
+-- used from the more button
+---------------------------------------------------
+function scene:morebutton( parms )
+end
+
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )

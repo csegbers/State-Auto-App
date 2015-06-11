@@ -144,6 +144,21 @@ if myApp.isTall then
 end
 
 
+------------------------------------
+-- will gracefully close down the overlay if it is up
+-- then do a callback
+-------------------------------------
+function myApp.hideOverlay(parms)
+    local currOverlay = (composer.getSceneName( "overlay" ))
+    if currOverlay  then
+       local v =  composer.getScene( currOverlay).myparams()
+       print ("overlay effect back " .. v.navigation.composer.effectback)
+       composer.hideOverlay(  v.navigation.composer.effectback , v.navigation.composer.time   )   -- for some reason the time goes twice as fast
+       timer.performWithDelay(v.navigation.composer.time /2,parms.callback)
+    else
+       parms.callback()
+    end
+end
 
 --------------------------------------------------
 -- clear Title bar icons nav elements
@@ -233,40 +248,42 @@ end
 function myApp.showScreen(parms)
 
     if myApp.moreinfo.direction  == "left" then 
-        local tnt = parms.instructions
-        myApp.tabCurrentKey = tnt.key
-        ----------------------------------------------------------
-        --   Make sure the Tab is selected in case we came from a different direction instead of user tapping tabbar
-        ----------------------------------------------------------
-        myApp.tabBar:setSelected(tnt.sel)
-        ----------------------------------------------------------
-        --   Change the title in the status bar and launch new screen
-        ----------------------------------------------------------
-        if parms.firsttime  then
-            myApp.TitleGroup.titleText.text = tnt.title
-            myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)
-        else
-            ---------------------------------------------------
-            -- on a subscreen coming back ? slide it on in
-            ---------------------------------------------------
-            if parms.effectback then  
-                transition.to( myApp.TitleGroup.titleText, { 
-                time=myApp.tabs.transitiontime/2, alpha=.2,x = myApp.TitleGroup.titleText.x*3,
-                onComplete= function () myApp.TitleGroup.titleText.text = tnt.title; myApp.TitleGroup.titleText.x = myApp.cCx*-1;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime  }) myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over) end } )
-                  
-            else
-                transition.to( myApp.TitleGroup.titleText, { time=myApp.tabs.transitiontime , alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=myApp.tabs.transitiontime }) end } )
-                transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)})
-            end
-        end
+        myApp.hideOverlay({callback= function () 
+                local tnt = parms.instructions
+                myApp.tabCurrentKey = tnt.key
+                ----------------------------------------------------------
+                --   Make sure the Tab is selected in case we came from a different direction instead of user tapping tabbar
+                ----------------------------------------------------------
+                myApp.tabBar:setSelected(tnt.sel)
+                ----------------------------------------------------------
+                --   Change the title in the status bar and launch new screen
+                ----------------------------------------------------------
+                if parms.firsttime  then
+                    myApp.TitleGroup.titleText.text = tnt.title
+                    myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)
+                else
+                    ---------------------------------------------------
+                    -- on a subscreen coming back ? slide it on in
+                    ---------------------------------------------------
+                    if parms.effectback then  
+                        transition.to( myApp.TitleGroup.titleText, { 
+                        time=myApp.tabs.transitiontime/2, alpha=.2,x = myApp.TitleGroup.titleText.x*3,
+                        onComplete= function () myApp.TitleGroup.titleText.text = tnt.title; myApp.TitleGroup.titleText.x = myApp.cCx*-1;  transition.to( myApp.TitleGroup.titleText, {alpha=1,x = myApp.cCx,   transition=easing.outQuint, time=myApp.tabs.transitiontime  }) myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over) end } )
+                          
+                    else
+                        transition.to( myApp.TitleGroup.titleText, { time=myApp.tabs.transitiontime , alpha=.2,onComplete= function () myApp.TitleGroup.titleText.text = tnt.title;  transition.to( myApp.TitleGroup.titleText, {alpha=1, time=myApp.tabs.transitiontime }) end } )
+                        transition.to( myApp.TitleGroup.titleIcon, { time=myApp.tabs.transitiontime, alpha=0 ,onComplete=myApp.showScreenIcon(myApp.imgfld .. parms.instructions.over)})
+                    end
+                end
 
-        local effect = tnt.navigation.composer.effect
-        -----------------------------------------------
-        -- override effect ? Maybe a "back" etc..
-        -----------------------------------------------
-        if parms.effectback then effect = parms.effectback end
+                local effect = tnt.navigation.composer.effect
+                -----------------------------------------------
+                -- override effect ? Maybe a "back" etc..
+                -----------------------------------------------
+                if parms.effectback then effect = parms.effectback end
 
-        composer.gotoScene(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time, effect=effect, params = tnt})
+                composer.gotoScene(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time, effect=effect, params = tnt})
+          end })    -- callback funcyion
     end
     return true
 end
@@ -391,17 +408,27 @@ end
 --         instructions table must have a composer table
 --------------------------------------------------
 function myApp.showSubScreen(parms)
-        local tnt = parms.instructions or {}
-        if tnt.navigation.composer.otherscenes then
-            --debugpopup (myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation.composer.time)
-            tnt.navigation = myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation
-            --print (myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation.composer.time)
-        end
-        if tnt.navigation.composer.overlay then
-            composer.showOverlay(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time,effect=tnt.navigation.composer.effect,isModal=tnt.navigation.composer.isModal})
-        else
-            myApp.showSubScreenRegular(parms)
-        end
+        local currOverlay = (composer.getSceneName( "overlay" ))
+        myApp.hideOverlay({callback= function () 
+                local tnt = parms.instructions or {}
+                if tnt.navigation.composer.otherscenes then
+                    --debugpopup (myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation.composer.time)
+                    tnt.navigation = myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation
+                    --print (myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation.composer.time)
+                end
+                if tnt.navigation.composer.overlay then
+                    -------------------------------------
+                    -- if we just were in an overlay, it was just closed
+                    -- must select action again otherwise it gets 2 overlays 
+                    -- tripping on each other
+                    -------------------------------------
+                    if currOverlay == nil then
+                       composer.showOverlay(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time,effect=tnt.navigation.composer.effect,isModal=tnt.navigation.composer.isModal, params = tnt ,})
+                    end
+                else
+                    myApp.showSubScreenRegular(parms)
+                end
+                end }) -- callback
 end
 
 
@@ -539,6 +566,7 @@ function myApp.navigationDirections(parms)
        end   --v.navigation.directions 
 end
 -- system.openURL("comgooglemaps://?saddr=lat,lng&daddr=xxx&directionsmode=transit")
+
 
 
 ------------------------------------------------------

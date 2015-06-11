@@ -3,7 +3,7 @@
 -- Store variables used across the entire app 
 -------------------------------------------------------
 local M = { 
-            debugMode = true,
+            debugMode = false,
             appName = "State Auto Insured App" ,
             appNameSmall = "Insured App" ,
             urlScheme = "rockhillapp",
@@ -42,6 +42,10 @@ local M = {
             scenemaskFile = "",
             splash = {image = "splash.jpg", delay = 150, },
             promptforphonecalls = true,
+            webview = {
+                         pageloadwaittime = 10000,
+                         timeoutmessage = "Page taking too long to load.",
+                     },
 
             objecttypes = {
                         phone = {
@@ -146,6 +150,8 @@ local M = {
                      addresslocate = {
                                 errortitle = "Not Valid Location",
                                 errormessage = "Cannot Determine Location: ",
+                                loadwaittime = 12000,
+                                timeoutmessage = "Taking too long to determine location.",
                                     },
                      currentlocate = {
                                 errortitle = "No GPS Signal",
@@ -165,8 +171,9 @@ local M = {
                                              isModal = true,
                                              lua="login",
                                              overlay=true,
-                                             time=500, 
-                                             effect="fromTop",
+                                             time=700, 
+                                             effect="slideDown",
+                                             effectback="slideUp",
                                           },},
                               },
                     },

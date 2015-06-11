@@ -402,6 +402,15 @@ function scene:myparams( event )
 end
 
 ---------------------------------------------------
+-- if an overlay is happening to us
+-- type (hide show)
+-- phase (will did)
+---------------------------------------------------
+function scene:overlay( parms )
+     print ("overlay happening on top of " .. currScene .. " " .. parms.type .. " " .. parms.phase)
+end
+
+---------------------------------------------------
 -- use if someone wants us to transition away
 -- for navigational appearnaces
 -- used from the more button
