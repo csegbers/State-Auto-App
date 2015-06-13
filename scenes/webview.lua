@@ -116,6 +116,20 @@ end
 ---------------------------------------------------
 function scene:overlay( parms )
      print ("overlay happening on top of " .. currScene .. " " .. parms.type .. " " .. parms.phase)
+     local deltamult
+     if parms.phase == "will"  then
+         if parms.type == "show"  then
+            deltamult = 1
+        --    webView.isVisible = false
+            transition.to(  webView, {  time=parms.time/2,alpha=0})
+         else     -- parms.type == "hide"then
+            deltamult = -1
+         --   webView.isVisible = true
+            transition.to(  webView, {  time=parms.time/2,alpha=1})
+         end
+
+       --  transition.to(  webView, {  time=parms.time,delta=true, y=(parms.height + 20 -parms.height/2)* deltamult  , height = (parms.height+40) *deltamult*-1  , transition=parms.transition})
+     end
 end
 ---------------------------------------------------
 -- use if someone wants us to transition away
@@ -130,6 +144,7 @@ end
 -- Title bar navigation hit. Do we do something ?
 ---------------------------------------------------
 function scene:navigationhit( parms )
+
      local returncode = false
      if parms.phase == "back" and webView.canGoBack then
         returncode = true

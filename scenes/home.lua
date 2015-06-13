@@ -13,6 +13,7 @@ local login = require( myApp.classfld .. "classlogin" )
 
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 local sceneparams
+local container
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -24,7 +25,7 @@ function scene:create(event)
     print ("Create  " .. currScene)
     sceneparams = event.params or {}
     local group = self.view
-    local container = common.SceneContainer()
+    container = common.SceneContainer()
     group:insert(container)
  
     local function scrollListener( event )
@@ -248,6 +249,15 @@ end
 ---------------------------------------------------
 function scene:overlay( parms )
      print ("overlay happening on top of " .. currScene .. " " .. parms.type .. " " .. parms.phase)
+     -- local deltamult
+     -- if parms.phase == "will"  then
+     --     if parms.type == "show"  then
+     --        deltamult = 1
+     --     else     -- parms.type == "hide"then
+     --        deltamult = -1
+     --     end
+     --     transition.to(  container, {  time=parms.time,delta=true, y=(parms.height + 20 )* deltamult  , height = (parms.height+40) *deltamult*-1  , transition=parms.transition})
+     -- end
 end
 
 ---------------------------------------------------

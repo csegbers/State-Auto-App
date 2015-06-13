@@ -14,6 +14,7 @@ local currScene = "login"
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
 local sceneparams
+local container
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -25,11 +26,19 @@ function scene:create(event)
 	local group = self.view
     sceneparams = event.params or {}
 
-     local background = display.newRect(0,0,myApp.cW-20,200)
+    container = display.newContainer(myApp.sceneWidth-30,200)
+    container.y = myApp.cH / 3
+    container.x = myApp.cW / 2
+
+    local background = display.newRect(0,0,myApp.sceneWidth-20,200)
     background:setFillColor(155/myApp.colorDivisor, 255/myApp.colorDivisor, 255/myApp.colorDivisor, 255/myApp.colorDivisor)
-    background.x = myApp.cW / 2
-    background.y = myApp.cH / 3
-    group:insert(background)
+    -- background.x = myApp.cW / 2
+    -- background.y = myApp.cH / 3
+    container:insert(background)
+
+
+
+    group:insert(container)
         -- self.login = login.new({ 
         --                          id=1,
         --                     })
@@ -47,7 +56,7 @@ function scene:show( event )
     -----------------------------
     -- call incase the parent needs to do any action
     ------------------------------
-    pcall(function() event.parent:overlay({type="show",phase = phase} ) end)
+    pcall(function() event.parent:overlay({type="show",phase = phase,time=sceneparams.navigation.composer.time,height=container.height,width=container.width,x=container.x,y=container.y} ) end)
 
 
     if ( phase == "will" ) then
@@ -73,7 +82,7 @@ function scene:hide( event )
     -----------------------------
     -- call incase the parent needs to do any action
     ------------------------------
-    pcall(function() event.parent:overlay({type="hide",phase = phase} ) end)
+    pcall(function() event.parent:overlay({type="hide",phase = phase,time=sceneparams.navigation.composer.time,height=container.height,width=container.width,x=container.x,y=container.y} ) end)
 
     if ( phase == "will" ) then
         -- Called when the scene is on screen (but is about to go off screen).

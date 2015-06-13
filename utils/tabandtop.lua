@@ -144,7 +144,9 @@ end
 
 ------------------------------------
 -- will gracefully close down the overlay if it is up
--- then do a callback
+-- then do a callback or the regulat scene
+--
+-- you can alos pass in nil for callback to use this to simply shut down the overlay
 -------------------------------------
 function myApp.hideOverlay(parms)
     local currOverlay = (composer.getSceneName( "overlay" ))
@@ -170,14 +172,24 @@ end
 function myApp.showScreenCallback(parms)
     
     local returncode = false
+    local currOverlay = (composer.getSceneName( "overlay" ))
     ----------------------------------------------
     -- does the current screen want to do something with navigation ?
     -- if so do it otherwise default to the normal navigation
+    --
+    -- But if we have an overlay scene showing... 
+    -- hideOverlay would have remove it to get us back to normal processing
     --------------------------------------------------
-    pcall(function() returncode = composer.getScene( composer.getSceneName( "current" ) ):navigationhit({phase=parms.phase} ) end)
-    if returncode == false then
-        parms.callBack()
+    if currOverlay  then
+        myApp.hideOverlay({callback=  nil})
+    else
+        pcall(function() returncode = composer.getScene( composer.getSceneName( "current" ) ):navigationhit({phase=parms.phase} ) end)
+        if returncode == false then
+            parms.callBack()
+        end
     end
+    
+ 
 end
 
 
