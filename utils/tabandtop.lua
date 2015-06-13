@@ -26,7 +26,6 @@ myApp.TitleGroup:insert(statusBarBackground)
 ----------------------------------------------------------
 --   This is the title bar
 ----------------------------------------------------------
-
 local tbry = myApp.titleBarHeight / 2
 local tbrheight = myApp.titleBarHeight
 
@@ -60,14 +59,14 @@ myApp.TitleGroup:insert(myApp.TitleGroup.titleText)
 --   right side more button
 ----------------------------------------------------------
 myApp.TitleGroup.moreIcon = widget.newButton {
-                    defaultFile = myApp.imgfld .. myApp.moreinfo.morebutton.defaultFile,
-                    overFile = myApp.imgfld .. myApp.moreinfo.morebutton.overFile ,
-                    height = myApp.tabs.tabbtnh,
-                    width = myApp.tabs.tabbtnw,
-                    x = myApp.sceneWidth - myApp.tabs.tabbtnw/2 - myApp.titleBarEdge  ,
-                    y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch  ,
-                    onRelease = function() if myApp.moreinfo.imsliding == false then myApp.MoreInfoMove() end end,
-               }
+        defaultFile = myApp.imgfld .. myApp.moreinfo.morebutton.defaultFile,
+        overFile = myApp.imgfld .. myApp.moreinfo.morebutton.overFile ,
+        height = myApp.tabs.tabbtnh,
+        width = myApp.tabs.tabbtnw,
+        x = myApp.sceneWidth - myApp.tabs.tabbtnw/2 - myApp.titleBarEdge  ,
+        y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch  ,
+        onRelease = function() if myApp.moreinfo.imsliding == false then myApp.MoreInfoMove() end end,
+   }
 
 myApp.TitleGroup:insert(myApp.TitleGroup.moreIcon) 
  
@@ -143,7 +142,6 @@ if myApp.isTall then
     myApp.scenemaskFile = myApp.imgfld .. "mask-320x448.png"
 end
 
-
 ------------------------------------
 -- will gracefully close down the overlay if it is up
 -- then do a callback
@@ -161,9 +159,13 @@ function myApp.hideOverlay(parms)
 end
 
 --------------------------------------------------
--- clear Title bar icons nav elements
---
 -- parms - {instructions (table)}
+--
+-- Does the current screen want to possibly
+-- do something when they hit the < > navigation buttons
+-- case: webview.. maybe forward back on the web page if needed ?
+--
+-- if so do it
 --------------------------------------------------
 function myApp.showScreenCallback(parms)
     

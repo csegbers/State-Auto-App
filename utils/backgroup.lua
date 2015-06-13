@@ -69,14 +69,6 @@ function myApp.MoreInfoMove( parms )
        action = "slideoff"
     end
 
-   -- Runtime:dispatchEvent{ name=newlesson.tabparm.eventname,id=newlesson.id,rowindex=newlesson.rowindex ,phase="insert"}
-   --Runtime:removeEventListener( "key",  self.onKey ) 
-   --Runtime:addEventListener( "key",  self.onKey ) 
-   --image:addEventListener( "myEventType", myListener )
-  --local event = { name="myEventType", target=image }
-   --image:dispatchEvent( event )
-
-
     pcall(function() composer.getScene( composer.getSceneName( "current" ) ):morebutton({time=transtime,x = deltax, transition=easing.outQuint,action=action} ) end)
 
 
@@ -89,8 +81,6 @@ function myApp.MoreInfoMove( parms )
     -- do alpha separate because of the delta
     ---------------------------------------
     transition.to(  myApp.transContainer, { time=myApp.moreinfo.transitiontimealpha,alpha = talpha, onComplete = params.onComplete })
-
-
 
 end
 
@@ -112,7 +102,6 @@ local onRowTouch = function( event )
                   -- Different scene name or id ?
                   ----------------------------------------------
                   myApp.navigationCommon(v)
-
 
               end })
     end
@@ -170,7 +159,6 @@ for i,k in ipairs(a) do
         rowColor = myApp.moreinfo.row.catcolor
         lineColor = defaultcolor
     end
-
 
 	   myList:insertRow({
 	      rowHeight = rowHeight, 
