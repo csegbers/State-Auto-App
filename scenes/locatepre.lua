@@ -28,8 +28,8 @@ local addressButton
 function scene:create(event)
 
     print ("Create  " .. currScene)
-    local group = self.view
-    sceneparams = event.params or {}
+    -- local group = self.view
+    -- sceneparams = event.params or {}
 
 end
 

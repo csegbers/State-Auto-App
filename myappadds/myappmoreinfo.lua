@@ -55,7 +55,15 @@ local moreinfo = {
                                    title = "Support", 
                                    isCategory = true,
                                       },
-                               bb1 = {title = "Help", 
+
+                               bb3 = {
+                                          title = "Contact State Auto", 
+                                          pic="truck.png",
+                                          backtext = "<",
+                                          scrollblockinfo = { object="contactus" , navigate = "subscene"},
+                                          navigation = { composer = { id = "contactus",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
+                                      },
+                               bb4 = {title = "Help", 
                                            pic="truck.png",
                                            text="Flat tire, out of gas ? We can help",
                                            backtext = "<",
@@ -71,7 +79,7 @@ local moreinfo = {
                                                effectback="slideRight",
                                             },},
                                          },
-                               bb2 = {title = "Terms", 
+                               bb5 = {title = "Terms", 
                                            pic="truck.png",
                                            text="Flat tire, out of gas ? We can help",
                                            backtext = "<",
@@ -88,7 +96,7 @@ local moreinfo = {
                                             },},
                                          },
 
-                                bb3 = {title = "Help", 
+                                bb6 = {title = "Help", 
                                            pic="truck.png",
                                            text="Flat tire, out of gas ? We can help",
                                            backtext = "<",
@@ -167,11 +175,6 @@ local moreinfo = {
                                           pic="truck.png",
                                           text="Flat tire, out of gas ? We can help really help",
                                            backtext = "<",
-                                          locateinfo = {
-                                                  functionname="getagenciesnearby",
-                                                  limit=2,
-                                                  miles=50,
-                                                },
                                           navigation = { tabbar = {
                                                id = "xxxmore",
                                                key="gdebug",

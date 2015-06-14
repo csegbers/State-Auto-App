@@ -8,7 +8,8 @@ local tabs = {
         btns = {
             ahome = {
                         label="Home", title="State Auto" ,def="saicon.png",over="saicon-down.png",
-                        navigation = { composer = { id = "home",lua="home" ,time=250, effect="crossFade" },},
+                        scrollblockinfo = { object="homepage" , navigate = "mainscene"},
+                        navigation = { composer = { id = "home",lua="scrollblocks" ,time=250, effect="crossFade" },},
                     },
             bvideo = {
                         label="My Agent" ,title="My Agent" ,def="myagent.png",over="myagent-down.png",

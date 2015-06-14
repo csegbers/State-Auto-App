@@ -2,7 +2,7 @@
 -------------------------------------------------------
 -- Store variables used across the entire app 
 -------------------------------------------------------
-local homepage = { 
+local contactus = { 
 
 --------------------------------------------------------
 -- note: physical order of items does not matter. 
@@ -24,45 +24,7 @@ local homepage = {
             textfontsize=12   ,       
             textbottomedge =12   ,           
             items = {
-                        alocate = {
-                             title = "Locate an Agent", 
-                             pic="trustedchoice.png",
-                             originaliconwidth = 196,
-                             originaliconheight = 77,
-                             iconwidth = 120,      -- height will be scaled appropriately
-                             text="Locate agents nearby or from an address",
-                             backtext = "<",
-                             --groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
-                             locateinfo = {
-                                            limit=100,
-                                            miles=25,
-                                            object = "Agency", --- used for mapping and other web services
-                                          },
-                             navigation = { composer = {
-                                         id = "alocate1",
-                                         lua="locatepre",
-                                         time=250, 
-                                         effect="slideLeft",
-                                         effectback="slideRight",
-                                      },},
-                                 },
-                         broasast = {title = "Certified Repair Shops", 
-                                     pic="qsg.png",
-                                     text="Locate certified repair shops nearby or from an address",
-                                     backtext = "<",
-                                     locateinfo = {
-                                            limit=100,
-                                            miles=10,
-                                            object = "BodyShop", --- used for mapping and other web services
-                                          },
-                                    navigation = { composer = {
-                                         id = "alocateqsg",
-                                         lua="locatepre",
-                                         time=250, 
-                                         effect="slideLeft",
-                                         effectback="slideRight",
-                                      },},
-                                   },
+
                           ccc = {title = "Roadside Assistance", pic="towing.png",text="Locate nearby towing services" ,
                                navigation = { search = { q="Towing" },},
                                       
@@ -112,19 +74,7 @@ local homepage = {
                          fttt = {title = "Mail", pic="email.png",text="Flat tire, out of gas ? We can help", 
                                navigation = { popup = { type="mail", options= {to="nobody@mycompany.com", subject="hi there"},},},
                                  },
-                         zzz= {
-                                          title = "Contact State Auto", 
-                                          pic="truck.png",
-                                          backtext = "<",
-                                           text="Contact for help",
-                                          scrollblockinfo = { object="contactus" , navigate = "subscene"},
-                                          ---------------------------
-                                          -- note if calling same lua from same lua... effect wont do much of course
-                                          ---------------------------
-                                          navigation = { composer = { id = "contactus",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight",},},
-                                      },
-
                      },   --items
             }
       
-return homepage
+return contactus

@@ -446,7 +446,8 @@ function myApp.showSubScreen(parms)
 end
 
 
-function myApp.navigationCommon(parms, parentinfo)
+function myApp.navigationCommon(parms)
+--function myApp.navigationCommon(parms, parentinfo)
        local v = parms
        -----------------------------------
        -- composer
@@ -458,12 +459,11 @@ function myApp.navigationCommon(parms, parentinfo)
           if ((composer.getSceneName( "current" )  == (myApp.scenesfld .. v.navigation.composer.lua))
               and (composer.getScene( composer.getSceneName( "current" ) ).myparams().navigation.composer.id == v.navigation.composer.id)) then
            else
-             --local parentinfo = composer.getScene( composer.getSceneName( "current" ) ).myparams()
-             if parentinfo then
-              v.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback=v.navigation.composer.effectback}) end
-             else
+             --if parentinfo then
+              --v.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback=v.navigation.composer.effectback}) end
+             --else
               v.callBack = function() myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabCurrentKey],effectback=v.navigation.composer.effectback}) end
-             end
+             --end
              myApp.showSubScreen ({instructions=v})   
           end
        else
