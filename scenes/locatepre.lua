@@ -127,11 +127,11 @@ function scene:show( event )
              container:insert(myMilestext)
 
             local function milesCheck()
-                if sceneparams.locateinfo.miles > myApp.locatepre.milerange.high then
-                    sceneparams.locateinfo.miles = myApp.locatepre.milerange.high
+                if sceneparams.sceneinfo.locateinfo.miles > myApp.locatepre.milerange.high then
+                    sceneparams.sceneinfo.locateinfo.miles = myApp.locatepre.milerange.high
                 else
-                    if sceneparams.locateinfo.miles < myApp.locatepre.milerange.low then
-                        sceneparams.locateinfo.miles = myApp.locatepre.milerange.low
+                    if sceneparams.sceneinfo.locateinfo.miles < myApp.locatepre.milerange.low then
+                        sceneparams.sceneinfo.locateinfo.miles = myApp.locatepre.milerange.low
                     end
                 end
             end
@@ -147,14 +147,14 @@ function scene:show( event )
                 width = itemGrp.width - myRangetext.width - myMilestext.width - myApp.locatepre.edge*5,
                 id = "miles",
                 orientation = "horizontal",
-                value = (sceneparams.locateinfo.miles-myApp.locatepre.milerange.low)  / myApp.locatepre.milerange.high * 100,
+                value = (sceneparams.sceneinfo.locateinfo.miles-myApp.locatepre.milerange.low)  / myApp.locatepre.milerange.high * 100,
                 listener = function(event) 
-                             sceneparams.locateinfo.miles = ((event.value/100) * myApp.locatepre.milerange.high) +  myApp.locatepre.milerange.low 
+                             sceneparams.sceneinfo.locateinfo.miles = ((event.value/100) * myApp.locatepre.milerange.high) +  myApp.locatepre.milerange.low 
                              milesCheck()
-                             myMilestext.text = sceneparams.locateinfo.miles .. " Miles"
+                             myMilestext.text = sceneparams.sceneinfo.locateinfo.miles .. " Miles"
                           end,
             }
-            myMilestext.text = sceneparams.locateinfo.miles .. " Miles"
+            myMilestext.text = sceneparams.sceneinfo.locateinfo.miles .. " Miles"
             container:insert( horizontalSlider )
 
              -------------------------------------------------
@@ -163,7 +163,7 @@ function scene:show( event )
 
              local function launchLocateScene(inputparms) 
                       local locatelaunch = {  
-                                         title = myApp.mappings.objects[sceneparams.locateinfo.object].desc.plural , --sceneparams.title, 
+                                         title = myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].desc.plural , --sceneparams.title, 
                                          pic=sceneparams.pic,
                                          originaliconwidth = sceneparams.originaliconwidth,
                                          originaliconheight = sceneparams.originaliconheight,
@@ -173,18 +173,18 @@ function scene:show( event )
  
                                          locateinfo = {
                                                         desc = inputparms.desc,
-                                                        functionname=myApp.mappings.objects[sceneparams.locateinfo.object].functionname.locate,
-                                                        limit=sceneparams.locateinfo.limit,
-                                                        miles=sceneparams.locateinfo.miles,
-                                                        object=sceneparams.locateinfo.object,
+                                                        functionname=myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].functionname.locate,
+                                                        limit=sceneparams.sceneinfo.locateinfo.limit,
+                                                        miles=sceneparams.sceneinfo.locateinfo.miles,
+                                                        object=sceneparams.sceneinfo.locateinfo.object,
                                                         lat = inputparms.lat,
                                                         lng = inputparms.lng,
-                                                        mapping= myApp.mappings.objects[sceneparams.locateinfo.object].mapping,
+                                                        mapping= myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].mapping,
                                                       },
                                          navigation = { 
                                                composer = {
                                                               -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
-                                                             id = sceneparams.locateinfo.object.."-" ..sceneparams.locateinfo.miles.."-" .. sceneparams.locateinfo.limit .."-".. inputparms.lat .."-".. inputparms.lng,   
+                                                             id = sceneparams.sceneinfo.locateinfo.object.."-" ..sceneparams.sceneinfo.locateinfo.miles.."-" .. sceneparams.sceneinfo.locateinfo.limit .."-".. inputparms.lat .."-".. inputparms.lng,   
                                                              lua=myApp.locatepre.lua ,
                                                              time=sceneparams.navigation.composer.time, 
                                                              effect=myApp.locatepre.effect,
@@ -205,7 +205,7 @@ function scene:show( event )
                   -- have accurate location ?
                   ------------------------------------------------------
                   if myApp.gps.haveaccuratelocation == true then
-                       launchLocateScene{desc=string.format (myApp.mappings.objects[sceneparams.locateinfo.object].desc.plural ..  " within %i miles of your current location.",sceneparams.locateinfo.miles), lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
+                       launchLocateScene{desc=string.format (myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].desc.plural ..  " within %i miles of your current location.",sceneparams.sceneinfo.locateinfo.miles), lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
                   end
 
              end
@@ -217,7 +217,7 @@ function scene:show( event )
                   ------------------------------------------------------
                   if ( event.isError ) then
                   else
-                       launchLocateScene{desc=string.format (myApp.mappings.objects[sceneparams.locateinfo.object].desc.plural  ..  " within %i miles of %s.",sceneparams.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
+                       launchLocateScene{desc=string.format (myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].desc.plural  ..  " within %i miles of %s.",sceneparams.sceneinfo.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
                   end
               end  
 

@@ -33,11 +33,16 @@ local homepage = {
                              text="Locate agents nearby or from an address",
                              backtext = "<",
                              --groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
-                             locateinfo = {
-                                            limit=100,
-                                            miles=25,
-                                            object = "Agency", --- used for mapping and other web services
-                                          },
+
+                             sceneinfo = { 
+                                            locateinfo = {
+                                                limit=100,
+                                                miles=25,
+                                                object = "Agency", --- used for mapping and other web services
+                                              },
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                              navigation = { composer = {
                                          id = "alocate1",
                                          lua="locatepre",
@@ -50,11 +55,15 @@ local homepage = {
                                      pic="qsg.png",
                                      text="Locate certified repair shops nearby or from an address",
                                      backtext = "<",
-                                     locateinfo = {
-                                            limit=100,
-                                            miles=10,
-                                            object = "BodyShop", --- used for mapping and other web services
-                                          },
+                                     sceneinfo = { 
+                                             locateinfo = {
+                                                    limit=100,
+                                                    miles=10,
+                                                    object = "BodyShop", --- used for mapping and other web services
+                                                  },
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                                     navigation = { composer = {
                                          id = "alocateqsg",
                                          lua="locatepre",
@@ -72,9 +81,10 @@ local homepage = {
                               text="Sample web page",
                               backtext = "<",
                               forwardtext = ">",
-                              htmlinfo = {
-                                      url="http://www.stateauto.com/" ,
-                                    },
+                             sceneinfo = { 
+                                               htmlinfo = {url="http://www.stateauto.com/" ,},
+                                               scrollblockinfo = { },
+                                             },
                               navigation = { composer = {
                                    id = "stateautoweb",
                                    lua="webview",
@@ -117,7 +127,11 @@ local homepage = {
                                           pic="truck.png",
                                           backtext = "<",
                                            text="Contact for help",
-                                          scrollblockinfo = { object="contactus" , navigate = "subscene"},
+                                          
+                                          sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { object="contactus" , navigate = "subscene"},
+                                             },
                                           ---------------------------
                                           -- note if calling same lua from same lua... effect wont do much of course
                                           ---------------------------

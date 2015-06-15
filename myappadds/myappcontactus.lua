@@ -15,7 +15,7 @@ local contactus = {
             groupheaderheight = 20,
             groupbetween = 10,
             groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
-            groupheader = { r=25/255, g=75/255, b=150/255, a=1 },
+            groupheader = { r=80/255, g=120/255, b=30/255, a=1 },
             iconwidth = 60,    -- can be overidden in item
             iconheight = 60,   -- can be overidden in item
             headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
@@ -34,9 +34,11 @@ local contactus = {
                               text="Sample web page",
                               backtext = "<",
                               forwardtext = ">",
-                              htmlinfo = {
-                                      url="http://www.stateauto.com/" ,
-                                    },
+
+                             sceneinfo = { 
+                                  htmlinfo = {     url="http://www.stateauto.com/" , },
+                                 scrollblockinfo = { },
+                                             },
                               navigation = { composer = {
                                    id = "stateautoweb",
                                    lua="webview",

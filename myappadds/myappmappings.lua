@@ -7,6 +7,10 @@ local mappings = {
       objects = {
                   Agency = {    -- name must match actual aobject name in parse
                           backtext = "<",
+                          sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                           navigation = { 
                                           composer = {
                                                id = "x",     -- will be dynamically set
@@ -63,6 +67,10 @@ local mappings = {
                             },
                    BodyShop = {    -- name must match actual aobject name in parse
                           backtext = "<",
+                          sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                           navigation = { 
                                           composer = {
                                                id = "x",     -- will be dynamically set

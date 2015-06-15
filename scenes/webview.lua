@@ -62,15 +62,15 @@ function scene:show( event )
             --webView:reload()
             webView:addEventListener( "urlRequest", webListener )
             --debugpopup(sceneparams.htmlinfo.url )
-            local url = sceneparams.htmlinfo.url
+            local url = sceneparams.sceneinfo.htmlinfo.url
 
             timer.performWithDelay(myApp.webview.pageloadwaittime, function() webListener({type="timeout"}) end) 
-            if sceneparams.htmlinfo.url then
+            if sceneparams.sceneinfo.htmlinfo.url then
                 if string.sub(url, 1, 4):upper() ~= "HTTP" then  url = "http://" .. url end
                 native.setActivityIndicator( true )
                 webView:request( url )
             else
-                webView:request( myApp.htmlfld .. sceneparams.htmlinfo.htmlfile , sceneparams.htmlinfo.dir )
+                webView:request( myApp.htmlfld .. sceneparams.sceneinfo.htmlinfo.htmlfile , sceneparams.sceneinfo.htmlinfo.dir )
             end
             
     end	

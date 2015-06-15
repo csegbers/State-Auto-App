@@ -8,11 +8,18 @@ local tabs = {
         btns = {
             ahome = {
                         label="Home", title="State Auto" ,def="saicon.png",over="saicon-down.png",
-                        scrollblockinfo = { object="homepage" , navigate = "mainscene"},
+                        sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { object="homepage" , navigate = "mainscene"},
+                                             },
                         navigation = { composer = { id = "home",lua="scrollblocks" ,time=250, effect="crossFade" },},
                     },
             bvideo = {
                         label="My Agent" ,title="My Agent" ,def="myagent.png",over="myagent-down.png",
+                        sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                         navigation = { composer = {id = "video", lua="video" ,time=250, effect="slideRight" },},
                         options = {
                                 feedName = "video.rss",
@@ -25,10 +32,18 @@ local tabs = {
                     },
             cmenu = {
                         label="Account",  title="Menu" ,def="account.png",over="account-down.png",
+                         sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                         navigation = { composer = { id = "account",lua="menu" ,time=250, effect="slideDown" },},
                     },
             dblogs = {
                       label="Blogs" ,title="Blog" ,def="tabbaricon.png",over="tabbaricon-down.png",
+                     sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                       navigation = { composer = {id = "blog", lua="feed" ,time=250, effect="crossFade" },},
                       options = {
                             feedName = "corona.rss",
@@ -40,11 +55,19 @@ local tabs = {
                       },
            epics = {
                     label="Pics" ,title="Pics",def="tabbaricon.png",over="tabbaricon-down.png",
+                  sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                     navigation = { composer = { id = "epic",lua="photogallery" ,time=250, effect="crossFade" },},
                    },
            
            fmaps = {
                         label="Maps", title="Maps",def="tabbaricon.png",over="tabbaricon-down.png",
+                        sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                         navigation = { composer = {id = "maps", lua="mapscene" ,time=250, effect="crossFade" },},
                         options = {
                                 pageTitle = "Corona Headquarters"
@@ -52,6 +75,10 @@ local tabs = {
                     },
           gdebug = {
                      label="Debug" ,title="Debug" ,def="tabbaricon.png",over="tabbaricon-down.png" ,showonlyindebugMode=true,
+                     sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                     navigation = { composer = { id = "debug",lua="debugapp" ,time=250, effect="crossFade" },},
                   }
                 }

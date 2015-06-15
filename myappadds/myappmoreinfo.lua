@@ -37,14 +37,12 @@ local moreinfo = {
                                    originaliconwidth = 196,
                                    originaliconheight = 77,
                                    iconwidth = 120,      -- height will be scaled appropriately
-                                   text="Locate agents nearby or from an address",
+                                   text="xxxxx",
                                    backtext = "<",
-                                  -- groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
-                                   locateinfo = {
-                                                  limit=100,
-                                                  miles=25,
-                                                  object = "Agency", --- used for mapping and other web services
-                                                },
+                                   sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                                    navigation = { composer = {
                                                otherscenes = "login",
                                             },},
@@ -58,17 +56,24 @@ local moreinfo = {
                                           title = "Contact State Auto", 
                                           pic="truck.png",
                                           backtext = "<",
-                                          scrollblockinfo = { object="contactus" , navigate = "subscene"},
+                                          sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { object="contactus" , navigate = "subscene"},
+                                             },
                                           navigation = { composer = { id = "contactus",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
                                       },
                                bb4 = {title = "Help", 
                                            pic="truck.png",
                                            text="Flat tire, out of gas ? We can help",
                                            backtext = "<",
-                                          htmlinfo = {
-                                                  htmlfile="help.html" ,
-                                                  dir = system.ResourceDirectory ,
+
+                                          sceneinfo = { 
+                                                htmlinfo = {
+                                                    htmlfile="help.html" ,
+                                                    dir = system.ResourceDirectory ,
                                                 },
+                                               scrollblockinfo = { },
+                                             },
                                           navigation = { composer = {
                                                id = "help",
                                                lua="webview",
@@ -81,10 +86,14 @@ local moreinfo = {
                                            pic="truck.png",
                                            text="Flat tire, out of gas ? We can help",
                                            backtext = "<",
-                                          htmlinfo = {
-                                                  htmlfile="terms.html" ,
-                                                  dir = system.ResourceDirectory ,
+
+                                          sceneinfo = { 
+                                                htmlinfo = {
+                                                    htmlfile="terms.html" ,
+                                                    dir = system.ResourceDirectory ,
                                                 },
+                                               scrollblockinfo = { },
+                                             },
                                           navigation = { composer = {
                                                id = "term",
                                                lua="webview",
@@ -94,32 +103,21 @@ local moreinfo = {
                                             },},
                                          },
 
-                                bb6 = {title = "Help", 
-                                           pic="truck.png",
-                                           text="Flat tire, out of gas ? We can help",
-                                           backtext = "<",
-                                          htmlinfo = {
-                                                  htmlfile="help.html" ,
-                                                  dir = system.ResourceDirectory ,
-                                                },
-                                          navigation = { composer = {
-                                               id = "help",
-                                               lua="webview",
-                                               time=250, 
-                                               effect="slideLeft",
-                                               effectback="slideRight",
-                                            },},
-                                         },
+
                                    dtt= {title = "Privacy", 
                                     includeline  = false,
                                     pic="truck.png",
                                     text="Sample web page",
                                     backtext = "<",
                                           pic="truck.png",
-                                          htmlinfo = {
-                                                  htmlfile="privacy.html" ,
-                                                  dir = system.ResourceDirectory ,
+
+                                            sceneinfo = { 
+                                                htmlinfo = {
+                                                    htmlfile="privacy.html" ,
+                                                    dir = system.ResourceDirectory ,
                                                 },
+                                               scrollblockinfo = { },
+                                             },
                                           navigation = { composer = {
                                                id = "yahooweb6",
                                                lua="webview",
@@ -135,7 +133,7 @@ local moreinfo = {
                                       },
                                xx1 = {
                                    includeline  = false,       -- needed if prior is header otherwise it looks bad 
-                                   title = "Test", 
+                                   title = "Locarte agents", 
                                    pic="trustedchoice.png",
                                    originaliconwidth = 196,
                                    originaliconheight = 77,
@@ -143,11 +141,15 @@ local moreinfo = {
                                    text="Locate agents nearby or from an address",
                                    backtext = "<",
                                   -- groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
-                                   locateinfo = {
-                                                  limit=100,
-                                                  miles=25,
-                                                  object = "Agency", --- used for mapping and other web services
-                                                },
+                                  sceneinfo = { 
+                                              locateinfo = {
+                                                    limit=100,
+                                                    miles=25,
+                                                    object = "Agency", --- used for mapping and other web services
+                                                  },
+                                                htmlinfo = { },
+                                               scrollblockinfo = { },
+                                             },
                                    navigation = { composer = {
                                                id = "alocatemore",
                                                lua="locatepre",

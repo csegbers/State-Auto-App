@@ -79,9 +79,13 @@ local M = {
                               text="Sample web page",
                               backtext = "<",
                               forwardtext = ">",
-                              htmlinfo = {
-                                            url="",    --- dyanamically changed
-                                          },
+                              -- htmlinfo = {
+                              --               url="",    --- dyanamically changed
+                              --             },
+                             sceneinfo = { 
+                                               htmlinfo = { url="", } ,  --- dyanamically changed  
+                                               scrollblockinfo = { },
+                                         },
                               navigation = { composer = {
                                          id = "", --- dyanamically changed
                                          lua="webview",
@@ -110,14 +114,17 @@ local M = {
                               navigation = { directions = { address="%s" },},
                             },
 
-                            xxdirections = {
-                                          title = "Contact State Auto", 
-                                          launch="directions",
-                                          pic="truck.png",
-                                          backtext = "<",
-                                          scrollblockinfo = { object="contactus" , navigate = "subscene"},
-                                          navigation = { composer = { id = "contactus",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
-                                      },
+                         -- xxdirections = {
+                         --                  title = "Contact State Auto", 
+                         --                  launch="directions",
+                         --                  pic="truck.png",
+                         --                  backtext = "<",
+                         --                  sceneinfo = { 
+                         --                       htmlinfo = {},
+                         --                       scrollblockinfo = { object="contactus" , navigate = "subscene"},
+                         --                               },
+                         --                  navigation = { composer = { id = "contactus",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
+                         --              },
 
 
                            },    --objecttypes
@@ -176,7 +183,10 @@ local M = {
             otherscenes = { 
                       login = {
                                   loggedin = false,
-
+                                  sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
                                   navigation = { composer = {
                                              id = "login",
                                              isModal = true,

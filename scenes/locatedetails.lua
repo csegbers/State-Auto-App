@@ -118,20 +118,17 @@ local onRowTouch = function( event )
                           myApp.navigationCommon( {launch = obgroup.launch, navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
                        else
                             if navgroup.composer then
-                                locatelaunch =                          
+                                local locatelaunch =                          
                                      {
                                         title = obgroup.title, 
                                         text=myName.text,
                                         backtext = obgroup.backtext ,
                                         forwardtext = obgroup.forwardtext ,
                                         pic=obgroup.pic,
-                                        htmlinfo = { 
-                                                      url=row.params.value ,
-                                                   },
-                                        scrollblockinfo = { 
-                                                      object=obgroup.scrollblockinfo.object ,
-                                                      navigate=obgroup.scrollblockinfo.navigate ,
-                                                   },
+                                        -- htmlinfo = { 
+                                        --               url=row.params.value ,
+                                        --            },
+                                        sceneinfo = obgroup.sceneinfo,
                                         navigation = 
                                          { 
                                             composer = 
@@ -144,7 +141,7 @@ local onRowTouch = function( event )
                                                 }
                                         ,}
                                     ,}
-                                    
+                                 locatelaunch.sceneinfo.htmlinfo.url =  row.params.value   
                                  local parentinfo =  sceneparams 
                                  locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
                                  myApp.showSubScreen ({instructions=locatelaunch})

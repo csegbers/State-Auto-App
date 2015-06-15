@@ -235,8 +235,8 @@ function scene:show( event )
         -- since this scene can be used for multiple purposes
         -- sbi will point to the table for what items to show etc...etc
         ---------------------------------------
-        sbi = myApp[sceneparams.scrollblockinfo.object]
-       --debugpopup (sceneparams.scrollblockinfo.navigate)
+        sbi = myApp[sceneparams.sceneinfo.scrollblockinfo.object]
+       --debugpopup (sceneparams.sceneinfo.scrollblockinfo.navigate)
 
         if (runit or justcreated) then 
 
@@ -277,7 +277,7 @@ function scene:show( event )
                 -- Pass in our scene info for the new scene callback
                 -------------------------------------------
                 local function onObjectTouchAction(  )
-                    if sceneparams.scrollblockinfo.navigate == "mainscene" then
+                    if sceneparams.sceneinfo.scrollblockinfo.navigate == "mainscene" then
                        myApp.navigationCommon(homepageitem)
                     else
                          local parentinfo =  sceneparams 
