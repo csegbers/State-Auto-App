@@ -94,8 +94,10 @@ local onRowTouch = function( event )
               function()  
                   local v = myApp.moreinfo.items[event.row.params.key]
                   ----------------------------------------------
+                  -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                   -- always do a "back" to the MAIN Tabbar page !!!!
                   -- no nested backing for these items
+                  -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                   ---------------------------------------------
                   ---------------------------------------------
                   -- Composer ?

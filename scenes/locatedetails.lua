@@ -128,6 +128,10 @@ local onRowTouch = function( event )
                                         htmlinfo = { 
                                                       url=row.params.value ,
                                                    },
+                                        scrollblockinfo = { 
+                                                      object=obgroup.scrollblockinfo.object ,
+                                                      navigate=obgroup.scrollblockinfo.navigate ,
+                                                   },
                                         navigation = 
                                          { 
                                             composer = 

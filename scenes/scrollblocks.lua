@@ -27,6 +27,7 @@ function scene:create(event)
      print ("Create  " .. currScene)
      justcreated = true
      sceneparams = event.params or {}
+      
 
    --  print ("Create  " .. currScene)
    --  sceneparams = event.params or {}
@@ -229,7 +230,13 @@ function scene:show( event )
         -- update sceneparams now, not before as we check prior scene
         --------------------
         sceneparams = event.params or {}
+
+        --------------------------------------
+        -- since this scene can be used for multiple purposes
+        -- sbi will point to the table for what items to show etc...etc
+        ---------------------------------------
         sbi = myApp[sceneparams.scrollblockinfo.object]
+       --debugpopup (sceneparams.scrollblockinfo.navigate)
 
         if (runit or justcreated) then 
 
@@ -270,10 +277,13 @@ function scene:show( event )
                 -- Pass in our scene info for the new scene callback
                 -------------------------------------------
                 local function onObjectTouchAction(  )
-                   -- if sbi.scrollblockinfo.navigate == "mainscene" then
+                    if sceneparams.scrollblockinfo.navigate == "mainscene" then
                        myApp.navigationCommon(homepageitem)
-                   -- else
-                   -- end
+                    else
+                         local parentinfo =  sceneparams 
+                         homepageitem.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                         myApp.showSubScreen ({instructions=homepageitem})
+                     end
 
                 end       
                 ---------------------------------------------

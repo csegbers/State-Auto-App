@@ -42,6 +42,9 @@ local M = {
             scenemaskFile = "",
             splash = {image = "splash.jpg", delay = 150, },
             promptforphonecalls = true,
+            composer = {
+                          recycleOnSceneChange = false,
+                       },
             webview = {
                          pageloadwaittime = 10000,
                          timeoutmessage = "Page taking too long to load.",
@@ -76,19 +79,16 @@ local M = {
                               text="Sample web page",
                               backtext = "<",
                               forwardtext = ">",
-                                    htmlinfo = {
+                              htmlinfo = {
                                             url="",    --- dyanamically changed
                                           },
-                                    navigation = { composer = {
+                              navigation = { composer = {
                                          id = "", --- dyanamically changed
                                          lua="webview",
                                          time=250, 
                                          effect="slideLeft",
                                          effectback="slideRight",
                                       },},
-
-
-
 
                             },
                         facebook = {
@@ -109,6 +109,17 @@ local M = {
                               title="Get Directions",
                               navigation = { directions = { address="%s" },},
                             },
+
+                            xxdirections = {
+                                          title = "Contact State Auto", 
+                                          launch="directions",
+                                          pic="truck.png",
+                                          backtext = "<",
+                                          scrollblockinfo = { object="contactus" , navigate = "subscene"},
+                                          navigation = { composer = { id = "contactus",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
+                                      },
+
+
                            },    --objecttypes
 
             maps = {
@@ -141,7 +152,7 @@ local M = {
                      --attempts = 0,                             -- cointer
                      --maxattempts = 10,                     
                      --event= "",                               -- set elsewhere
-                     haveaccuratelocation = false ,  
+                     haveaccuratelocation = false ,               -- set elsewhere
                      currentlocation = {},                     -- set elsewhere
                      debug = {                                -- will be used if in debugmode
                                 latitude=39.896311,
@@ -177,9 +188,7 @@ local M = {
                                           },},
                               },
                     },
-            composer = {
-                          recycleOnSceneChange = false,
-                       },
+
             titleGradient = {
                     type = 'gradient',
                     color1 = { 189/255, 203/255, 220/255, 1 }, 

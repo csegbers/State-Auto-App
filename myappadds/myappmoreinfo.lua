@@ -3,9 +3,7 @@
 -- Store variables used across the entire app 
 -------------------------------------------------------
 local moreinfo = { 
-
-           
-                      imsliding = false,
+                      imsliding = false,     -- will be updated in app
                       transitiontime = 700,
                       transitiontimealpha = 200,
                       direction = "left",     -- initial direction

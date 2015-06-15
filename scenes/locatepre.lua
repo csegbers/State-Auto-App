@@ -163,7 +163,7 @@ function scene:show( event )
 
              local function launchLocateScene(inputparms) 
                       local locatelaunch = {  
-                                         title = sceneparams.title, 
+                                         title = myApp.mappings.objects[sceneparams.locateinfo.object].desc.plural , --sceneparams.title, 
                                          pic=sceneparams.pic,
                                          originaliconwidth = sceneparams.originaliconwidth,
                                          originaliconheight = sceneparams.originaliconheight,
