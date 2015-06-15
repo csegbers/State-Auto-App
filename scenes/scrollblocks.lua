@@ -231,6 +231,7 @@ function scene:show( event )
         --------------------
         sceneparams = event.params or {}
 
+
         --------------------------------------
         -- since this scene can be used for multiple purposes
         -- sbi will point to the table for what items to show etc...etc
@@ -277,12 +278,16 @@ function scene:show( event )
                 -- Pass in our scene info for the new scene callback
                 -------------------------------------------
                 local function onObjectTouchAction(  )
-                    if sceneparams.sceneinfo.scrollblockinfo.navigate == "mainscene" then
-                       myApp.navigationCommon(homepageitem)
-                    else
+                    ------------------------------
+                    -- subscene with a composer ?
+                    ------------------------------
+                    if sceneparams.sceneinfo.scrollblockinfo.navigate == "subscene" and homepageitem.navigation.composer then
+                         --debugpopup (sceneparams.sceneinfo.scrollblockinfo.navigate .. " " )
                          local parentinfo =  sceneparams 
                          homepageitem.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
                          myApp.showSubScreen ({instructions=homepageitem})
+                    else
+                         myApp.navigationCommon(homepageitem)
                      end
 
                 end       
