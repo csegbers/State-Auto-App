@@ -3,7 +3,7 @@
 -- Store variables used across the entire app 
 -------------------------------------------------------
 local M = { 
-            debugMode = false,
+            debugMode = true,
             appName = "State Auto Insured App" ,
             appNameSmall = "Insured App" ,
             urlScheme = "rockhillapp",
@@ -186,6 +186,36 @@ local M = {
                                   sceneinfo = { 
                                                htmlinfo = {},
                                                scrollblockinfo = { },
+
+                                               edge = 15,
+                                               height = 200,
+                                               cornerradius = 2,
+                                               groupbackground = { r=235/255, g=235/255, b=235/255, a=1 },
+                                               strokecolor = { r=150/255, g=150/255, b=150/255, a=1 },
+                                               strokewidth = 1,
+ 
+                                               textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                                               textfontsize=12  ,
+                                               btnshape= "rect", --roundedRect",
+
+                                               btncanceldefcolor = { r=160/255, g=160/255, b=160/255, a=1 },  
+                                               btncancelovcolor = { r=130/255, g=130/255, b=130/255, a=1 }, 
+                                               btncanceldeflabelcolor = { r=255/255, g=255/255, b=255/255, a=1 }, 
+                                               btncancelovlabelcolor = { r=100/255, g=100/255, b=100/255, a=1 },  
+                                               btncanceltext = "Cancel",
+
+                                               btnlogindefcolor = { r=0/255, g=100/255, b=0/255, a=1 },  
+                                               btnloginovcolor = { r=0/255, g=150/255, b=0/255, a=1 }, 
+                                               btnlogindeflabelcolor = { r=255/255, g=255/255, b=255/255, a=1 }, 
+                                               btnloginovlabelcolor = { r=230/255, g=230/255, b=230/255, a=1 },  
+                                               btnlogintext = "Login",                                             
+
+                                               btnfontsize = 14,
+                                               btnheight = 25,
+                                               btnwidth = 90,
+
+                                               
+
                                              },
                                   navigation = { composer = {
                                              id = "login",

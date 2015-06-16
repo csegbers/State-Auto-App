@@ -103,7 +103,7 @@ local function addtabBtn(tkey)
                 labelColor = { default = myApp.colorGray,   over = myApp.saColor,  },
                 width = myApp.tabs.tabbtnw,
                 height = myApp.tabs.tabbtnh,
-                onPress = function () myApp.showScreen({instructions=btnrntry}) end,
+                onPress= function () myApp.showScreen({instructions=btnrntry}) end,
             }
         table.insert(tabButtons, tabitem)
     end
@@ -153,11 +153,12 @@ function myApp.hideOverlay(parms)
     if currOverlay  then
        local v =  composer.getScene( currOverlay).myparams()
        print ("overlay effect back " .. v.navigation.composer.effectback)
-       composer.hideOverlay(  v.navigation.composer.effectback , v.navigation.composer.time   )   -- for some reason the time goes twice as fast
-       timer.performWithDelay(v.navigation.composer.time /2,parms.callback)
+       composer.hideOverlay(  v.navigation.composer.effectback , v.navigation.composer.time * 2 )   -- for some reason the time goes twice as fast
+       if parms.callback then timer.performWithDelay(v.navigation.composer.time /2,parms.callback) end
     else
-       parms.callback()
+       if parms.callback then parms.callback() end
     end
+    return true
 end
 
 --------------------------------------------------
