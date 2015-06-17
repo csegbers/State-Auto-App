@@ -362,7 +362,7 @@ function scene:show( event )
             })
             -- Hide the native part of this until we need to show it on the screen.
 
-            addressField.x = myApp.cW/2
+            addressField.x = myApp.cW/2  
             addressField.y = addressButton.y + addressButton.height + myApp.locatepre.edge*2 + container.y
      
             group:insert(addressField)      -- insertng into container messes up

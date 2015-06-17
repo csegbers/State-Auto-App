@@ -30,7 +30,7 @@ local M = {
             classfld = "classes.",
             htmlfld = "html/",
             theme = "widget_theme_ios7",
-            font = "HelveticaNeue-Light",
+            font =  "HelveticaNeue-Light",
             fontBold = "HelveticaNeue",
             fontItalic = "HelveticaNeue-LightItalic",
             fontBoldItalic = "Helvetica-BoldItalic",
@@ -188,14 +188,17 @@ local M = {
                                                scrollblockinfo = { },
 
                                                edge = 15,
-                                               height = 200,
+                                               height = 220,
                                                cornerradius = 2,
                                                groupbackground = { r=235/255, g=235/255, b=235/255, a=1 },
                                                strokecolor = { r=150/255, g=150/255, b=150/255, a=1 },
                                                strokewidth = 1,
+
+                                               userlabel = "Email Address",
+                                               pwdlabel = "Password",
  
                                                textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
-                                               textfontsize=12  ,
+                                               textfontsize=14  ,
                                                btnshape= "rect", --roundedRect",
 
                                                btncanceldefcolor = { r=160/255, g=160/255, b=160/255, a=1 },  
@@ -211,10 +214,26 @@ local M = {
                                                btnlogintext = "Login",                                             
 
                                                btnfontsize = 14,
-                                               btnheight = 25,
+                                               btnheight = 30,
                                                btnwidth = 90,
 
-                                               
+                                               userfieldfontsize=14  , 
+                                               userfieldheight = 25,
+                                               userfieldcornerradius = 6,
+                                               userfieldplaceholder = "",
+                                               userfieldmessage = {
+                                                    errortitle = "xxxx", 
+                                                    errormessage = "yyyy",
+                                                },
+
+                                               pwdfieldfontsize=14  , 
+                                               pwdfieldheight = 25,
+                                               pwdfieldcornerradius = 6,
+                                               pwdfieldplaceholder = "",
+                                               pwdfieldmessage = {
+                                                    errortitle = "xxxx", 
+                                                    errormessage = "yyyy",
+                                                },
 
                                              },
                                   navigation = { composer = {

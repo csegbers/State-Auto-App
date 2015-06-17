@@ -69,9 +69,16 @@ function myApp.MoreInfoMove( parms )
        action = "slideoff"
     end
 
+    -----------------------------------------------
+    -- we are about to slide off. Does the current scene and/or overlay scene
+    -- need to do something. Perhaps slide off their own maps etc...
+    -----------------------------------------------
     pcall(function() composer.getScene( composer.getSceneName( "current" ) ):morebutton({time=transtime,x = deltax, transition=easing.outQuint,action=action} ) end)
+    pcall(function() composer.getScene( composer.getSceneName( "overlay" ) ):morebutton({time=transtime,x = deltax, transition=easing.outQuint,action=action} ) end)
 
-
+    -----------------------------------------------
+    -- slide the major groups
+    ------------------------------------------------
     transition.to(  composer.stage, {  time=transtime,delta=true, x = deltax , transition=easing.outQuint})
     transition.to(  myApp.backGroup, { time=transtime ,delta=true, x = deltax , transition=easing.outQuint})
     transition.to(  myApp.TitleGroup, { time=transtime,delta=true, x = deltax, transition=easing.outQuint})
@@ -83,7 +90,6 @@ function myApp.MoreInfoMove( parms )
     transition.to(  myApp.transContainer, { time=myApp.moreinfo.transitiontimealpha,alpha = talpha, onComplete = params.onComplete })
 
 end
-
 
 ---------------------------------------------
 -- Action on selection

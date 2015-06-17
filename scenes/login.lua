@@ -1,11 +1,14 @@
 ---------------------------------------------------------------------------------------
 -- Login Overlay scene
 ---------------------------------------------------------------------------------------
+local myApp = require( "myapp" ) 
+
 local composer = require( "composer" )
 local scene = composer.newScene()
 
 local widget = require( "widget" )
-local myApp = require( "myapp" ) 
+local widgetExtras = require( myApp.utilsfld .. "widget-extras" )
+
 local common = require( myApp.utilsfld .. "common" )
 
 local login = require( myApp.classfld .. "classlogin" )
@@ -16,6 +19,12 @@ print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 local sceneparams
 local container
 local cancelButton
+local userField
+local pwdField
+local txtUserLabel
+local txtPWDLabel
+local showpwdSwitch
+
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -34,6 +43,7 @@ function scene:show( event )
     local phase = event.phase
     print ("Show:" .. phase.. " " .. currScene)
     sceneparams = event.params   or {}         -- params contains the item table 
+    local sceneinfo = myApp.otherscenes.login.sceneinfo
 
     -----------------------------
     -- call incase the parent needs to do any action
@@ -46,7 +56,7 @@ function scene:show( event )
         -- Called when the scene is still off screen (but is about to come on screen).
 
 
-            local sceneinfo = myApp.otherscenes.login.sceneinfo
+
 
             display.remove( container )           -- wont exist initially no biggie
             container = nil
@@ -65,16 +75,44 @@ function scene:show( event )
             container:insert(background)
 
              -------------------------------------------------
-             -- Header text
+             -- userid text
              -------------------------------------------------
-             local myText = display.newText({text="Email Address", font= myApp.fontBold, fontSize=sceneinfo.textfontsize,align="left" })
-             myText:setFillColor( sceneinfo.textcolor.r,sceneinfo.textcolor.g,sceneinfo.textcolor.b,sceneinfo.textcolor.a )
-             myText.anchorX = 0
-             myText.anchorY = 0
-             myText.x = background.x - background.width/2 + sceneinfo.edge/2
-             myText.y = background.y - background.height/2 + sceneinfo.edge/2
-            -- myText.x = container.height / 2
-             container:insert(myText)
+             txtUserLabel = display.newText({text=sceneinfo.userlabel, font= myApp.fontBold, fontSize=sceneinfo.textfontsize,align="left" })
+             txtUserLabel:setFillColor( sceneinfo.textcolor.r,sceneinfo.textcolor.g,sceneinfo.textcolor.b,sceneinfo.textcolor.a )
+             txtUserLabel.anchorX = 0
+             txtUserLabel.anchorY = 0
+             txtUserLabel.x = background.x - background.width/2 + sceneinfo.edge/2
+             txtUserLabel.y = background.y - background.height/2 + sceneinfo.edge/2
+             
+             container:insert(txtUserLabel)
+
+ 
+             -------------------------------------------------
+             -- pwd text
+             -------------------------------------------------
+             txtPWDLabel = display.newText({text=sceneinfo.pwdlabel, font= myApp.fontBold, fontSize=sceneinfo.textfontsize,align="left" })
+             txtPWDLabel:setFillColor( sceneinfo.textcolor.r,sceneinfo.textcolor.g,sceneinfo.textcolor.b,sceneinfo.textcolor.a )
+             txtPWDLabel.anchorX = 0
+             txtPWDLabel.anchorY = 0
+             txtPWDLabel.x = background.x - background.width/2 + sceneinfo.edge/2
+             txtPWDLabel.y = txtUserLabel.y + txtUserLabel.height + sceneinfo.userfieldheight + sceneinfo.edge
+             
+             container:insert(txtPWDLabel)
+
+ 
+             -------------------------------------------------
+             -- show password switch
+             -------------------------------------------------
+             showpwdSwitch = widget.newSwitch
+                {
+                    style = "onOff",
+                    id = "showpwdSwitch",
+                    initialSwitchState = false,
+                    onRelease = function()  pwdField.textField.isSecure = not showpwdSwitch.isOn end ,
+                }
+             showpwdSwitch.x = txtPWDLabel.x + background.width - showpwdSwitch.width
+             showpwdSwitch.y = txtPWDLabel.y + sceneinfo.pwdfieldheight + sceneinfo.edge/2
+             container:insert(showpwdSwitch)
 
              ---------------------------------------------
              -- Cancel button
@@ -96,7 +134,7 @@ function scene:show( event )
                   }
                cancelButton.anchorX = 0
                cancelButton.anchorY = 0
-               cancelButton.x = myText.x  
+               cancelButton.x = txtUserLabel.x  
                cancelButton.y = background.y + background.height/2 - sceneinfo.btnheight - sceneinfo.edge/2   -- background uses .5 anchor
                --debugpopup (background.y .. " " .. background.height)
                container:insert(cancelButton)
@@ -136,9 +174,60 @@ function scene:show( event )
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
-      
 
 
+              -------------------------------------------------
+             -- userid field
+             -------------------------------------------------
+            userField = widget.newTextField({
+                
+                width = container.width - sceneinfo.edge*2,
+                height = sceneinfo.userfieldheight,
+                cornerRadius = sceneinfo.userfieldcornerradius,
+                strokeWidth = 0,
+                text = "",
+                fontSize = sceneinfo.userfieldfontsize,
+                placeholder = sceneinfo.userfieldplaceholder,
+                font = myApp.fontBold,
+                labelWidth = 0,
+                inputType = "email",
+                listener = function() end,
+            })
+            -- Hide the native part of this until we need to show it on the screen.
+            
+         --   local lbX, lbY = txtUserLabel:localToContent( txtUserLabel.width/2-sceneinfo.edge/2, 0 )
+            local lbX, lbY = txtUserLabel:localToContent( 0 , 0 )     -- get center points relative to device
+            userField.x = lbX - txtUserLabel.width/2 + userField.width / 2 
+            userField.y = lbY + sceneinfo.userfieldheight
+     
+            group:insert(userField)      -- insertng into container messes up
+
+
+              -------------------------------------------------
+             -- userid field
+             -------------------------------------------------
+            pwdField = widget.newTextField({
+                
+                width = container.width - sceneinfo.edge*2 - showpwdSwitch.width*1.5,
+                height = sceneinfo.pwdfieldheight,
+                cornerRadius = sceneinfo.pwdfieldcornerradius,
+                strokeWidth = 0,
+                text = "",
+                fontSize = sceneinfo.pwdfieldfontsize,
+                placeholder = sceneinfo.pwdfieldplaceholder,
+                font = myApp.fontBold,
+                labelWidth = 0,
+                isSecure = not showpwdSwitch.isOn,    -- note a border shows up... cannot get rid of when issecure
+                listener = function() end,
+            })
+            -- Hide the native part of this until we need to show it on the screen.
+            
+            lbX, lbY = txtPWDLabel:localToContent( 0,0 )
+            pwdField.x = lbX - txtPWDLabel.width/2 + pwdField.width / 2
+            pwdField.y = lbY + sceneinfo.pwdfieldheight
+
+            group:insert(pwdField)      -- insertng into container messes up
+ 
     end
 	
  
@@ -154,9 +243,13 @@ function scene:hide( event )
     ------------------------------
     pcall(function() event.parent:overlay({type="hide",phase = phase,time=sceneparams.navigation.composer.time } ) end)
     if ( phase == "will" ) then
-        -- Called when the scene is on screen (but is about to go off screen).
-        -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.
+        userField:removeSelf()
+        userField = nil
+
+        pwdField:removeSelf()
+        pwdField = nil
+
+        native.setKeyboardFocus( nil )
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
     end
@@ -171,12 +264,16 @@ end
 function scene:myparams( event )
        return sceneparams
 end
+
 ---------------------------------------------------
 -- use if someone wants us to transition away
 -- for navigational appearnaces
 -- used from the more button
 ---------------------------------------------------
 function scene:morebutton( parms )
+     transition.to(  userField, {  time=parms.time,delta=true, x = parms.x , transition=parms.transition})
+     transition.to(  pwdField, {  time=parms.time,delta=true, x = parms.x , transition=parms.transition})
+
 end
 
 scene:addEventListener( "create", scene )
