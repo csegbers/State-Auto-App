@@ -9,9 +9,9 @@ local scene = composer.newScene()
 local widget = require( "widget" )
 local widgetExtras = require( myApp.utilsfld .. "widget-extras" )
 
-local common = require( myApp.utilsfld .. "common" )
+local parse = require( myApp.utilsfld .. "mod_parse" ) 
 
-local login = require( myApp.classfld .. "classlogin" )
+local common = require( myApp.utilsfld .. "common" )
 
 local currScene = "login"
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
@@ -24,6 +24,7 @@ local pwdField
 local txtUserLabel
 local txtPWDLabel
 local showpwdSwitch
+local forgotButton
 
 
 ------------------------------------------------------
@@ -105,7 +106,7 @@ function scene:show( event )
              -------------------------------------------------
              showpwdSwitch = widget.newSwitch
                 {
-                    style = "onOff",
+                    style = sceneinfo.showpwdswitchstyle,
                     id = "showpwdSwitch",
                     initialSwitchState = false,
                     onRelease = function()  pwdField.textField.isSecure = not showpwdSwitch.isOn end ,
@@ -114,6 +115,63 @@ function scene:show( event )
              showpwdSwitch.y = txtPWDLabel.y + sceneinfo.pwdfieldheight + sceneinfo.edge/2
              container:insert(showpwdSwitch)
 
+              -------------------------------------------------
+             -- forgot pwd buttoin
+             -------------------------------------------------
+            forgotButton = widget.newButton {
+                    label = sceneinfo.btnforgotlabel ,
+                    width =  1,    -- will recalucualte
+                    labelColor = sceneinfo.btnforgotlabelColor,
+                    fontSize = sceneinfo.btnforgotfontsize,
+                    font = myApp.fontBold,      
+                    onRelease = function()  end,
+               }
+
+             forgotButton.x = 0 - background.width/2 + forgotButton.width/2 + sceneinfo.edge
+             forgotButton.y = showpwdSwitch.y + showpwdSwitch.height  
+             container:insert(forgotButton)
+
+             -------------------------------------------------
+             -- create pwd buttoin
+             -------------------------------------------------
+            createButton = widget.newButton {
+                    label = sceneinfo.btncreatelabel ,
+                    width =  1,    -- will recalucualte
+                    labelColor = sceneinfo.btncreatelabelColor,
+                    fontSize = sceneinfo.btncreatefontsize,
+                    font = myApp.fontBold,      
+                    onRelease = function() 
+                                        local inputemail = userField.textField.text or ""
+                                        local inputpwd = pwdField.textField.text or ""
+                                        if inputemail == "" or inputpwd == ""then
+                                           native.showAlert( sceneinfo.btncreatemessage.errortitle, sceneinfo.btncreatemessage.errormessage, { "Okay" } )
+                                        else
+                                            native.setActivityIndicator( true )
+                                            local userDataTable = { ["username"] = inputemail, ["email"] = inputemail, ["password"] = inputpwd }
+                                            parse:clearSessionToken ()
+                                            parse:createUser( 
+                                                              userDataTable,  
+                                                              function(event)
+                                                                   native.setActivityIndicator( false )
+                                                                   if not event.error then
+                                                                     native.showAlert( sceneinfo.btncreatemessage.successtitle, sceneinfo.btncreatemessage.successmessage, { "Okay" } )
+                                                                     --timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
+                                                                     -- stay here becuase they most likely will get the email and need to login again  
+                                                                   else
+                                                                     native.showAlert( sceneinfo.btncreatemessage.failuretitle, event.error, { "Okay" } )
+                                                                   end
+     
+
+                                                              end    --- return function from parse
+                                                             )   -- end of parse
+
+                                         end -- end of checking for valid input
+                                 end,    -- end onrelease
+               }
+
+             createButton.x = forgotButton.x + forgotButton.width + sceneinfo.edge*3
+             createButton.y = forgotButton.y
+             container:insert(createButton)
              ---------------------------------------------
              -- Cancel button
              ---------------------------------------------
@@ -155,8 +213,33 @@ function scene:show( event )
                     ---------------------------------
                     -- stick inside a time to prevent the buton press from passing thru to the current scene
                     ---------------------------------
-                    onRelease = function() timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end)  return true end,
+                    onRelease = function() 
+                                        local inputemail = userField.textField.text or ""
+                                        local inputpwd = pwdField.textField.text or ""
+                                        if inputemail == "" or inputpwd == ""then
+                                           native.showAlert( sceneinfo.btnloginmessage.errortitle, sceneinfo.btnloginmessage.errormessage, { "Okay" } )
+                                        else
+                                            native.setActivityIndicator( true )
+                                            local userDataTable = { ["username"] = inputemail, ["password"] = inputpwd }
+                                            parse:clearSessionToken ()
+                                            parse:loginUser( 
+                                                              userDataTable,  
+                                                              function(event)
+                                                                   native.setActivityIndicator( false )
+                                                                   if not event.error then
+                                                                    -- native.showAlert( sceneinfo.btnloginmessage.successtitle, sceneinfo.btnloginmessage.successmessage, { "Okay" } )
+                                                                     timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
+                                                                     -- stay here becuase they most likely will get the email and need to login again  
+                                                                   else
+                                                                     native.showAlert( sceneinfo.btnloginmessage.failuretitle, event.error, { "Okay" } )
+                                                                   end
+     
 
+                                                              end    --- return function from parse
+                                                             )   -- end of parse
+
+                                         end -- end of checking for valid input
+                                 end,    -- end onrelease
                   }
                loginButton.anchorX = 0
                loginButton.anchorY = 0

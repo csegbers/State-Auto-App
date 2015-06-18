@@ -211,7 +211,15 @@ local M = {
                                                btnloginovcolor = { r=0/255, g=150/255, b=0/255, a=1 }, 
                                                btnlogindeflabelcolor = { r=255/255, g=255/255, b=255/255, a=1 }, 
                                                btnloginovlabelcolor = { r=230/255, g=230/255, b=230/255, a=1 },  
-                                               btnlogintext = "Login",                                             
+                                               btnlogintext = "Login",        
+                                               btnloginmessage = {
+                                                    errortitle = "Invalid Entries", 
+                                                    errormessage = "Must have a valid email address and password entered.",
+                                                    successtitle= "Logged In !!",
+                                                    successmessage= "An email verification has been re-sent. Please follow the link in the email, return back and Login again to continue.",
+                                                    failuretitle= "Error With Your Request",
+
+                                                },                                     
 
                                                btnfontsize = 14,
                                                btnheight = 30,
@@ -234,6 +242,27 @@ local M = {
                                                     errortitle = "xxxx", 
                                                     errormessage = "yyyy",
                                                 },
+
+                                                showpwdswitchstyle = "onOff",
+
+                                                btnforgotlabel = "Forgot Password" ,
+                                                btnforgotllabelcolor = { default={ 0, 100/255, 200/255 }, over={ 0, 0, 0, 0.5 } },
+                                                btnforgotfontsize=12  , 
+
+
+                                                btncreatelabel = "Create An Account" ,
+                                                btncreatellabelcolor = { default={ 0, 100/255, 200/255 }, over={ 0, 0, 0, 0.5 } },
+                                                btncreatefontsize=12  , 
+                                                btncreatemessage = {
+                                                    errortitle = "Invalid Entries", 
+                                                    errormessage = "Must have a valid email address and password entered.",
+                                                    successtitle= "Congratulations !!",
+                                                    successmessage= "An email verification has been sent. Please follow the link in the email, return back and Login again to continue.",
+                                                    failuretitle= "Error With Your Request",
+
+                                                },
+
+
 
                                              },
                                   navigation = { composer = {
