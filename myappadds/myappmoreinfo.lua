@@ -133,7 +133,7 @@ local moreinfo = {
                                       },
                                xx1 = {
                                    includeline  = false,       -- needed if prior is header otherwise it looks bad 
-                                   title = "Locarte agents", 
+                                   title = "Locate agents", 
                                    pic="trustedchoice.png",
                                    originaliconwidth = 196,
                                    originaliconheight = 77,
