@@ -28,6 +28,8 @@ local M = {
             scenesfld = "scenes.",
             utilsfld = "utils.",
             classfld = "classes.",
+            databasename= "insapp.db",
+            hashkey = "aXaLwATgS3lPh848glLpugq5sqcHi8T2jfDQeWz1",
             htmlfld = "html/",
             theme = "widget_theme_ios7",
             font =  "HelveticaNeue-Light",
@@ -241,6 +243,10 @@ local M = {
                             pref3 = {cat="locale",name="identifier",title="Loc ID"},
                             pref4 = {cat="locale",name="language",title="Loc Lang"},
                         },
+
+            mydb = {   -- Databse info   other stuff will be added at startup
+                      lCC  = {},    -- used to store user defaults from db record
+                   },    -- 
   
 
         }
@@ -253,6 +259,8 @@ M.locate = require( M.myappadds .. "myapplocate" ).locate
 M.locatepre = require( M.myappadds .. "myapplocate" ).locatepre
 M.locatedetails = require( M.myappadds .. "myapplocate" ).locatedetails
 M.otherscenes = require( M.myappadds .. "myappotherscenes" ) 
+
+ 
 return M
 -- The following string values are supported for the effect key of the options table:
 

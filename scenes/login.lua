@@ -35,7 +35,6 @@ local forgotButton
 function scene:create(event)
     print ("Create  " .. currScene)
 
-
 end
 
 function scene:show( event )
@@ -154,6 +153,7 @@ function scene:show( event )
                                                               function(event)
                                                                    native.setActivityIndicator( false )
                                                                    if not event.error then
+                                                                     myApp.fncPutUD("email",inputemail)
                                                                      native.showAlert( sceneinfo.btncreatemessage.successtitle, sceneinfo.btncreatemessage.successmessage, { "Okay" } )
                                                                      --timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
                                                                      -- stay here becuase they most likely will get the email and need to login again  
@@ -227,6 +227,7 @@ function scene:show( event )
                                                               function(event)
                                                                    native.setActivityIndicator( false )
                                                                    if not event.error then
+                                                                    myApp.fncPutUD("email",inputemail)
                                                                     -- native.showAlert( sceneinfo.btnloginmessage.successtitle, sceneinfo.btnloginmessage.successmessage, { "Okay" } )
                                                                      timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
                                                                      -- stay here becuase they most likely will get the email and need to login again  
@@ -263,12 +264,11 @@ function scene:show( event )
              -- userid field
              -------------------------------------------------
             userField = widget.newTextField({
-                
                 width = container.width - sceneinfo.edge*2,
                 height = sceneinfo.userfieldheight,
                 cornerRadius = sceneinfo.userfieldcornerradius,
                 strokeWidth = 0,
-                text = "",
+                text = myApp.fncGetUD("email"),
                 fontSize = sceneinfo.userfieldfontsize,
                 placeholder = sceneinfo.userfieldplaceholder,
                 font = myApp.fontBold,
