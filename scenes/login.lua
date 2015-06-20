@@ -25,7 +25,8 @@ local txtUserLabel
 local txtPWDLabel
 local showpwdSwitch
 local forgotButton
-
+local createButton
+local loginButton
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -54,9 +55,6 @@ function scene:show( event )
     if ( phase == "will" ) then
 
         -- Called when the scene is still off screen (but is about to come on screen).
-
-
-
 
             display.remove( container )           -- wont exist initially no biggie
             container = nil
@@ -123,7 +121,27 @@ function scene:show( event )
                     labelColor = sceneinfo.btnforgotlabelColor,
                     fontSize = sceneinfo.btnforgotfontsize,
                     font = myApp.fontBold,      
-                    onRelease = function()  end,
+                    onRelease = function() 
+                                        local inputemail = userField.textField.text or ""
+                                        if inputemail == ""  then
+                                            native.showAlert( sceneinfo.btnforgotmessage.errortitle, sceneinfo.btnforgotmessage.errormessage, { "Okay" } )
+                                        else
+                                            native.setActivityIndicator( true )
+                                            --parse:clearSessionToken ()
+                                            parse:requestPassword( 
+                                                              inputemail,  
+                                                              function(event)
+                                                                   native.setActivityIndicator( false )
+                                                                   if not event.error then
+                                                                      native.showAlert( sceneinfo.btnforgotmessage.successtitle, sceneinfo.btnforgotmessage.successmessage, { "Okay" } )
+                                                                   -- stay here becuase they most likely will get the email and need to login again  
+                                                                   else
+                                                                      native.showAlert( sceneinfo.btnforgotmessage.failuretitle, event.error, { "Okay" } )
+                                                                   end
+                                                              end    --- return function from parse
+                                                             )   -- end of parse
+                                         end -- end of checking for valid input
+                                 end,    -- end onrelease
                }
 
              forgotButton.x = 0 - background.width/2 + forgotButton.width/2 + sceneinfo.edge
@@ -142,7 +160,7 @@ function scene:show( event )
                     onRelease = function() 
                                         local inputemail = userField.textField.text or ""
                                         local inputpwd = pwdField.textField.text or ""
-                                        if inputemail == "" or inputpwd == ""then
+                                        if inputemail == "" or inputpwd == "" then
                                            native.showAlert( sceneinfo.btncreatemessage.errortitle, sceneinfo.btncreatemessage.errormessage, { "Okay" } )
                                         else
                                             native.setActivityIndicator( true )
@@ -154,17 +172,15 @@ function scene:show( event )
                                                                    native.setActivityIndicator( false )
                                                                    if not event.error then
                                                                      myApp.fncPutUD("email",inputemail)
+                                                                     myApp.fncUserLoggedIn(event.response)
                                                                      native.showAlert( sceneinfo.btncreatemessage.successtitle, sceneinfo.btncreatemessage.successmessage, { "Okay" } )
                                                                      --timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
                                                                      -- stay here becuase they most likely will get the email and need to login again  
                                                                    else
                                                                      native.showAlert( sceneinfo.btncreatemessage.failuretitle, event.error, { "Okay" } )
                                                                    end
-     
-
                                                               end    --- return function from parse
                                                              )   -- end of parse
-
                                          end -- end of checking for valid input
                                  end,    -- end onrelease
                }
@@ -216,7 +232,7 @@ function scene:show( event )
                     onRelease = function() 
                                         local inputemail = userField.textField.text or ""
                                         local inputpwd = pwdField.textField.text or ""
-                                        if inputemail == "" or inputpwd == ""then
+                                        if inputemail == "" or inputpwd == "" then
                                            native.showAlert( sceneinfo.btnloginmessage.errortitle, sceneinfo.btnloginmessage.errormessage, { "Okay" } )
                                         else
                                             native.setActivityIndicator( true )
@@ -227,18 +243,26 @@ function scene:show( event )
                                                               function(event)
                                                                    native.setActivityIndicator( false )
                                                                    if not event.error then
-                                                                    myApp.fncPutUD("email",inputemail)
+                                                                      myApp.fncPutUD("email",inputemail)
+                                                                      myApp.fncUserLoggedIn(event.response)
+                                                                      if myApp.authentication.emailVerified == false then
+                                                                        -----------------------------------------------
+                                                                        -- resend another email verification. Prior ones invalid
+                                                                        -- only way to do this is update email to "" then reupdate
+                                                                        ------------------------------------------------
+                                                                        parse:updateUser( myApp.authentication.objectId, { ["email"] = "" } ,function() parse:updateUser(myApp.authentication.objectId, { ["email"] = inputemail } ) end)
+                                                                        native.showAlert( sceneinfo.btnloginmessage.verifytitle, sceneinfo.btnloginmessage.verifymessage, { "Okay" } )
+                                                                      else
+                                                                        timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
+                                                                      end
                                                                     -- native.showAlert( sceneinfo.btnloginmessage.successtitle, sceneinfo.btnloginmessage.successmessage, { "Okay" } )
-                                                                     timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
+                                                                     
                                                                      -- stay here becuase they most likely will get the email and need to login again  
                                                                    else
-                                                                     native.showAlert( sceneinfo.btnloginmessage.failuretitle, event.error, { "Okay" } )
+                                                                      native.showAlert( sceneinfo.btnloginmessage.failuretitle, event.error, { "Okay" } )
                                                                    end
-     
-
                                                               end    --- return function from parse
                                                              )   -- end of parse
-
                                          end -- end of checking for valid input
                                  end,    -- end onrelease
                   }
@@ -274,8 +298,12 @@ function scene:show( event )
                 font = myApp.fontBold,
                 labelWidth = 0,
                 inputType = "email",
-                listener = function() end,
-            })
+                listener = function()     if ( "began" == event.phase ) then
+                                          elseif ( "submitted" == event.phase ) then
+                                             native.setKeyboardFocus( pwdField )
+                                          end 
+                            end,
+                        })
             -- Hide the native part of this until we need to show it on the screen.
             
          --   local lbX, lbY = txtUserLabel:localToContent( txtUserLabel.width/2-sceneinfo.edge/2, 0 )
@@ -301,7 +329,7 @@ function scene:show( event )
                 font = myApp.fontBold,
                 labelWidth = 0,
                 isSecure = not showpwdSwitch.isOn,    -- note a border shows up... cannot get rid of when issecure
-                listener = function() end,
+                listener = function()   if ( "submitted" == event.phase ) then native.setKeyboardFocus( nil )end end,
             })
             -- Hide the native part of this until we need to show it on the screen.
             
@@ -310,6 +338,10 @@ function scene:show( event )
             pwdField.y = lbY + sceneinfo.pwdfieldheight
 
             group:insert(pwdField)      -- insertng into container messes up
+
+            if (userField.textField.text or "") ~= "" then
+                native.setKeyboardFocus( pwdField )
+            end
  
     end
 	
@@ -355,7 +387,7 @@ end
 ---------------------------------------------------
 function scene:morebutton( parms )
      transition.to(  userField, {  time=parms.time,delta=true, x = parms.x , transition=parms.transition})
-     transition.to(  pwdField, {  time=parms.time,delta=true, x = parms.x , transition=parms.transition})
+     transition.to(  pwdField,  {  time=parms.time,delta=true, x = parms.x , transition=parms.transition})
 
 end
 

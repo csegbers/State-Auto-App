@@ -37,9 +37,11 @@ local otherscenes = {
                                      btnloginmessage = {
                                           errortitle = "Invalid Entries", 
                                           errormessage = "Must have a valid email address and password entered.",
-                                          successtitle= "Logged In !!",
-                                          successmessage= "An email verification has been re-sent. Please follow the link in the email, return back and Login again to continue.",
+                                          --successtitle= "Logged In !!",
+                                          --successmessage= "An email verification has been re-sent. Please follow the link in the email, return back and Login again to continue.",
                                           failuretitle= "Error With Your Request",
+                                          verifytitle= "Correct Login But No Email Verification",
+                                          verifymessage= "An email verification has been re-sent. Please check your email in a few minutes, follow the link in the email, return back and Login again to continue.",
 
                                       },                                     
 
@@ -70,6 +72,14 @@ local otherscenes = {
                                       btnforgotlabel = "Forgot Password" ,
                                       btnforgotllabelcolor = { default={ 0, 100/255, 200/255 }, over={ 0, 0, 0, 0.5 } },
                                       btnforgotfontsize=12  , 
+                                      btnforgotmessage = {
+                                          errortitle = "Invalid Entries", 
+                                          errormessage = "Must have a valid email address to reset password",
+                                          successtitle= "Email Sent",
+                                          successmessage= "An email has been sent. Please follow the link in the email to reset your password, return back and Login again to continue.",
+                                          failuretitle= "Error With Your Request",
+
+                                      },
 
 
                                       btncreatelabel = "Create An Account" ,

@@ -120,16 +120,14 @@ function scene:overlay( parms )
      print ("overlay happening on top of " .. currScene .. " " .. parms.type .. " " .. parms.phase)
      if parms.phase == "will"  then
          local slidey = myApp.cH --/ 2  + myApp.tabs.tabBarHeight  + myApp.tSbch
-         if parms.type == "show"  then
-        --    webView.isVisible = false
-            transition.to(  webView, {  time=parms.time/2,alpha=0  })
-            transition.to(  webView, {  time=parms.time/2,delta=true, y = slidey })  -- note we need to slide out so the overlay scene buttons can perform
-         else     -- parms.type == "hide"then
-         --   webView.isVisible = true
-            transition.to(  webView, {  time=parms.time/2,alpha=1})
-            transition.to(  webView, {  time=parms.time/2,delta=true, y =  slidey * -1  })
+         local alphatype = 0
+         local slideytype = 1
+         if parms.type == "hide"  then
+            alphatype = 1
+            slideytype = -1
          end
-
+         transition.to(  webView, {  time=parms.time/2,alpha=alphatype})
+         transition.to(  webView, {  time=parms.time/2,delta=true, y =  slidey * slideytype })
        --  transition.to(  webView, {  time=parms.time,delta=true, y=(parms.height + 20 -parms.height/2)* deltamult  , height = (parms.height+40) *deltamult*-1  , transition=parms.transition})
      end
 end

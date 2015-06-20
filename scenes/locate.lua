@@ -407,11 +407,24 @@ end
 -- if an overlay is happening to us
 -- type (hide show)
 -- phase (will did)
+--
+-- must slide away so overlay scene can perform
 ---------------------------------------------------
 function scene:overlay( parms )
      print ("overlay happening on top of " .. currScene .. " " .. parms.type .. " " .. parms.phase)
+     if parms.phase == "will"  then
+         local slidex = myApp.cW --/ 2  + myApp.tabs.tabBarHeight  + myApp.tSbch
+         local alphatype = 0
+         local slidextype = 1
+         if parms.type == "hide"  then
+            alphatype = 1
+            slidextype = -1
+         end
+         transition.to(  myMap, {  time=parms.time/2,alpha=alphatype})
+         transition.to(  myMap, {  time=parms.time/2,delta=true, x =  slidex * slidextype })
+       --  transition.to(  webView, {  time=parms.time,delta=true, y=(parms.height + 20 -parms.height/2)* deltamult  , height = (parms.height+40) *deltamult*-1  , transition=parms.transition})
+     end
 end
-
 ---------------------------------------------------
 -- use if someone wants us to transition away
 -- for navigational appearnaces

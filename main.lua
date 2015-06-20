@@ -2,8 +2,9 @@
 -- Insured App
 --====================================================================--
 local myApp = require( "myapp" )  
-local startup = require( myApp.utilsfld .. "startup" ) 
-local common = require( myApp.utilsfld .. "common" )  
+require( myApp.utilsfld .. "startup" ) 
+
+require( myApp.utilsfld .. "common" )  
 
 local composer = require( "composer" )
 composer.isDebug = myApp.debugMode

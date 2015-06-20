@@ -180,9 +180,13 @@ local M = {
                                   
                   },
             authentication = {
-                                  loggedin = false
+                                  loggedin = false,
+                                  email="",
+                                  emailVerified = false,
+                                  username = "",
+                                  objectId = "",
+                                  sessionToken="",
                               },
-
 
             titleGradient = {
                     type = 'gradient',
