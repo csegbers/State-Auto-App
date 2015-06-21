@@ -72,6 +72,19 @@ local homepage = {
                                          effectback="slideRight",
                                       },},
                                    },
+                         bsemer = {title = "Emergency 911", pic="emergency.png",text="Click here for location services and to dial 911" ,
+                                     backtext = "<",
+                                     groupheader = { r=255/255, g=0/255, b=0/255, a=1 },
+                                     sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { },
+                                             },
+                                     navigation = { composer = {
+                                               otherscenes = "emergency",
+                                            },},
+
+                                      
+                                  },
                           ccc = {title = "Roadside Assistance", pic="towing.png",text="Locate nearby towing services" ,
                                navigation = { search = { q="Towing" },},
                                       

@@ -107,5 +107,18 @@ local otherscenes = {
                                    effectback="slideUp",
                                 },},
                     },
+
+          emergency = {
+
+                                    navigation = { composer = {
+                                         id = "alocateqsg",
+                                         lua="emergency911",
+                                         time=250, 
+                                         effect="slideLeft",
+                                         effectback="slideRight",
+                                      },},
+                        }
+
+
           }
 return otherscenes

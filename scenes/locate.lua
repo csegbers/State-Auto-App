@@ -421,8 +421,7 @@ function scene:overlay( parms )
             slidextype = -1
          end
          transition.to(  myMap, {  time=parms.time/2,alpha=alphatype})
-         transition.to(  myMap, {  time=parms.time/2,delta=true, x =  slidex * slidextype })
-       --  transition.to(  webView, {  time=parms.time,delta=true, y=(parms.height + 20 -parms.height/2)* deltamult  , height = (parms.height+40) *deltamult*-1  , transition=parms.transition})
+     --    transition.to(  myMap, {  time=parms.time/2,delta=true, x =  slidex * slidextype })
      end
 end
 ---------------------------------------------------

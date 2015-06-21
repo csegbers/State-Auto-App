@@ -138,9 +138,9 @@ Runtime:addEventListener( "udchanged", myApp.evtudchanged )
 ---------------------------------------
 function  myApp.evtloginchanged( event )
       if event.value == true then
-         debugpopup ("loginchanged true   "  )
+         --debugpopup ("loginchanged true   "  )
       else
-         debugpopup ("loginchanged false   "  )
+         --debugpopup ("loginchanged false   "  )
       end
       
 end

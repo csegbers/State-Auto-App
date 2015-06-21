@@ -449,13 +449,19 @@ function scene:myparams( event )
        return sceneparams
 end
 
----------------------------------------------------
--- if an overlay is happening to us
--- type (hide show)
--- phase (will did)
----------------------------------------------------
 function scene:overlay( parms )
      print ("overlay happening on top of " .. currScene .. " " .. parms.type .. " " .. parms.phase)
+     if parms.phase == "will"  then
+         local slidex = myApp.cW --/ 2  + myApp.tabs.tabBarHeight  + myApp.tSbch
+         local alphatype = 0
+         local slidextype = 1
+         if parms.type == "hide"  then
+            alphatype = 1
+            slidextype = -1
+         end
+         transition.to(  myMap, {  time=parms.time/2,alpha=alphatype})
+      --   transition.to(  myMap, {  time=parms.time/2,delta=true, x =  slidex * slidextype })
+     end
 end
 
 ---------------------------------------------------
