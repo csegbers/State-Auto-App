@@ -118,6 +118,34 @@ parse:getConfig( function(e) if not e.error then myApp.appName = e.response.para
 --parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from home logevent") print (e.requestType)   end )
 
 
+--------------------------------------
+-- any user fields changing we need to be aware of ?
+---------------------------------------
+function  myApp.evtudchanged( event )
+     if (event.name == "udchanged")   then
+        debugpopup ("udchanged - " .. event.field  )
+        -------------------------------
+        -- first time ever successfully logged in ? send to help
+        --------------------------------
+        if event.field == "everloggedin" and event.value == true then
+        end
+     end
+end
+Runtime:addEventListener( "udchanged", myApp.evtudchanged )
+
+--------------------------------------
+-- login status change ?
+---------------------------------------
+function  myApp.evtloginchanged( event )
+      if event.value == true then
+         debugpopup ("loginchanged true   "  )
+      else
+         debugpopup ("loginchanged false   "  )
+      end
+      
+end
+Runtime:addEventListener( "loginchanged", myApp.evtloginchanged )
+
 function  myApp.getCurrentLocation( event )
         --local getGPS   -- forward reference
         local parms = event or {}

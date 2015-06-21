@@ -43,14 +43,14 @@ function myApp.fncPutUD (infld,value)
    local parms = myApp.mydb.dbconfig.dbschema.UD
    local tf = parms.fields[infld].name
    local lCC = myApp.mydb.lCC
-   print ("fncPutUD",infld,value,lCC[tf].value)
+   --print ("fncPutUD",infld,value,lCC[tf].value)
    if lCC[tf] == nil then myApp.fncGetUD(infld) end     -- may or may not have read from table. No biggie if not since we are updating
    print ("field should we update " ,infld,lCC[tf].value,value)
    if parms.fields[infld].storehashed == true then value = myApp.fncGetHash(value) end
    if lCC[tf].value ~= value then
        local ov = lCC[tf].value
        lCC[tf].value = value    
-       print ("field updated " ,infld,tf,lCC[tf].value)
+       print ("field updated " .. infld )
        lCC[tf].dirty = true
        Runtime:dispatchEvent{ name="udchanged",field=infld,value=value,oldvalue=ov }
    end

@@ -17,7 +17,18 @@ function myApp.fncUserLoggedIn (userObject)
      local curLoggedin = myApp.authentication.loggedin or false
      myApp.authentication.loggedin =  myApp.authentication.emailVerified or false
 
+     -----------------------------
+     -- dispatch event if login status changed
+     -----------------------------
      if myApp.authentication.loggedin ~= curLoggedin then
          Runtime:dispatchEvent{ name="loginchanged", value=myApp.authentication.loggedin }
+     end
+
+     ----------------------------
+     -- first time logging in ?
+     -- event it in case we want to do something
+     ----------------------------
+     if myApp.authentication.loggedin   then
+          myApp.fncPutUD ("everloggedin",1)     --- if still a 0 will update and trigger event
      end
 end

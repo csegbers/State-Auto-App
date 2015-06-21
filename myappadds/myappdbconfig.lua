@@ -18,7 +18,8 @@ M.dbschema = {
 								pin = {name="udpin",title="PIN",att="TEXT", def="",reset=false},
 								
 								userid = {name="uduserid",title="UserID",att="TEXT", def="",reset=false},
-								email = {name="udemail",title="Email",att="TEXT", def="",reset=false,inputparms = {type = "email"}},
+								email = {name="udemail",title="Email",att="TEXT", def="",reset=false},
+								everloggedin = {name="udeverlogedin",title="Ever Logged In",att="INTEGER", def=0,reset=false},
 																															
 							},
 
