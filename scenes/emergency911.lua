@@ -61,37 +61,14 @@ function scene:show( event )
              local groupwidth = myApp.sceneWidth-myApp.locatepre.edge*2
              local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=myApp.locatepre.textfontsize})
              local textHeightSingleLine = dumText.height
-             
-             -------------------------------------------------
-             -- Background
-             -------------------------------------------------
-             local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locatepre.groupstrokewidth*2,myApp.locatepre.groupheight, 1)
-             myRoundedRect:setFillColor(myApp.locatepre.groupbackground.r,myApp.locatepre.groupbackground.g,myApp.locatepre.groupbackground.b,myApp.locatepre.groupbackground.a )
-             myRoundedRect.strokeWidth = myApp.locatepre.groupstrokewidth
-             myRoundedRect:setStrokeColor( headcolor.r,headcolor.g,headcolor.b ) 
-             itemGrp:insert(myRoundedRect)
 
-             -------------------------------------------------
-             -- Header Background
-             -------------------------------------------------
-             local startYother = startY- myApp.locatepre.groupheight/2  
-             local myRoundedTop = display.newRoundedRect(startX, startYother ,groupwidth, myApp.locatepre.groupheaderheight, 1 )
-             myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
-             itemGrp:insert(myRoundedTop)
-             
-             -------------------------------------------------
-             -- Header text
-             -------------------------------------------------
-             local myText = display.newText( sceneparams.title, startX, startYother,  myApp.fontBold, myApp.locatepre.headerfontsize )
-             myText:setFillColor( myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b,myApp.locatepre.headercolor.a )
-             itemGrp:insert(myText)
-
+             local startYother = startY  
              -------------------------------------------------
              -- Icon ?
              -------------------------------------------------
              if sceneparams.pic then
-                 local myIcon = display.newImageRect(myApp.imgfld .. sceneparams.pic, sceneparams.originaliconwidth or myApp.locatepre.iconwidth ,sceneparams.originaliconheight or myApp.locatepre.iconheight )
-                 common.fitImage( myIcon, sceneparams.iconwidth or myApp.locatepre.iconwidth   )
+                 local myIcon = display.newImageRect(myApp.imgfld .. "dial911.png",  myApp.locatepre.iconwidth *2,  myApp.locatepre.iconheight * 2 )
+                 --common.fitImage( myIcon, sceneparams.iconwidth or myApp.locatepre.iconwidth   )
                  myIcon.x = startX
                  myIcon.y = startYother + itemGrp.height/2 - 20
                  itemGrp:insert(myIcon)

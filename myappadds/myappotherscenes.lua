@@ -20,7 +20,7 @@ local otherscenes = {
                                      pwdlabel = "Password",
 
                                      textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
-                                     textfontsize=14  ,
+                                     textfontsize=18  ,
                                      btnshape= "rect", --roundedRect",
 
                                      btncanceldefcolor = { r=160/255, g=160/255, b=160/255, a=1 },  
@@ -45,7 +45,7 @@ local otherscenes = {
 
                                       },                                     
 
-                                     btnfontsize = 14,
+                                     btnfontsize = 16,
                                      btnheight = 30,
                                      btnwidth = 90,
 
@@ -71,7 +71,7 @@ local otherscenes = {
 
                                       btnforgotlabel = "Forgot Password" ,
                                       btnforgotllabelcolor = { default={ 0, 100/255, 200/255 }, over={ 0, 0, 0, 0.5 } },
-                                      btnforgotfontsize=12  , 
+                                      btnforgotfontsize=13  , 
                                       btnforgotmessage = {
                                           errortitle = "Invalid Entries", 
                                           errormessage = "Must have a valid email address to reset password",
@@ -84,7 +84,7 @@ local otherscenes = {
 
                                       btncreatelabel = "Create An Account" ,
                                       btncreatellabelcolor = { default={ 0, 100/255, 200/255 }, over={ 0, 0, 0, 0.5 } },
-                                      btncreatefontsize=12  , 
+                                      btncreatefontsize=13  , 
                                       btncreatemessage = {
                                           errortitle = "Invalid Entries", 
                                           errormessage = "Must have a valid email address and password entered.",
