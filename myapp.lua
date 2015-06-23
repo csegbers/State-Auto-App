@@ -163,6 +163,7 @@ local M = {
                      --event= "",                               -- set elsewhere
                      haveaccuratelocation = false ,               -- set elsewhere
                      currentlocation = {},                     -- set elsewhere
+                     nearestaddress = {},                      -- set elsewhere
                      debug = {                                -- will be used if in debugmode
                                 latitude=39.896311,
                                 longitude=-82.7674464,
@@ -176,6 +177,12 @@ local M = {
                      currentlocate = {
                                 errortitle = "No GPS Signal",
                                 errormessage = "Can't sync with GPS. Error: ",
+                                    },
+                     nearestlocate= {
+                                errortitle = "Not Valid Address",
+                                errormessage = "Cannot Determine Address: ",
+                                loadwaittime = 5000,
+                                timeoutmessage = "Taking too long to determine address.",
                                     },
                                   
                   },

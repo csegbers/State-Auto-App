@@ -39,10 +39,10 @@ local moreinfo = {
                                    iconwidth = 120,      -- height will be scaled appropriately
                                    text="xxxxx",
                                    backtext = "<",
-                                   sceneinfo = { 
-                                               htmlinfo = {},
-                                               scrollblockinfo = { },
-                                             },
+                                   --sceneinfo = { 
+                                   --            htmlinfo = {},
+                                   --            scrollblockinfo = { },
+                                    --         },
                                    navigation = { composer = {
                                                otherscenes = "login",
                                             },},

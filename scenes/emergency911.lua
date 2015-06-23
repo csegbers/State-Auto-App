@@ -18,8 +18,7 @@ print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 local sceneparams
 local container
 local itemGrp
-local curlocButton
-local addressButton
+local myLoc
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -43,7 +42,8 @@ function scene:show( event )
              -- Setting params needed on the "Will" phase !!!!
              --------------------------
              sceneparams = event.params or {}          -- params contains the item table 
-             -- Called when the scene is still off screen (but is about to come on screen).
+             local sceneinfo = sceneparams.sceneinfo --  myApp.otherscenes.emergency.sceneinfo
+              
              display.remove( container )           -- wont exist initially no biggie
              container = nil
 
@@ -55,112 +55,78 @@ function scene:show( event )
              ---------------------------------------------
 
              itemGrp = display.newGroup(  )
-             local headcolor = sceneparams.groupheader or myApp.locatepre.groupheader
+             local headcolor = sceneinfo.groupheader  
              local startX = 0
-             local startY = 0 -myApp.cH/2 + myApp.locatepre.groupheight/2 + myApp.locatepre.edge*2 + myApp.sceneStartTop
-             local groupwidth = myApp.sceneWidth-myApp.locatepre.edge*2
-             local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=myApp.locatepre.textfontsize})
+             local startY = 0 -myApp.cH/2 + sceneinfo.groupheight/2 + sceneinfo.edge*2 + myApp.sceneStartTop
+             local groupwidth = myApp.sceneWidth-sceneinfo.edge*2
+             local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=sceneinfo.textfontsize})
              local textHeightSingleLine = dumText.height
 
              local startYother = startY  
+             
              -------------------------------------------------
-             -- Icon ?
+             -- Background
              -------------------------------------------------
-             if sceneparams.pic then
-                 local myIcon = display.newImageRect(myApp.imgfld .. "dial911.png",  myApp.locatepre.iconwidth *2,  myApp.locatepre.iconheight * 2 )
-                 --common.fitImage( myIcon, sceneparams.iconwidth or myApp.locatepre.iconwidth   )
-                 myIcon.x = startX
-                 myIcon.y = startYother + itemGrp.height/2 - 20
-                 itemGrp:insert(myIcon)
-             end
+             local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-sceneinfo.groupstrokewidth*2,sceneinfo.groupheight, 1)
+             myRoundedRect:setFillColor(sceneinfo.groupbackground.r,sceneinfo.groupbackground.g,sceneinfo.groupbackground.b,sceneinfo.groupbackground.a )
+             myRoundedRect.strokeWidth = sceneinfo.groupstrokewidth
+             myRoundedRect:setStrokeColor( headcolor.r,headcolor.g,headcolor.b ) 
+             itemGrp:insert(myRoundedRect)
 
-             -- -------------------------------------------------
-             -- -- Desc text
-             -- -------------------------------------------------
-             -- local myDesc = display.newText( {text=sceneparams.text, x=startX , y=0, height=0,width=groupwidth-myApp.locatepre.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatepre.textfontsize,align="center" })
-             -- myDesc.y=startYother+myApp.locatepre.groupheight - (myDesc.height/2) -  myApp.locatepre.textbottomedge
-             -- myDesc:setFillColor( myApp.locatepre.textcolor.r,myApp.locatepre.textcolor.g,myApp.locatepre.textcolor.b,myApp.locatepre.textcolor.a )
-             -- itemGrp:insert(myDesc)
+             -------------------------------------------------
+             -- Header Background
+             -------------------------------------------------
+             local startYother = startY- sceneinfo.groupheight/2  
+             local myRoundedTop = display.newRoundedRect(startX, startYother ,groupwidth, sceneinfo.groupheaderheight, 1 )
+             myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
+             itemGrp:insert(myRoundedTop)
+             
+             -------------------------------------------------
+             -- Header text
+             -------------------------------------------------
+             local myText = display.newText( sceneparams.title, startX, startYother,  myApp.fontBold, sceneinfo.headerfontsize )
+             myText:setFillColor( sceneinfo.headercolor.r,sceneinfo.headercolor.g,sceneinfo.headercolor.b,sceneinfo.headercolor.a )
+             itemGrp:insert(myText)
+
+
+
+             ----------------------------------------------------------
+             --   emergency button
+             ----------------------------------------------------------
+             local btnDial = widget.newButton {
+                        defaultFile = myApp.imgfld .. sceneinfo.dialbutton.defaultFile,
+                        overFile = myApp.imgfld .. sceneinfo.dialbutton.overFile,
+                        height = sceneinfo.dialbutton.height,
+                        width = sceneinfo.dialbutton.width,
+                        x = groupwidth/2 * -1 +  sceneinfo.dialbutton.width/2 + sceneinfo.edge,
+                        y = startYother + itemGrp.height/2  ,
+                        onRelease = function() myApp.navigationCommon(sceneinfo.dialbutton.dial) end,
+                   }
+
+                itemGrp:insert(btnDial) 
+ 
+ 
+             -------------------------------------------------
+             -- current address location text
+             -------------------------------------------------
+             myLoc = display.newText( {text=sceneinfo.text, x=startX + sceneinfo.dialbutton.width/2 + sceneinfo.edge/2, y=0, height=0,width=groupwidth-sceneinfo.edge*2 -sceneinfo.dialbutton.width ,font= myApp.fontBold, fontSize=sceneinfo.textfontsize,align="center" })
+             myLoc.y=startYother+sceneinfo.groupheight - (myLoc.height/2) -  sceneinfo.groupheaderheight - sceneinfo.textbottomedge
+             myLoc:setFillColor( sceneinfo.textcolor.r,sceneinfo.textcolor.g,sceneinfo.textcolor.b,sceneinfo.textcolor.a )
+             itemGrp:insert(myLoc)
+
+              myLoc.text = sceneinfo.text ..   "\n\n" .. "12293" .. " " .. "Mallard Pond Ct".. "\n" .. "Pickerington" .. ", " .. "Ohio" .. "  " .. "43147-3434"
+
+             myApp.getNearestAddress({callback=
+                         function() 
+                            local address = myApp.gps.nearestaddress
+                            myLoc.text = sceneinfo.text ..   "\n\n" .. address.streetDetail .. " " .. address.street .. "\n" .. address.city .. ", " .. address.region .. "  " .. address.postalCode
+                         end
+                         } ) 
 
              container:insert(itemGrp)
 
-
-
-             -------------------------------------------------
-             -- Current loc button pressed return
-             -------------------------------------------------
-
-             local function launchLocateScene(inputparms) 
-                      local locatelaunch = {  
-                                         title = myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].desc.plural , --sceneparams.title, 
-                                         pic=sceneparams.pic,
-                                         originaliconwidth = sceneparams.originaliconwidth,
-                                         originaliconheight = sceneparams.originaliconheight,
-                                         iconwidth = sceneparams.iconwidth,      -- height will be scaled appropriately
-                                         text=sceneparams.text,
-                                         backtext = sceneparams.backtext,
  
-                                         locateinfo = {
-                                                        desc = inputparms.desc,
-                                                        functionname=myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].functionname.locate,
-                                                        limit=sceneparams.sceneinfo.locateinfo.limit,
-                                                        miles=sceneparams.sceneinfo.locateinfo.miles,
-                                                        object=sceneparams.sceneinfo.locateinfo.object,
-                                                        lat = inputparms.lat,
-                                                        lng = inputparms.lng,
-                                                        mapping= myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].mapping,
-                                                      },
-                                         navigation = { 
-                                               composer = {
-                                                              -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
-                                                             id = sceneparams.sceneinfo.locateinfo.object.."-" ..sceneparams.sceneinfo.locateinfo.miles.."-" .. sceneparams.sceneinfo.locateinfo.limit .."-".. inputparms.lat .."-".. inputparms.lng,   
-                                                             lua=myApp.locatepre.lua ,
-                                                             time=sceneparams.navigation.composer.time, 
-                                                             effect=myApp.locatepre.effect,
-                                                             effectback=myApp.locatepre.effectback,
-                                                          },
-                                                     },
-                                 }      
-
-                         local parentinfo =  sceneparams 
-                         locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
-                         myApp.showSubScreen ({instructions=locatelaunch})
-
-             end
-
-
-             local function curlocReleaseback() 
-                  ------------------------------------------------------
-                  -- have accurate location ?
-                  ------------------------------------------------------
-                  if myApp.gps.haveaccuratelocation == true then
-                       launchLocateScene{desc=string.format (myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].desc.plural ..  " within %i miles of your current location.",sceneparams.sceneinfo.locateinfo.miles), lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
-                  end
-
-             end
-
-
-
-
-             ---------------------------------------------
-             -- Use Current Location button
-             ---------------------------------------------
-              curlocButton = widget.newButton {
-                    shape=myApp.locatepre.shape,
-                    fillColor = { default={ headcolor.r, headcolor.g, headcolor.b, myApp.locatepre.btndefaultcoloralpha}, over={ headcolor.r, headcolor.g, headcolor.b, myApp.locatepre.btnovercoloralpha } },
-                    label = myApp.locatepre.curlocbtntext,
-                    labelColor = { default={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b }, over={ myApp.locatepre.headercolor.r,myApp.locatepre.headercolor.g,myApp.locatepre.headercolor.b, .75 } },
-                    fontSize = myApp.locatepre.headerfontsize,
-                    font = myApp.fontBold,
-                    width = itemGrp.width,
-                    height = myApp.locatepre.btnheight,
-                    x = itemGrp.x,
-                    y = startY +  itemGrp.height /2 + myApp.locatepre.btnheight /2 + 50,
-                    onRelease = function() 
-                                    myApp.getCurrentLocation({callback=curlocReleaseback}) 
-                                end,
-                  }
-               container:insert(curlocButton)
+ 
 
 
 

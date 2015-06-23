@@ -151,6 +151,7 @@ function  myApp.getCurrentLocation( event )
         local parms = event or {}
         myApp.gps.haveaccuratelocation = false
         native.setActivityIndicator( true ) 
+        myApp.gps.currentlocation = {}
         local function locationHandler ( event )
             native.setActivityIndicator( false ) 
             Runtime:removeEventListener( "location", locationHandler )  
@@ -172,7 +173,7 @@ function  myApp.getCurrentLocation( event )
                  if myApp.debugMode and system.getInfo( "environment" ) == "simulator" then
                      myApp.gps.currentlocation.latitude = myApp.gps.debug.latitude 
                      myApp.gps.currentlocation.longitude = myApp.gps.debug.longitude 
-                  end
+                 end
             end
             ----------------------------------------------
             -- Caller wants us to run something ?
@@ -219,6 +220,7 @@ function  myApp.getAddressLocation( event )
         local callbackexecuted = false
         native.setActivityIndicator( true ) 
         local myMap = native.newMapView( -100, -100, 20, 20 ) -- keep out the way
+        
 
         local function addressHandler ( event )
             if callbackexecuted == false then
@@ -226,7 +228,7 @@ function  myApp.getAddressLocation( event )
                 native.setActivityIndicator( false ) 
                 myMap:removeSelf()
                 myMap = nil
-
+                
                 if ( event.isError ) then
                     native.showAlert( myApp.gps.addresslocate.errortitle, myApp.gps.addresslocate.errormessage .. (event.errorMessage or "Unknown"), { "Okay" } )
                 else
@@ -239,7 +241,10 @@ function  myApp.getAddressLocation( event )
             end
         end
 
-        timer.performWithDelay(myApp.gps.addresslocate.loadwaittime, 
+
+        if myMap then 
+           myMap:requestLocation( parms.address, addressHandler ) 
+           timer.performWithDelay(myApp.gps.addresslocate.loadwaittime, 
                          function() 
                             if callbackexecuted == false then 
                                 callbackexecuted = true 
@@ -248,7 +253,66 @@ function  myApp.getAddressLocation( event )
                             end 
                           end
                      ) 
-        if myMap then myMap:requestLocation( parms.address, addressHandler ) else native.setActivityIndicator( false )  end
+        else 
+           native.setActivityIndicator( false )  
+        end
+ 
+end
+
+
+function  myApp.getNearestAddress( event )
+        local parms = event or {}
+        myApp.gps.nearestaddress = {}
+      
+        local function curlocback() 
+            ------------------------------------------------------
+            -- have accurate location ?
+            ------------------------------------------------------
+            if myApp.gps.haveaccuratelocation == true then
+                --lat=myApp.gps.currentlocation.latitude,lng=myApp.gps.currentlocation.longitude}
+
+
+                  local callbackexecuted = false
+                  native.setActivityIndicator( true ) 
+                  local myMap = native.newMapView( -100, -100, 20, 20 ) -- keep out the way
+
+                  local function nearaddressHandler ( event )
+                      if callbackexecuted == false then
+                          callbackexecuted = true
+                          native.setActivityIndicator( false ) 
+                          myMap:removeSelf()
+                          myMap = nil
+                          myApp.gps.nearestaddress = event
+                          if ( event.isError ) then
+                              native.showAlert( myApp.gps.nearestlocate.errortitle, myApp.gps.nearestlocate.errormessage .. (event.errorMessage or "Unknown"), { "Okay" } )
+                          else
+                               --if myApp.debugMode then native.showAlert( "neaAddress is " .. parms.address, "lat: " ..  event.latitude .. "  Long "..  event.longitude , { "Okay" } ) end
+                          end
+                          ----------------------------------------------
+                          -- Caller wants us to run something ?
+                          ----------------------------------------------
+                          if parms.callback then  parms.callback(event) end     
+                      end
+                  end
+
+                  if myMap then 
+                      myMap:nearestAddress( myApp.gps.currentlocation.latitude,myApp.gps.currentlocation.longitude, nearaddressHandler ) 
+                      timer.performWithDelay(myApp.gps.nearestlocate.loadwaittime, 
+                                   function() 
+                                      if callbackexecuted == false then 
+                                          callbackexecuted = true 
+                                          native.setActivityIndicator( false ) 
+                                          native.showAlert( myApp.appName ,myApp.gps.nearestlocate.timeoutmessage ,{"ok"}) 
+                                      end 
+                                    end
+                               ) 
+                  else 
+                      native.setActivityIndicator( false )  
+                  end
+            end   -- myApp.gps.haveaccuratelocation
+
+        end  -- curlocback 
+        myApp.getCurrentLocation({callback=curlocback})    -- update the gps coordinate
  
 end
 

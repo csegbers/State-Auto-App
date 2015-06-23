@@ -108,9 +108,37 @@ local otherscenes = {
                                 },},
                     },
 
-          emergency = {
+          emergency = {  
+                           sceneinfo = {   
+                                       groupheader = { r=255/255, g=0/255, b=0/255, a=1 },
+                                       groupheight = 140,
+                                       edge=10,
+                                       textfontsize=12   ,  
+                                       groupwidth = 120,
+                                       groupmaxwidth = 170,     -- we will allow to grow to fit better if there is extra edging. This would be max however
+                                       groupstrokewidth = 1,
+                                       groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
+                                       groupheaderheight = 35,
+                                       headerfontsize = 17, 
+                                       headercolor = { r=255/255, g=255/255, b=255/255, a=1 },
 
-                                    navigation = { composer = {
+                                      dialbutton = {
+                                                      defaultFile="dial911.png",
+                                                      overFile="dial911-down.png",
+                                                      width = 75,    
+                                                       height = 75,  
+                                                       dial = { navigation = { systemurl = { url="tel:911"},},},
+                                                      },
+                                  
+                                      text = "Approximate Address:" ,         
+                                      textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                                      textfontsize=16   , 
+                                      textbottomedge =12   ,  
+
+
+                                  },
+
+                           navigation = { composer = {
                                          id = "alocateqsg",
                                          lua="emergency911",
                                          time=250, 

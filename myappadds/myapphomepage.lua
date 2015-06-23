@@ -75,10 +75,10 @@ local homepage = {
                          bsemer = {title = "Emergency" , pic="emergency.png",text="Click here for location services and to dial 911" ,
                                      backtext = "<",
                                      groupheader = { r=255/255, g=0/255, b=0/255, a=1 },
-                                     sceneinfo = { 
-                                               htmlinfo = {},
-                                               scrollblockinfo = { },
-                                             },
+                                    -- sceneinfo = { 
+                                          --     htmlinfo = {},
+                                          --     scrollblockinfo = { },
+                                          --   },
                                      navigation = { composer = {
                                                otherscenes = "emergency",
                                             },},

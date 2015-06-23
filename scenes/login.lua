@@ -44,7 +44,7 @@ function scene:show( event )
     local phase = event.phase
     print ("Show:" .. phase.. " " .. currScene)
     sceneparams = event.params   or {}         -- params contains the item table 
-    local sceneinfo = myApp.otherscenes.login.sceneinfo
+    local sceneinfo = sceneparams.sceneinfo -- myApp.otherscenes.login.sceneinfo
 
     -----------------------------
     -- call incase the parent needs to do any action

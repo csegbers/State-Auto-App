@@ -429,6 +429,7 @@ function myApp.showSubScreen(parms)
                 if tnt.navigation.composer.otherscenes then
                     --debugpopup (myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation.composer.time)
                     tnt.navigation = myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation
+                    tnt.sceneinfo = myApp.otherscenes[tnt.navigation.composer.otherscenes].sceneinfo
                     --print (myApp.otherscenes[tnt.navigation.composer.otherscenes].navigation.composer.time)
                 end
                 if tnt.navigation.composer.overlay then
@@ -455,7 +456,9 @@ function myApp.navigationCommon(parms)
        -----------------------------------
        if v.navigation.composer  then
           if v.navigation.composer.otherscenes then
-            v.navigation = myApp.otherscenes[v.navigation.composer.otherscenes].navigation
+            local otherscene = myApp.otherscenes[v.navigation.composer.otherscenes]
+            v.navigation = otherscene.navigation
+            v.sceneinfo  = otherscene.sceneinfo
           end
           if ((composer.getSceneName( "current" )  == (myApp.scenesfld .. v.navigation.composer.lua))
               and (composer.getScene( composer.getSceneName( "current" ) ).myparams().navigation.composer.id == v.navigation.composer.id)) then
@@ -498,6 +501,9 @@ function myApp.navigationCommon(parms)
                       if myApp.promptforphonecalls then
                            -- Show alert with two buttons
                           local disphone = ("(" .. string.sub(digitsonly, 1,3) .. ") " .. string.sub(digitsonly, 4,6) .. "-" .. string.sub(digitsonly, 7) )
+                          if string.len( digitsonly) ~= 10 then
+                            disphone = digitsonly
+                          end
                           native.showAlert( myApp.appName, "Call " .. disphone .. " ?" , { "OK", "Cancel" },  function( event ) if event.action == "clicked" then   local i = event.index if i == 2 then dothenavigation = false end goUrl() end end)
                      else
                           goUrl()
