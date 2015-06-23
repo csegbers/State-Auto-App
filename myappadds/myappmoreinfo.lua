@@ -3,6 +3,7 @@
 -- Store variables used across the entire app 
 -------------------------------------------------------
 local moreinfo = { 
+                      -- in items     showonlyindebugMode = true    showonlyinloggedin
                       imsliding = false,     -- will be updated in app
                       transitiontime = 700,
                       transitiontimealpha = 200,
@@ -20,17 +21,33 @@ local moreinfo = {
                               height = 40,
                               indent = 25,
                               textcolor = 1,
-                              textfontsize=14 ,
-                              catheight = 25,
+                              textfontsize=16 ,
+                              catheight = 30,
                               catcolor = { default={ 180 /255, 200/255, 230/255, 0.7} },
                             },
                       items = {
 
-                               AAlogin = {
+                               AAAlogin = {
                                    title = "Login", 
                                    isCategory = true,
                                       },
-                              alocate = {
+                               aalogout = {
+                                   title = "Logout", 
+                                   showonlyinloggedin=true,
+                                   pic="trustedchoice.png",
+                                   originaliconwidth = 196,
+                                   originaliconheight = 77,
+                                   iconwidth = 120,      -- height will be scaled appropriately
+                                   text="xxxxx",
+                                   backtext = "<",
+                                   --sceneinfo = { 
+                                   --            htmlinfo = {},
+                                   --            scrollblockinfo = { },
+                                    --         },
+                                   navigation = { execute = {  method = function() Runtime:dispatchEvent{ name="logmeout" } end, },},
+                                           
+                                       },
+                              ablogin = {
                                    includeline  = false,       -- needed if prior is header otherwise it looks bad 
                                    title = "Login", 
                                    pic="trustedchoice.png",
@@ -47,6 +64,7 @@ local moreinfo = {
                                                otherscenes = "login",
                                             },},
                                        },
+
                                bb0head = {
                                    title = "Support", 
                                    isCategory = true,

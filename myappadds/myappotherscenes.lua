@@ -113,7 +113,7 @@ local otherscenes = {
                                        groupheader = { r=255/255, g=0/255, b=0/255, a=1 },
                                        groupheight = 140,
                                        edge=10,
-                                       textfontsize=12   ,  
+                                       textfontsize=14   ,  
                                        groupwidth = 120,
                                        groupmaxwidth = 170,     -- we will allow to grow to fit better if there is extra edging. This would be max however
                                        groupstrokewidth = 1,
@@ -158,7 +158,7 @@ local otherscenes = {
                                        groupheader = { r=0/255, g=100/255, b=0/255, a=1 },
                                        groupheight = 140,
                                        edge=10,
-                                       textfontsize=12   ,  
+                                       textfontsize=14   ,  
                                        groupwidth = 120,
                                        groupmaxwidth = 170,     -- we will allow to grow to fit better if there is extra edging. This would be max however
                                        groupstrokewidth = 1,

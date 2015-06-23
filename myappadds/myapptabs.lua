@@ -14,66 +14,25 @@ local tabs = {
                                              },
                         navigation = { composer = { id = "home",lua="scrollblocks" ,time=250, effect="crossFade" },},
                     },
-            bvideo = {
+          bagent = {
                         label="My Agent" ,title="My Agent" ,def="myagent.png",over="myagent-down.png",
                         sceneinfo = { 
                                                htmlinfo = {},
                                                scrollblockinfo = { },
                                              },
-                        navigation = { composer = {id = "video", lua="video" ,time=250, effect="slideRight" },},
-                        options = {
-                                feedName = "video.rss",
-                                --feedURL = "http://gdata.youtube.com/feeds/mobile/users/CoronaLabs/uploads?max-results=20&alt=rss&orderby=published&format=1",
-                                feedURL = "http://gdata.youtube.com/feeds/mobile/users/StateAutoChristmas/uploads?max-results=20&alt=rss&orderby=published&format=1",
-                                icons = "embedded",
-                                displayMode = "videoviewer",
-                                pageTitle = "Corona Videos"
-                                   }                                
+                        navigation = { composer = {id = "agent", lua="agent" ,time=250, effect="slideRight" },},
+                                
                     },
-            cmenu = {
-                        label="Account",  title="Menu" ,def="account.png",over="account-down.png",
+          caccount = {
+                        label="My Account",  title="My Account" ,def="account.png",over="account-down.png",
                          sceneinfo = { 
                                                htmlinfo = {},
                                                scrollblockinfo = { },
                                              },
-                        navigation = { composer = { id = "account",lua="menu" ,time=250, effect="slideDown" },},
+                        navigation = { composer = { id = "account",lua="account" ,time=250, effect="slideDown" },},
                     },
-            dblogs = {
-                      label="Blogs" ,title="Blog" ,def="tabbaricon.png",over="tabbaricon-down.png",
-                     sceneinfo = { 
-                                               htmlinfo = {},
-                                               scrollblockinfo = { },
-                                             },
-                      navigation = { composer = {id = "blog", lua="feed" ,time=250, effect="crossFade" },},
-                      options = {
-                            feedName = "corona.rss",
-                            feedURL = "http://www.coronalabs.com/feed/",
-                            icons = "fixed",
-                            displayMode = "webpage",
-                            pageTitle = "Corona Labs"
-                                 }
-                      },
-           epics = {
-                    label="Pics" ,title="Pics",def="tabbaricon.png",over="tabbaricon-down.png",
-                  sceneinfo = { 
-                                               htmlinfo = {},
-                                               scrollblockinfo = { },
-                                             },
-                    navigation = { composer = { id = "epic",lua="photogallery" ,time=250, effect="crossFade" },},
-                   },
-           
-           fmaps = {
-                        label="Maps", title="Maps",def="tabbaricon.png",over="tabbaricon-down.png",
-                        sceneinfo = { 
-                                               htmlinfo = {},
-                                               scrollblockinfo = { },
-                                             },
-                        navigation = { composer = {id = "maps", lua="mapscene" ,time=250, effect="crossFade" },},
-                        options = {
-                                pageTitle = "Corona Headquarters"
-                                 }                              
-                    },
-          gdebug = {
+
+          zdebug = {
                      label="Debug" ,title="Debug" ,def="tabbaricon.png",over="tabbaricon-down.png" ,showonlyindebugMode=true,
                      sceneinfo = { 
                                                htmlinfo = {},

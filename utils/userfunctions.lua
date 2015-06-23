@@ -7,7 +7,7 @@ local myApp = require( "myapp" )
 -- if user just created then not every field is there like email
 -------------------------------
 function myApp.fncUserLoggedIn (userObject)
-
+     print "fncUserLoggedIn  "
      myApp.authentication.email = userObject.email
      myApp.authentication.emailVerified = userObject.emailVerified
      myApp.authentication.username = userObject.username                -- for now this is email
@@ -31,4 +31,19 @@ function myApp.fncUserLoggedIn (userObject)
      if myApp.authentication.loggedin   then
           myApp.fncPutUD ("everloggedin",1)     --- if still a 0 will update and trigger event
      end
+end
+
+-------------------------------
+-- Log em out
+-------------------------------
+function myApp.fncUserLoggedOut (event)
+     print "fncUserLoggedOut  "
+     myApp.fncUserLoggedIn({
+           email = "",
+           emailVerified = false,
+           username = "",
+           objectId = "",
+           sessionToken = "",
+          })
+   
 end

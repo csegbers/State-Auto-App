@@ -87,6 +87,8 @@ local function addtabBtn(tkey)
     local btnrntry = myApp.tabs.btns[tkey]      -- will refernece same copy no biggie for now
     local showbtn =   true
     if (btnrntry.showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
+    if (btnrntry.showonlyinloggedin and myApp.authentication.loggedin == false) then showbtn = false  end
+
     if showbtn then
         tabCnt = tabCnt + 1
 
@@ -536,9 +538,13 @@ function myApp.navigationCommon(parms)
                            -------------------------------
                            if v.navigation.popup then
                               native.showPopup( v.navigation.popup.type, v.navigation.popup.options )
-                           end
-                       end
-                  end
+                           else
+                               if  v.navigation.execute then
+                                   v.navigation.execute.method()
+                               end
+                           end   -- v.navigation.popup
+                       end  -- v.navigation.search 
+                  end   -- v.navigation.directions
                end  --v.navigation.systemurl
             end  --v.navigation.tabbar
        end   --v.navigation.composer 

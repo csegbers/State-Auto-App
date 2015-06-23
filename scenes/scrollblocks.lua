@@ -28,176 +28,7 @@ function scene:create(event)
      justcreated = true
      sceneparams = event.params or {}
       
-
-   --  print ("Create  " .. currScene)
-   --  sceneparams = event.params or {}
-   --  sbi = myApp[sceneparams.scrollblockinfo.object]
-   --  local group = self.view
-   --  container = common.SceneContainer()
-   --  group:insert(container)
  
-   --  local function scrollListener( event )
-   --        return true
-   --  end
-
-   --  local scrollView = widget.newScrollView
-   --      {
-   --          x = 0,
-   --          y = 0,
-   --          width = myApp.sceneWidth, 
-   --          height =  myApp.sceneHeight,
-   --          listener = scrollListener,
-   --          horizontalScrollDisabled = true,
-   --          hideBackground = true,
-   --      }
-   --   container:insert(scrollView)
-
-   --   ----------------------------------------------
-   --   -- Tcouhed an object - go do something
-   --   ----------------------------------------------
-   --   local function onObjectTouch( event )
-   --      print ("sceneparams " .. sbi.groupwidth)
-   --      local homepageitem = sbi.items[event.target.id] 
-   --  --    local homepageitem = sbi.items[event.target.id] 
-   --      -------------------------------------------
-   --      -- launch another scene ?
-   --      -- Pass in our scene info for the new scene callback
-   --      -------------------------------------------
-   --      local function onObjectTouchAction(  )
-   --          myApp.navigationCommon(homepageitem)
-
-   --      end       
-   --      ---------------------------------------------
-   --      -- simulate a pressing of a button
-   --      ---------------------------------------------
-   --      transition.to( event.target, { time=100, x=5,y=5,  delta=true , transition=easing.continuousLoop, onComplete=onObjectTouchAction } )  
-   --   end
-
-   --   local groupheight = sbi.groupheight
-   --   local groupwidth = sbi.groupwidth                                -- starting width of the selection box
-   --   local workingScreenWidth = myApp.sceneWidth - sbi.groupbetween   -- screen widh - the left edge (since each box would have 1 right edge)
-   --   local workingGroupWidth = groupwidth + sbi.groupbetween          -- group width plus the right edge
-   --   local groupsPerRow = math.floor(workingScreenWidth / workingGroupWidth )    -- how many across can we fit
-   --   local leftWidth = myApp.sceneWidth - (workingGroupWidth*groupsPerRow )      -- width of the left edige
-   --   local leftY = (leftWidth) / 2 + (sbi.groupbetween / 2 )          -- starting point of left box
-   --   local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=sbi.textfontsize})
-   --   local textHeightSingleLine = dumText.height
-   --   display.remove( dumText )
-   --   dumText=nil
-
-   --   -------------------------------------------
-   --   -- lots of extra edging ? edging > space in between ?
-   --   -- expand the boxes but not beyond their max size
-   --   -------------------------------------------
-   --   if leftWidth > sbi.groupbetween then
-   --      local origgroupwidth = groupwidth
-   --      groupwidth = groupwidth + ((leftWidth - sbi.groupbetween) / groupsPerRow)   -- calcualte new group width
-   --      if groupwidth > sbi.groupmaxwidth then                                      -- gone too far ? push back
-   --          groupwidth = sbi.groupmaxwidth 
-   --          if groupwidth < origgroupwidth then groupwidth = origgroupwidth end                -- just incase someone puts the max > than original
-   --      end
-   --      workingGroupWidth = groupwidth +  sbi.groupbetween                          -- calcualt enew total group width _ spacing
-   --      leftWidth = myApp.sceneWidth - (workingGroupWidth*groupsPerRow )                       -- recalce leftwdith and left starting point
-   --      leftY = (leftWidth) / 2 + (sbi.groupbetween / 2 )
-   --   end
-
-   --   -----------------------------------------------
-   --   -- where we stuff all the little selection groups
-   --   -----------------------------------------------
-   --   local primGroup = display.newGroup(  )
-
-   --   --------------------------------------------
-   --   -- must sort otherwise order is not honered
-   --   -- so the KEYS must be in alphabetical order you want !!
-   --   --------------------------------------------
-   --   local a = {}
-   --   for n in pairs(sbi.items) do table.insert(a, n) end
-   --   table.sort(a)
-   --   local row = 1
-   --   local col = 1
-   --   for i,k in ipairs(a) do 
-   --       local v = sbi.items[k]
-   --       print ("home page item " .. k)
-   --           --------------------------------------
-   --           -- need to start a new row ?
-   --           --------------------------------------
-   --           if col > groupsPerRow then
-   --                row = row + 1
-   --                col = 1
-   --           end
-
-   --           ---------------------------------------------
-   --           -- lets create the group
-   --           ---------------------------------------------
-   --           local itemGrp = display.newGroup(  )
-   --           itemGrp.id = k
-   --           local startX = workingGroupWidth*(col-1) + leftY + groupwidth/2
-   --           local startY = (groupheight/2 +sbi.groupbetween*row) + (row-1)* groupheight
-             
-   --           -------------------------------------------------
-   --           -- Background
-   --           -------------------------------------------------
-   --           local myRoundedRect = display.newRoundedRect(startX, startY ,groupwidth,  groupheight, 1 )
-   --           myRoundedRect:setFillColor(sbi.groupbackground.r,sbi.groupbackground.g,sbi.groupbackground.b,sbi.groupbackground.a )
-   --           itemGrp:insert(myRoundedRect)
-
-   --           -------------------------------------------------
-   --           -- Header Background
-   --           -------------------------------------------------
-   --           local startYother = startY- groupheight/2 + sbi.groupbetween
-   --           local myRoundedTop = display.newRoundedRect(startX, startYother ,groupwidth, sbi.groupheaderheight, 1 )
-   --           local headcolor = v.groupheader or sbi.groupheader
-   --           myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
-   --           itemGrp:insert(myRoundedTop)
-             
-   --           -------------------------------------------------
-   --           -- Header text
-   --           -------------------------------------------------
-   --           local myText = display.newText( v.title, startX, startYother,  myApp.fontBold, sbi.headerfontsize )
-   --           myText:setFillColor( sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b,sbi.headercolor.a )
-   --           itemGrp:insert(myText)
-
-   --           -------------------------------------------------
-   --           -- Icon ?
-   --           -------------------------------------------------
-   --           if v.pic then
-   --               local myIcon = display.newImageRect(myApp.imgfld .. v.pic, v.originaliconwidth or sbi.iconwidth ,v.originaliconheight or sbi.iconheight )
-   --               common.fitImage( myIcon, v.iconwidth or sbi.iconwidth   )
-   --               myIcon.x = startX
-   --               myIcon.y = startYother + itemGrp.height/2 - 10 --- sbi.iconwidth
-   --               itemGrp:insert(myIcon)
-   --           end
-
-   --           -------------------------------------------------
-   --           -- Desc text
-   --           -------------------------------------------------
-             
-   --           local myDesc = display.newText( {text=v.text, x=startX, y=0, height=0,width=groupwidth-5 ,font= myApp.fontBold, fontSize=sbi.textfontsize,align="center" })
-   --           myDesc.y=startYother+groupheight - (myDesc.height/2) - sbi.textbottomedge
-   --           myDesc:setFillColor( sbi.textcolor.r,sbi.textcolor.g,sbi.textcolor.b,sbi.textcolor.a )
-   --           itemGrp:insert(myDesc)
-
-   --           -------------------------------------------------
-   --           -- Add touch event
-   --           -------------------------------------------------
-   --           itemGrp:addEventListener( "tap", onObjectTouch )
-
-   --           -------------------------------------------------
-   --           -- insert each individual group into the master group
-   --           -------------------------------------------------
-
-   --           primGroup:insert(itemGrp)
-
-   --           col = col+1
-   -- end
-
-   -- scrollView:insert(primGroup)
-
-   -- ---------------------------------------------
-   -- -- stick in a buffer for the scroll
-   -- ----------------------------------------------
-   -- scrollView:insert(display.newRoundedRect(1, (sbi.groupbetween*(row+1)) + row*sbi.groupheight ,1, sbi.groupbetween, 1 ))
-
 end
 
 function scene:show( event )
@@ -342,6 +173,11 @@ function scene:show( event )
              for i,k in ipairs(a) do 
                  local v = sbi.items[k]
                  print ("home page item " .. k)
+                 local showbtn = true
+                 if (v.showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
+                 if (v.showonlyinloggedin and myApp.authentication.loggedin == false) then showbtn = false  end
+
+                 if showbtn then
                      --------------------------------------
                      -- need to start a new row ?
                      --------------------------------------
@@ -350,18 +186,30 @@ function scene:show( event )
                           col = 1
                      end
 
+                     local cellworkingGroupWidth = workingGroupWidth
+                     local cellgroupwidth = groupwidth 
+                     if v.doublewide then 
+                        cellworkingGroupWidth = cellworkingGroupWidth * 2  
+                        cellgroupwidth = cellgroupwidth * 2 + sbi.groupbetween
+                        --col = col + 1
+                        if col == groupsPerRow then
+                          row = row + 1
+                           col = 1
+                         end
+                     end
+
                      ---------------------------------------------
                      -- lets create the group
                      ---------------------------------------------
                      local itemGrp = display.newGroup(  )
                      itemGrp.id = k
-                     local startX = workingGroupWidth*(col-1) + leftY + groupwidth/2
+                     local startX = cellworkingGroupWidth*(col-1) + leftY + cellgroupwidth/2
                      local startY = (groupheight/2 +sbi.groupbetween*row) + (row-1)* groupheight
                      
                      -------------------------------------------------
                      -- Background
                      -------------------------------------------------
-                     local myRoundedRect = display.newRoundedRect(startX, startY ,groupwidth,  groupheight, 1 )
+                     local myRoundedRect = display.newRoundedRect(startX, startY ,cellgroupwidth,  groupheight, 1 )
                      myRoundedRect:setFillColor(sbi.groupbackground.r,sbi.groupbackground.g,sbi.groupbackground.b,sbi.groupbackground.a )
                      itemGrp:insert(myRoundedRect)
 
@@ -369,7 +217,7 @@ function scene:show( event )
                      -- Header Background
                      -------------------------------------------------
                      local startYother = startY- groupheight/2 + sbi.groupbetween
-                     local myRoundedTop = display.newRoundedRect(startX, startYother ,groupwidth, sbi.groupheaderheight, 1 )
+                     local myRoundedTop = display.newRoundedRect(startX, startYother ,cellgroupwidth, sbi.groupheaderheight, 1 )
                      local headcolor = v.groupheader or sbi.groupheader
                      myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
                      itemGrp:insert(myRoundedTop)
@@ -396,7 +244,7 @@ function scene:show( event )
                      -- Desc text
                      -------------------------------------------------
                      
-                     local myDesc = display.newText( {text=(v.text or ""), x=startX, y=0, height=0,width=groupwidth-5 ,font= myApp.fontBold, fontSize=sbi.textfontsize,align="center" })
+                     local myDesc = display.newText( {text=(v.text or ""), x=startX, y=0, height=0,width=cellgroupwidth-5 ,font= myApp.fontBold, fontSize=sbi.textfontsize,align="center" })
                      myDesc.y=startYother+groupheight - (myDesc.height/2) - sbi.textbottomedge
                      myDesc:setFillColor( sbi.textcolor.r,sbi.textcolor.g,sbi.textcolor.b,sbi.textcolor.a )
                      itemGrp:insert(myDesc)
@@ -413,15 +261,19 @@ function scene:show( event )
                      primGroup:insert(itemGrp)
 
                      col = col+1
-           end
+                     if v.doublewide then 
+                      col = col+1
+                     end
+                 end   -- end showbtn
+              end     -- end for
 
-           scrollView:insert(primGroup)
+              scrollView:insert(primGroup)
 
-           ---------------------------------------------
-           -- stick in a buffer for the scroll
-           ----------------------------------------------
-            scrollView:insert(display.newRoundedRect(1, (sbi.groupbetween*(row+1)) + row*sbi.groupheight ,1, sbi.groupbetween, 1 ))
-            print ("end of will show")
+              ---------------------------------------------
+              -- stick in a buffer for the scroll
+              ----------------------------------------------
+               scrollView:insert(display.newRoundedRect(1, (sbi.groupbetween*(row+1)) + row*sbi.groupheight ,1, sbi.groupbetween, 1 ))
+               print ("end of will show")
         end -- runit ?
        
     elseif ( phase == "did" ) then

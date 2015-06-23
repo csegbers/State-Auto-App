@@ -125,7 +125,7 @@ function  myApp.evtudchanged( event )
      if (event.name == "udchanged")   then
         debugpopup ("udchanged - " .. event.field  )
         -------------------------------
-        -- first time ever successfully logged in ? send to help
+        -- first time ever successfully logged in ? send to help ?
         --------------------------------
         if event.field == "everloggedin" and event.value == true then
         end
@@ -137,14 +137,26 @@ Runtime:addEventListener( "udchanged", myApp.evtudchanged )
 -- login status change ?
 ---------------------------------------
 function  myApp.evtloginchanged( event )
+      print "evtloginchanged  "
       if event.value == true then
          --debugpopup ("loginchanged true   "  )
       else
          --debugpopup ("loginchanged false   "  )
       end
-      
+      myApp.BuildMoreInfoList( )
+
 end
 Runtime:addEventListener( "loginchanged", myApp.evtloginchanged )
+
+--------------------------------------
+-- log me out ?
+---------------------------------------
+function  myApp.evtlogmeout( event )
+      print "Logmeout event"
+      myApp.fncUserLoggedOut( )
+      
+end
+Runtime:addEventListener( "logmeout", myApp.evtlogmeout  )
 
 function  myApp.getCurrentLocation( event )
         --local getGPS   -- forward reference

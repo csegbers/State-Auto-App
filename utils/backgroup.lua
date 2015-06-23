@@ -119,7 +119,7 @@ end
 ---------------------------------------------
 -- create the list that will appear on the "more" button
 -----------------------------------------------
-local myList = widget.newTableView {
+local myMoreList = widget.newTableView {
    x = myApp.cW/2 + (myApp.sceneWidth - myApp.cW/myApp.moreinfo.movefactor)/2 ,
    y = myApp.cH/2 + myApp.tSbch/2 , 
    hideBackground=true,
@@ -141,44 +141,55 @@ local myList = widget.newTableView {
       end
    ,
 }
----------------------------------------------
--- Sort (key is critical !!)
---------------------------------------------- 
-local a = {}
-for n in pairs(myApp.moreinfo.items) do table.insert(a, n) end
-table.sort(a)
-
----------------------------------------------
--- Generate the rows
---------------------------------------------- 
-for i,k in ipairs(a) do 
-
-    local isCategory = false
-    local defaultcolor ={myApp.sceneBackgroundmorecolor.r,myApp.sceneBackgroundmorecolor.g,myApp.sceneBackgroundmorecolor.b}
-    local rowHeight = myApp.moreinfo.row.height
-    local rowColor = { default=defaultcolor, over=myApp.moreinfo.row.over }
-    local lineColor =  myApp.moreinfo.row.linecolor
-    if myApp.moreinfo.items[k].includeline == false then lineColor = defaultcolor end
-
-    -- Make some rows categories
-    if ( myApp.moreinfo.items[k].isCategory or false) then
-        isCategory = true
-        rowHeight = myApp.moreinfo.row.catheight
-        rowColor = myApp.moreinfo.row.catcolor
-        lineColor = defaultcolor
-    end
-
-	   myList:insertRow({
-	      rowHeight = rowHeight, 
-	      rowColor =  rowColor,
-	      lineColor = lineColor,
-        isCategory = isCategory,
-	      params = { title = myApp.moreinfo.items[k].title,key = k,}
-	   })
- end
----------------------------------------------
--- Insert the list
---------------------------------------------- 
-myApp.moreGroup:insert(myList )
 
 
+function myApp.BuildMoreInfoList(  )
+      myMoreList:deleteAllRows()
+      ---------------------------------------------
+      -- Sort (key is critical !!)
+      --------------------------------------------- 
+      local a = {}
+      for n in pairs(myApp.moreinfo.items) do table.insert(a, n) end
+      table.sort(a)
+
+      ---------------------------------------------
+      -- Generate the rows
+      --------------------------------------------- 
+      for i,k in ipairs(a) do 
+
+          local isCategory = false
+          local defaultcolor ={myApp.sceneBackgroundmorecolor.r,myApp.sceneBackgroundmorecolor.g,myApp.sceneBackgroundmorecolor.b}
+          local rowHeight = myApp.moreinfo.row.height
+          local rowColor = { default=defaultcolor, over=myApp.moreinfo.row.over }
+          local lineColor =  myApp.moreinfo.row.linecolor
+          if myApp.moreinfo.items[k].includeline == false then lineColor = defaultcolor end
+
+          -- Make some rows categories
+          if ( myApp.moreinfo.items[k].isCategory or false) then
+              isCategory = true
+              rowHeight = myApp.moreinfo.row.catheight
+              rowColor = myApp.moreinfo.row.catcolor
+              lineColor = defaultcolor
+          end
+
+          local showbtn =   true
+          if (myApp.moreinfo.items[k].showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
+          if (myApp.moreinfo.items[k].showonlyinloggedin and myApp.authentication.loggedin == false) then showbtn = false  end
+          if showbtn then
+               myMoreList:insertRow({
+                  rowHeight = rowHeight, 
+                  rowColor =  rowColor,
+                  lineColor = lineColor,
+                  isCategory = isCategory,
+                  params = { title = myApp.moreinfo.items[k].title,key = k,}
+               })
+          end
+       end
+      ---------------------------------------------
+      -- Insert the list
+      --------------------------------------------- 
+      myApp.moreGroup:insert(myMoreList )
+      myMoreList:scrollToIndex( 1 ) 
+end
+
+myApp.BuildMoreInfoList()

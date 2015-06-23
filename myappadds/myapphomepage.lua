@@ -26,6 +26,7 @@ local homepage = {
             items = {
                         alocate = {
                              title = "Locate an Agent", 
+                              
                              pic="trustedchoice.png",
                              originaliconwidth = 196,
                              originaliconheight = 77,
@@ -53,6 +54,7 @@ local homepage = {
                                  },
                          broasast = {title = "Certified Repair Shops", 
                                      pic="qsg.png",
+                                      
                                      text="Locate certified repair shops nearby or from an address",
                                      backtext = "<",
                                      sceneinfo = { 
@@ -74,6 +76,7 @@ local homepage = {
                                    },
                          bsemer = {title = "Emergency" , pic="emergency.png",text="Click here for location services and to dial 911" ,
                                      backtext = "<",
+                                    
                                      groupheader = { r=255/255, g=0/255, b=0/255, a=1 },
                                     -- sceneinfo = { 
                                           --     htmlinfo = {},
@@ -138,6 +141,7 @@ local homepage = {
                          zzz= {
                                           title = "Contact State Auto", 
                                           pic="truck.png",
+                                          doublewide = true,
                                           backtext = "<",
                                            text="Contact for help",
                                           
