@@ -92,7 +92,7 @@ local M = {
 
                                 textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
                                 textfontsize=18  ,   
-                                textbottomedge =2   ,
+                                textbottomedge =5   ,
                                 textfontsizeaddress=14  ,  
                                 textcoloraddress = { r=130/255, g=130/255, b=130/255, a=1 },   
 

@@ -218,7 +218,9 @@ function  myApp.getAddressLocation( event )
         print ("Calulating lat.lg for: " .. parms.address)
 
         local callbackexecuted = false
-        native.setActivityIndicator( true ) 
+        local activityindicator = true
+        if parms.activityindicator ~= nil then  activityindicator = parms.activityindicator end
+        native.setActivityIndicator( activityindicator   ) 
         local myMap = native.newMapView( -100, -100, 20, 20 ) -- keep out the way
         
 
@@ -249,7 +251,9 @@ function  myApp.getAddressLocation( event )
                             if callbackexecuted == false then 
                                 callbackexecuted = true 
                                 native.setActivityIndicator( false ) 
+                                if parms.callback then  parms.callback(event) end  
                                 native.showAlert( myApp.appName ,myApp.gps.addresslocate.timeoutmessage ,{"ok"}) 
+                                
                             end 
                           end
                      ) 
@@ -273,7 +277,9 @@ function  myApp.getNearestAddress( event )
 
 
                   local callbackexecuted = false
-                  native.setActivityIndicator( true ) 
+                  local activityindicator = true
+                  if parms.activityindicator ~= nil then  activityindicator = parms.activityindicator end
+                  native.setActivityIndicator(  activityindicator   ) 
                   local myMap = native.newMapView( -100, -100, 20, 20 ) -- keep out the way
 
                   local function nearaddressHandler ( event )
@@ -284,7 +290,9 @@ function  myApp.getNearestAddress( event )
                           myMap = nil
                           myApp.gps.nearestaddress = event
                           if ( event.isError ) then
-                              native.showAlert( myApp.gps.nearestlocate.errortitle, myApp.gps.nearestlocate.errormessage .. (event.errorMessage or "Unknown"), { "Okay" } )
+                              if parms.showerroralert then
+                                 native.showAlert( myApp.gps.nearestlocate.errortitle, myApp.gps.nearestlocate.errormessage .. (event.errorMessage or "Unknown"), { "Okay" } )
+                              end
                           else
                                --if myApp.debugMode then native.showAlert( "neaAddress is " .. parms.address, "lat: " ..  event.latitude .. "  Long "..  event.longitude , { "Okay" } ) end
                           end
@@ -302,17 +310,22 @@ function  myApp.getNearestAddress( event )
                                       if callbackexecuted == false then 
                                           callbackexecuted = true 
                                           native.setActivityIndicator( false ) 
-                                          native.showAlert( myApp.appName ,myApp.gps.nearestlocate.timeoutmessage ,{"ok"}) 
+                                          if parms.callback then  parms.callback(event) end  
+                                          if parms.showerroralert then
+                                             native.showAlert( myApp.appName ,myApp.gps.nearestlocate.timeoutmessage ,{"ok"}) 
+                                          end
                                       end 
                                     end
                                ) 
                   else 
                       native.setActivityIndicator( false )  
                   end
+            else
+              if parms.callback then  parms.callback(event) end  
             end   -- myApp.gps.haveaccuratelocation
 
         end  -- curlocback 
-        myApp.getCurrentLocation({callback=curlocback})    -- update the gps coordinate
+        myApp.getCurrentLocation({activityindicator=parms.activityindicator,callback=curlocback})    -- update the gps coordinate
  
 end
 

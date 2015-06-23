@@ -133,27 +133,17 @@ local moreinfo = {
                                       },
                                xx1 = {
                                    includeline  = false,       -- needed if prior is header otherwise it looks bad 
-                                   title = "Locate agents", 
-                                   pic="trustedchoice.png",
-                                   originaliconwidth = 196,
-                                   originaliconheight = 77,
-                                   iconwidth = 120,      -- height will be scaled appropriately
-                                   text="Locate agents nearby or from an address",
+                                   title = "My Settings", 
                                    backtext = "<",
                                   -- groupheader = { r=15/255, g=75/255, b=100/255, a=1 },   -- can override
                                   sceneinfo = { 
-                                              locateinfo = {
-                                                    limit=100,
-                                                    miles=25,
-                                                    object = "Agency", --- used for mapping and other web services
-                                                  },
                                                 htmlinfo = { },
                                                scrollblockinfo = { },
                                              },
                                    navigation = { composer = {
-                                               id = "alocatemore",
-                                               lua="locatepre",
-                                               time=250, 
+                                               id = "mysettings",
+                                               lua="settings",
+                                               time=500, 
                                                effect="slideLeft",
                                                effectback="slideRight",
                                             },},
@@ -162,24 +152,15 @@ local moreinfo = {
                                    title = "Extras", 
                                    isCategory = true,
                                       },
-                               zz1= {title = "External Launch", 
-                                    pic="truck.png",
-                                    text="xxxxxx",
-                                    backtext = "<",
-                                          pic="truck.png",
-                                          navigation = { systemurl = { url="tel:614-915-9769"},},
-                                            
-                                      },
 
-                                 zz2 = {title = "Debug", 
-                                          pic="truck.png",
-                                          text="Flat tire, out of gas ? We can help really help",
-                                           backtext = "<",
-                                          navigation = { tabbar = {
-                                               id = "xxxmore",
-                                               key="gdebug",
+                               zz1 = {title = "Where Am I ?"  ,
+                                     backtext = "<",
+                                     navigation = { composer = {
+                                               otherscenes = "whereami",
                                             },},
-                                      },
+
+                                      
+                                  },
                               },  --items
 
      }

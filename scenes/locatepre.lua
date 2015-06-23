@@ -217,7 +217,9 @@ function scene:show( event )
                   ------------------------------------------------------
                   if ( event.isError ) then
                   else
-                       launchLocateScene{desc=string.format (myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].desc.plural  ..  " within %i miles of %s.",sceneparams.sceneinfo.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
+                       if event.latitude then
+                          launchLocateScene{desc=string.format (myApp.mappings.objects[sceneparams.sceneinfo.locateinfo.object].desc.plural  ..  " within %i miles of %s.",sceneparams.sceneinfo.locateinfo.miles,addressField.textField.text),lat=event.latitude,lng=event.longitude}
+                       end
                   end
               end  
 
