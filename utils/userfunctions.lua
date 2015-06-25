@@ -6,7 +6,7 @@ local myApp = require( "myapp" )
 -------------------------------
 -- if user just created then not every field is there like email
 -------------------------------
-function myApp.fncUserLoggedIn (userObject)
+function myApp.fncUserLogInfo (userObject)
      print "fncUserLoggedIn  "
      myApp.authentication.email = userObject.email
      myApp.authentication.emailVerified = userObject.emailVerified
@@ -38,7 +38,7 @@ end
 -------------------------------
 function myApp.fncUserLoggedOut (event)
      print "fncUserLoggedOut  "
-     myApp.fncUserLoggedIn({
+     myApp.fncUserLogInfo({
            email = "",
            emailVerified = false,
            username = "",

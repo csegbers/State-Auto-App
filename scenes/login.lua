@@ -172,7 +172,7 @@ function scene:show( event )
                                                                    native.setActivityIndicator( false )
                                                                    if not event.error then
                                                                      myApp.fncPutUD("email",inputemail)
-                                                                     myApp.fncUserLoggedIn(event.response)
+                                                                     myApp.fncUserLogInfo(event.response)
                                                                      native.showAlert( sceneinfo.btncreatemessage.successtitle, sceneinfo.btncreatemessage.successmessage, { "Okay" } )
                                                                      --timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
                                                                      -- stay here becuase they most likely will get the email and need to login again  
@@ -244,7 +244,7 @@ function scene:show( event )
                                                                    native.setActivityIndicator( false )
                                                                    if not event.error then
                                                                       myApp.fncPutUD("email",inputemail)
-                                                                      myApp.fncUserLoggedIn(event.response)
+                                                                      myApp.fncUserLogInfo(event.response)
                                                                       if myApp.authentication.emailVerified == false then
                                                                         -----------------------------------------------
                                                                         -- resend another email verification. Prior ones invalid
