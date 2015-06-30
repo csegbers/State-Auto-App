@@ -88,7 +88,7 @@ local homepage = {
 
                                       
                                   },
-                          ccc = {title = "Roadside Assistance", pic="towing.png",text="Locate nearby towing services" ,
+                          ccc = {title = "Towing Services", pic="towing.png",text="Locate nearby towing services" ,
                                navigation = { search = { q="Towing" },},
                                       
                                   },

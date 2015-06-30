@@ -196,7 +196,14 @@ local otherscenes = {
                                          effect="slideLeft",
                                          effectback="slideRight",
                                       },},
-                        }
+                        },
+              account = {
+                           functionname = {
+                                       getpolicies = "getpoliciesforuser",
+                                       addpolicy =   "addpolicyforuser",
+                                         },
 
+                        },
+   
           }
 return otherscenes

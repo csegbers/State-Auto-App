@@ -193,6 +193,9 @@ local M = {
                                   username = "",
                                   objectId = "",
                                   sessionToken="",
+                                  policies = {},
+                                  agencies = {},
+                                  agencycode = "",      -- will be first code if ,ultiple policieis
                               },
 
             titleGradient = {
