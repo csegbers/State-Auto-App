@@ -15,6 +15,7 @@ local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
 local sceneparams
+local sceneid
 local container
 local myList
 local runit  
@@ -258,7 +259,7 @@ function scene:show( event )
         runit = true
         if sceneparams and justcreated == false then
           if  sceneparams.navigation.composer then
-             if sceneparams.navigation.composer.id == event.params.navigation.composer.id then
+             if sceneid == event.params.navigation.composer.id then
                runit = false
              end
           end
@@ -275,6 +276,8 @@ function scene:show( event )
         --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ------------------------------
         sceneparams = event.params           -- params contains the item table 
+        sceneid = sceneparams.navigation.composer.id       --- new field otherwise it is a refernce and some calls here send a reference so comparing id's is useless         
+
 
         ---------------------------------------
         -- upodate the desc
@@ -320,14 +323,16 @@ function scene:show( event )
                    -- Callback inline function
                    ------------------------------------------------------------
                    function(e) 
+                     
                       if not e.error then  
+                         
                           if myApp.locate.animation then
                              transition.to(  myList, { time=myApp.locate.animationtime, y = curmyListy , transition=easing.outQuint})
                           end
                           for i = 1, #e.response.result do
                               local resgroup = e.response.result[i]
-                              print("NAME" .. resgroup[sceneparams.locateinfo.mapping.name])
-
+                              --print("NAME" .. resgroup[sceneparams.locateinfo.mapping.name])
+ 
                              myList:insertRow{
                                 rowHeight = myApp.locate.row.height,
                                 isCategory = false,

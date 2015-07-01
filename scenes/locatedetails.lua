@@ -15,6 +15,7 @@ local currScene = (composer.getSceneName( "current" ) or "unknown")
 print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
 local sceneparams
+local sceneid
 local container
 local myList
 local runit  
@@ -23,7 +24,7 @@ local myMap
 local myName
 local myAddress
 local itemGrp
-local myObject     -- response object from the services call or nil if no hit
+local myObject     -- response object from the services call or nil if no hit or if existing like agent info
 local objectgroup -- pointer to the mappings stuff
 local curitemGrpy  
 local curmyListy 
@@ -90,7 +91,9 @@ local onRowTouch = function( event )
         -- center the map if we got off wack
         ------------------------
         if navgroup.directions  then
-            if myMap and myObject then myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude ,true ) end
+            if myMap and myObject then 
+              if myObject[objectgroup.mapping.geo] then myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude ,true ) end
+            end
         end
         
         if event.phase == "press"  then     
@@ -105,50 +108,62 @@ local onRowTouch = function( event )
 
 
            if navgroup then
-               -----------------------------
-               -- launching "external ? ""
-               ---------------------------- 
-               if navgroup.directions then  
-                   myApp.navigationCommon ({launch = obgroup.launch, navigation = { directions = { address=string.format( (navgroup.directions.address or ""),  row.params.fulladdress )},},} )
-               else 
-                   if navgroup.popup then 
-                     myApp.navigationCommon ({launch = obgroup.launch, navigation = { popup = { type = navgroup.popup.type, options ={to=string.format( (navgroup.popup.options.to or ""),  row.params.value )},},} ,})
-                   else
-                       if navgroup.systemurl then 
-                          myApp.navigationCommon( {launch = obgroup.launch, navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
+               if navgroup.tabbar then
+                  myApp.showScreen({instructions=myApp.tabs.btns[navgroup.tabbar.key]})
+               else
+                   -----------------------------
+                   -- launching "external ? ""
+                   ---------------------------- 
+                   if navgroup.directions then  
+                       myApp.navigationCommon ({launch = obgroup.launch, navigation = { directions = { address=string.format( (navgroup.directions.address or ""),  row.params.fulladdress )},},} )
+                   else 
+                       if navgroup.popup then 
+                         myApp.navigationCommon ({launch = obgroup.launch, navigation = { popup = { type = navgroup.popup.type, options ={to=string.format( (navgroup.popup.options.to or ""),  row.params.value )},},} ,})
                        else
-                            if navgroup.composer then
-                                local locatelaunch =                          
-                                     {
-                                        title = obgroup.title, 
-                                        text=myName.text,
-                                        backtext = obgroup.backtext ,
-                                        forwardtext = obgroup.forwardtext ,
-                                        pic=obgroup.pic,
-                                        -- htmlinfo = { 
-                                        --               url=row.params.value ,
-                                        --            },
-                                        sceneinfo = obgroup.sceneinfo,
-                                        navigation = 
-                                         { 
-                                            composer = 
-                                                { 
-                                                   id = row.params.value ,
-                                                   lua=navgroup.composer.lua,
-                                                   time=navgroup.composer.time, 
-                                                   effect=navgroup.composer.effect,
-                                                   effectback=navgroup.composer.effectback,              
-                                                }
+                           if navgroup.systemurl then 
+                              myApp.navigationCommon( {launch = obgroup.launch, navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
+                           else
+                                if navgroup.composer then
+                                    local locatelaunch =                          
+                                         {
+                                            title = obgroup.title, 
+                                            text=myName.text,
+                                            backtext = obgroup.backtext ,
+                                            forwardtext = obgroup.forwardtext ,
+                                            pic=obgroup.pic,
+                                            -- htmlinfo = { 
+                                            --               url=row.params.value ,
+                                            --            },
+                                            sceneinfo = obgroup.sceneinfo,
+                                            navigation = 
+                                             { 
+                                                composer = 
+                                                    { 
+                                                       id = row.params.value ,
+                                                       lua=navgroup.composer.lua,
+                                                       time=navgroup.composer.time, 
+                                                       effect=navgroup.composer.effect,
+                                                       effectback=navgroup.composer.effectback,              
+                                                    }
+                                            ,}
                                         ,}
-                                    ,}
-                                 locatelaunch.sceneinfo.htmlinfo.url =  row.params.value   
-                                 local parentinfo =  sceneparams 
-                                 locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
-                                 myApp.showSubScreen ({instructions=locatelaunch})
-                            end   -- if composer
-                       end  -- if systemurl
-                   end   -- popup
-               end -- directions
+                                     locatelaunch.sceneinfo.htmlinfo.url =  row.params.value   
+                                     local parentinfo =  sceneparams 
+                                     -----------------------------------------
+                                     -- are being used as a main tabbar scene ?
+                                     -----------------------------------------
+                                     if myApp.MainSceneNavidate(parentinfo) then
+                                       myApp.navigationCommon(locatelaunch)
+                                     else
+                                        locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                                        myApp.showSubScreen ({instructions=locatelaunch})
+                                     end
+                                     
+                                end   -- if composer
+                           end  -- if systemurl
+                       end   -- popup
+                   end -- directions
+               end -- tabbar
            end   -- if navigation
 
             
@@ -161,27 +176,36 @@ end
 -- The map. centered and marked for the 1 item
 ------------------------------------------------------
 local function buildMap( event )
-      native.setActivityIndicator( true ) 
+      if  myObject   then
+          if  myObject[objectgroup.mapping.geo]  then
+              native.setActivityIndicator( true ) 
 
-      local mapheight = myApp.sceneHeight-myList.height-itemGrp.height-myApp.locatedetails.edge*2
-      myMap = native.newMapView( 0, 0, myApp.sceneWidth-myApp.locatedetails.edge , mapheight  )   -- cause
-      if myMap and myObject then
-         myMap.mapType = myApp.locatedetails.map.type -- other mapType options are "satellite" or "hybrid"
+              local mapheight = myApp.sceneHeight-myList.height-itemGrp.height-myApp.locatedetails.edge*2
+              myMap = native.newMapView( 0, 0, myApp.sceneWidth-myApp.locatedetails.edge , mapheight  )   -- cause
+              if myMap then
+                 myMap.mapType = myApp.locatedetails.map.type -- other mapType options are "satellite" or "hybrid"
 
-      -- The MapView is just another Corona display object, and can be moved or rotated, etc.
-         myMap.x = myApp.cCx
-         myMap.y = myApp.sceneStartTop + itemGrp.height  + myApp.locatedetails.edge+ mapheight/2 + myApp.locatedetails.edge/2
+              -- The MapView is just another Corona display object, and can be moved or rotated, etc.
+                 myMap.x = myApp.cCx
+                 myMap.y = myApp.sceneStartTop + itemGrp.height  + myApp.locatedetails.edge+ mapheight/2 + myApp.locatedetails.edge/2
 
-         myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, false )
-         myMap:setRegion( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, myApp.locatedetails.map.latitudespan, myApp.locatedetails.map.longitudespan, false)
-      
-         local options = { 
-                  title=myObject[objectgroup.mapping.name], 
-                  subtitle=(myObject[objectgroup.mapping.street] or "") .. " " .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") , 
-                   }
-         myMap:addMarker( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, options )
+                 
+                 if myObject[objectgroup.mapping.geo].latitude and myObject[objectgroup.mapping.geo].longitude then
+                    myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, false )
+                    myMap:setRegion( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, myApp.locatedetails.map.latitudespan, myApp.locatedetails.map.longitudespan, false)
+
+                    local options = { 
+                              title=myObject[objectgroup.mapping.name], 
+                              subtitle=(myObject[objectgroup.mapping.street] or "") .. " " .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") , 
+                               }
+                    myMap:addMarker( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, options )
+                 end
+                
+              end
+
+              native.setActivityIndicator( false ) 
+          end
       end
-      native.setActivityIndicator( false ) 
 end
 
 
@@ -257,6 +281,9 @@ function scene:create(event)
         }
      container:insert(myList )
 
+
+
+
 end
 
 function scene:show( event )
@@ -279,7 +306,8 @@ function scene:show( event )
         runit = true
         if sceneparams and justcreated == false then
           if  sceneparams.navigation.composer then
-             if sceneparams.navigation.composer.id == event.params.navigation.composer.id then
+             --if sceneparams.navigation.composer.id == event.params.navigation.composer.id then
+             if sceneid == event.params.navigation.composer.id then
                runit = false
              end
           end
@@ -303,7 +331,8 @@ function scene:show( event )
         -- now go ahead
         --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ------------------------------
-        sceneparams = event.params            
+        sceneparams = event.params  
+        sceneid = sceneparams.navigation.composer.id       --- new field otherwise it is a refernce and some calls here send a reference so comparing id's is useless         
 
     ----------------------------------
     -- Did Show
@@ -311,111 +340,138 @@ function scene:show( event )
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
         objectgroup = myApp.mappings.objects[sceneparams.objecttype]     
-        print(sceneparams.objecttype .." " .. sceneparams.objectqueryvalue    ) 
+        print(sceneparams.objecttype .." queryval" .. (sceneparams.objectqueryvalue  or "")  .. " Existing " .. (sceneparams.objectexisting  or "") )
 
-        if common.testNetworkConnection()  then
-           -----------------------------------
-           -- always do the map even if criteria is same since it gets destrpyed every scene change
-           ------------------------------------
-           native.setActivityIndicator( true )
+        local BuildTheScene = function (resp)
+                myObject = resp
+                local haveitems = false
+                ---------------------------------------------
+                --  do we even have an object
+                ---------------------------------------------
+                itemGrp.isVisible = true
+                myList.isVisible = true
+                if myObject[objectgroup.mapping.name] == nil then
+                  itemGrp.isVisible = false
+                  myList.isVisible = false
+                end
 
-           if (runit or justcreated) then
-               --debugpopup ("looking for " .. sceneparams.objecttype .." " .. sceneparams.objectqueryvalue)
-               parse:run(objectgroup.functionname.details,
-                   {
-                      [objectgroup.mapping.id] =  sceneparams.objectqueryvalue,  
-                   },
-                   ------------------------------------------------------------
-                   -- Callback inline function
-                   ------------------------------------------------------------
-                   function(e) 
-                      if not e.error then  
-                          local haveitems = false
-                          if #e.response.result > 0 then
-                              myObject = e.response.result[1]
-                              print("NAME" .. myObject[objectgroup.mapping.name])
-                              myName.text = myObject[objectgroup.mapping.name]
-                              myAddress.text = (myObject[objectgroup.mapping.street] or "") .. "\n" .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") 
-                              myAddress.y = myName.y+ myName.height  
-                              if myApp.locatedetails.animation then
-                                  transition.to(  itemGrp, { time=myApp.locatedetails.animationtime, y = curitemGrpy , transition=easing.outQuint})
-                                  transition.to(  myList, { time=myApp.locatedetails.animationtime, y = curmyListy , transition=easing.outQuint})
-                              end
-                              ---------------------------------------------
-                              -- Sort (key is critical !!)
-                              -- what laucnh objects are availble ? See if those fields came down via the service.
-                              -- they may not always exist
-                              --------------------------------------------- 
-                              local a = {}
-                              for n in pairs(objectgroup.launchobjects) do table.insert(a, n) end
-                              table.sort(a)
+                print("NAME" .. (myObject[objectgroup.mapping.name] or ""))
+                myName.text = (myObject[objectgroup.mapping.name] or "") 
+                myAddress.text = (myObject[objectgroup.mapping.street] or "") .. "\n" .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") 
+                myAddress.y = myName.y+ myName.height  
+                if myApp.locatedetails.animation then
+                    transition.to(  itemGrp, { time=myApp.locatedetails.animationtime, y = curitemGrpy , transition=easing.outQuint})
+                    transition.to(  myList, { time=myApp.locatedetails.animationtime, y = curmyListy , transition=easing.outQuint})
+                end
+
+                ---------------------------------------------
+                -- Sort (key is critical !!)
+                -- what laucnh objects are availble ? See if those fields came down via the service.
+                -- they may not always exist
+                --------------------------------------------- 
+                local a = {}
+                for n in pairs(objectgroup.launchobjects) do table.insert(a, n) end
+                table.sort(a)
 
 
-                              local insertObject = function ( rowparms )
-                                    haveitems = true
-                                    myList:insertRow{
-                                      rowHeight = myApp.locatedetails.row.height,
-                                      isCategory = false,
-                                      rowColor = myApp.locatedetails.row.rowColor,
-                                      lineColor = myApp.locatedetails.row.lineColor,
+                local insertObject = function ( rowparms )
+                      haveitems = true
+                      myList:insertRow{
+                        rowHeight = myApp.locatedetails.row.height,
+                        isCategory = false,
+                        rowColor = myApp.locatedetails.row.rowColor,
+                        lineColor = myApp.locatedetails.row.lineColor,
 
-                                      params = rowparms, --{
-                                                  -- fieldtype = rowparms.fieldtype,  -- will point to object table
-                                                 --  desc = rowparms.desc,      -- actual field vale
-                                               -- }  -- params
-                                      }   --myList:insertRow
-                              end
+                        params = rowparms, --{
+                                    -- fieldtype = rowparms.fieldtype,  -- will point to object table
+                                   --  desc = rowparms.desc,      -- actual field vale
+                                 -- }  -- params
+                        }   --myList:insertRow
+                end
 
-                              ---------------------------------------------
-                              -- Generate a get directions row ?
-                              --------------------------------------------- 
-                              if myApp.locatedetails.row.includedirections then
-                                 local address = (myObject[objectgroup.mapping.street] or "") .. " " .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "")   --.. " " .. (myObject[objectgroup.mapping.zip] or ""
-                                 local addresswithzip = address .. " " .. (myObject[objectgroup.mapping.zip] or "")
-                                 insertObject({
-                                        fieldtype = "directions",
-                                        value = address, 
-                                        fulladdress = addresswithzip,
-                                        })
-                              end
+                ---------------------------------------------
+                -- Generate a get directions row ?
+                --------------------------------------------- 
+                if myApp.locatedetails.row.includedirections and myObject[objectgroup.mapping.street] then
+                   local address = (myObject[objectgroup.mapping.street] or "") .. " " .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "")   --.. " " .. (myObject[objectgroup.mapping.zip] or ""
+                   local addresswithzip = address .. " " .. (myObject[objectgroup.mapping.zip] or "")
+                   insertObject({
+                          fieldtype = "directions",
+                          value = address, 
+                          fulladdress = addresswithzip,
+                          })
+                end
+ 
+                ---------------------------------------------
+                -- Generate the rows for potential object launches like phne email
+                --------------------------------------------- 
+                for i,k in ipairs(a) do 
+                    ---------------------------
+                    -- is the field there  in the response?
+                    ---------------------------
+                    if myObject[objectgroup.launchobjects[k].field] then  
+                       insertObject({fieldtype = objectgroup.launchobjects[k].type,value = myObject[objectgroup.launchobjects[k].field], })
+                    end   -- does field exist
+                end   --loop
 
-                              ---------------------------------------------
-                              -- Generate the rows for potential object launches like phne email
-                              --------------------------------------------- 
-                              for i,k in ipairs(a) do 
-                                  ---------------------------
-                                  -- is the field there  in the response?
-                                  ---------------------------
-                                  if myObject[objectgroup.launchobjects[k].field] then  
-                                     insertObject({fieldtype = objectgroup.launchobjects[k].type,value = myObject[objectgroup.launchobjects[k].field], })
-                                  end   -- does field exist
-                              end   --loop
+               if haveitems then 
+                  myList:scrollToIndex( 1 ) 
+               end
+        end 
 
+         ------------------------------------------------------------
+         -- Existing object ? like an agent (myagent)
+         ------------------------------------------------------------
+        if sceneparams.objectexisting then
+            if (runit or justcreated) then
+              local theobjecttouse = {}
+              if  sceneparams.objectexisting == "myagent" then
+                  theobjecttouse = myApp.authentication.agencies
+              end
+              BuildTheScene(theobjecttouse)
+            end
+            buildMap()    -- do regardsless
+        else    -- sceneparams.objectexisting    else
 
+            if common.testNetworkConnection()  then
+               native.setActivityIndicator( true )
+               if (runit or justcreated) then
+                   --debugpopup ("looking for " .. sceneparams.objecttype .." " .. sceneparams.objectqueryvalue)
+                   
+                   parse:run(objectgroup.functionname.details,
+                       {
+                          [objectgroup.mapping.id] =  sceneparams.objectqueryvalue,  
+                       },
+                       ------------------------------------------------------------
+                       -- Callback inline function
+                       ------------------------------------------------------------
+                       function(e) 
+                          if not e.error then  
+                              
+                              if #e.response.result > 0 then
+                                  BuildTheScene(e.response.result[1])
 
-                          end  -- end of results >0
+                              end  -- end of results >0
 
-                          if haveitems then 
-                            myList:scrollToIndex( 1 ) 
-                          end
-                      end  -- end of error check
-                      -----------------------------------------------
-                      -- always do when returned fro srvice call
-                      ----------------------------------------------
-                      native.setActivityIndicator( false ) 
-                      buildMap()
-                  end )  -- end of parse call
-            else   -- else of runit or justcreated
-                -----------------------------------------------
-                -- always do the map even if same criteria coming in
-                -----------------------------------------------
-                native.setActivityIndicator( false )
-                buildMap()     -- always need to do   even on same object
-            end  -- end of runit or justcreated
-        end    -- end of network connection check
+                          end  -- end of error check
+                          -----------------------------------------------
+                          -- always do when returned fro srvice call
+                          ----------------------------------------------
+                          native.setActivityIndicator( false ) 
+                          buildMap()
+                      end )  -- end of parse call
+                else   -- runit or justcreated
+                    -----------------------------------------------
+                    -- always do the map even if same criteria coming in
+                    -----------------------------------------------
+                    native.setActivityIndicator( false )
+                    buildMap()     -- always need to do   even on same object
+                end  -- end of runit or justcreated
+            end    -- end of network connection check
+            
+        end    -- sceneparams.objectexisting
         justcreated = false
-
-    end
+    end   -- phase check
 	
 
 end
@@ -459,7 +515,9 @@ function scene:overlay( parms )
             alphatype = 1
             slidextype = -1
          end
-         transition.to(  myMap, {  time=parms.time/2,alpha=alphatype})
+         if myMap then
+            transition.to(  myMap, {  time=parms.time/2,alpha=alphatype})
+         end
       --   transition.to(  myMap, {  time=parms.time/2,delta=true, x =  slidex * slidextype })
      end
 end
@@ -470,7 +528,9 @@ end
 -- used from the more button
 ---------------------------------------------------
 function scene:morebutton( parms )
+   if myMap then
      transition.to(  myMap, {  time=parms.time,delta=true, x = parms.x , transition=parms.transition})
+   end
 end
 
 scene:addEventListener( "create", scene )

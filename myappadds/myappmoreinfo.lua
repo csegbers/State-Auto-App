@@ -179,6 +179,14 @@ local moreinfo = {
 
                                       
                                   },
+                              zz2 = {title = "Home page"  ,
+                                     backtext = "<",
+                                     navigation = { tabbar = {
+                                               key = "ahome",
+                                            },},
+
+                                      
+                                  },
                               },  --items
 
      }

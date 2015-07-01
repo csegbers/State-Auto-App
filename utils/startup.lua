@@ -108,7 +108,7 @@ end
 --  Start Parse
 -------------------------------------------------------
 parse:init({ appId = myApp.parse.appId , apiKey = myApp.parse.restApikey,})
-parse.showStatus = myApp.debugMode-- outputs response info in the console
+parse.showStatus =  myApp.debugMode-- outputs response info in the console
 --parse.showAlert = myApp.debugMode -- show a native pop-up with error and result codes
 parse.showJSON = myApp.debugMode -- output the raw JSON response in the console 
 --parse.dispatcher:addEventListener( "parseRequest", onParseResponse )
@@ -117,6 +117,22 @@ parse:appOpened(function (e) print ("return from appOpened") print (e.requestTyp
 parse:getConfig( function(e) if not e.error then myApp.appName = e.response.params.appName print ("ZZZZZZBBBBAAACCCK " .. e.response.params.appName) end end )
 --parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from home logevent") print (e.requestType)   end )
 
+
+
+----------------------------------------
+-- Was the scene laucnhed as a main tabbar sceene ?
+----------------------------------------
+function  myApp.MainSceneNavidate( parentinfo )
+     local msn = false
+     if parentinfo.sceneinfo then
+        if parentinfo.sceneinfo.usage then
+           if (parentinfo.sceneinfo.usage.navigate or "") == "mainscene" then
+              msn = true
+           end
+        end
+     end
+     return msn
+end
 
 --------------------------------------
 -- any user fields changing we need to be aware of ?
@@ -147,6 +163,30 @@ function  myApp.evtloginchanged( event )
 
 end
 Runtime:addEventListener( "loginchanged", myApp.evtloginchanged )
+
+-------------------------------------
+-- agencies changes ?
+---------------------------------------
+function  myApp.evtagencieschanged( event )
+
+  if (myApp.tabMyAgentKey or "") ~= "" then 
+     ----------------------------
+     -- generate new id so the scene will refresh itself if has already been run for the myagent
+     -- if never run, no biggie
+     ----------------------------
+     myApp.tabs.btns[myApp.tabMyAgentKey].navigation.composer.id = os.date( '*t' )  
+     
+     ------------------------------
+     -- are we on this tab currently ? including drill down scenes
+     -- start over on the tab
+     ----------------------------
+     if myApp.tabCurrentKey == myApp.tabMyAgentKey then
+        myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabMyAgentKey]})
+     end 
+  end
+
+end
+Runtime:addEventListener( "agencieschanged", myApp.evtagencieschanged )
 
 --------------------------------------
 -- log me out ?

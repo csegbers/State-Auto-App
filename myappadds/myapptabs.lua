@@ -3,7 +3,7 @@
 -- Store variables used across the entire app 
 -------------------------------------------------------
 local tabs = { 
-
+  
         tabbtnw = 32,tabbtnh = 32, tabBarHeight = 50,frameWidth = 20,launchkey = "ahome", transitiontime = 200,
         btns = {
             ahome = {
@@ -16,11 +16,15 @@ local tabs = {
                     },
           bagent = {
                         label="My Agent" ,title="My Agent" ,def="myagent.png",over="myagent-down.png",
+                        objecttype = "Agency",
+                        objectexisting = "myagent",
                         sceneinfo = { 
                                                htmlinfo = {},
                                                scrollblockinfo = { },
+                                               usage = { navigate = "mainscene"},
+
                                              },
-                        navigation = { composer = {id = "agent", lua="agent" ,time=250, effect="slideRight" },},
+                        navigation = { composer = {id = "myagent", lua="locatedetails" ,time=250, effect="crossFade" },},
                                 
                     },
           caccount = {

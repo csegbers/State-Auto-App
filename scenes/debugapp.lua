@@ -95,6 +95,20 @@ function scene:show( event )
 
             renderInfo(" ")
 
+               ------------
+               -- user
+               ----
+               renderInfo("email " ..  ( myApp.authentication.email or "" ))
+               renderInfo("emailVerified " ..  tostring(( myApp.authentication.emailVerified or "" )))
+               renderInfo("username " ..  ( myApp.authentication.username or "" ))
+               renderInfo("user objectId " ..  ( myApp.authentication.objectId or "" ))
+               renderInfo("sessionToken " ..  ( myApp.authentication.sessionToken or "" ))
+               renderInfo("agencycode " ..  ( myApp.authentication.agencycode or "" ))
+              
+
+               renderInfo(" ")
+ 
+
     elseif ( phase == "did" ) then
                
 

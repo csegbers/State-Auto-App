@@ -10,58 +10,74 @@ function myApp.fncUserUpdatePolicies ()
    myApp.authentication.agencies =  {}
    myApp.authentication.agencycode = ""
 
+   -----------------------------------------------
+   -- logged in ?
+   -----------------------------------------------
    if myApp.authentication.loggedin   then
- 
-               parse:run(myApp.otherscenes.account.functionname.getpolicies,
-                  {
-                   ["userId"] = myApp.authentication.objectId 
-                   },
-                   ------------------------------------------------------------
-                   -- Callback inline function
-                   ------------------------------------------------------------
-                   function(e) 
-                      --debugpopup ("here from get policies")
-                      if not e.error then  
-                           
-                          for i = 1, #e.response.result do
-                              local resgroup = e.response.result[i][1]
-                              myApp.authentication.policies[resgroup["policyNumber"]] = resgroup
-                              print("policy Number" .. resgroup["policyNumber"])
-                              if #resgroup.policyTerms[1] > 0 then
-                                  myApp.authentication.agencycode = resgroup.policyTerms[1][1].agencyCode or ""
-                             end
-                          end
+         native.setActivityIndicator( true ) 
+         parse:run(myApp.otherscenes.account.functionname.getpolicies,
+            {
+             ["userId"] = myApp.authentication.objectId 
+             },
+             ------------------------------------------------------------
+             -- Callback inline function
+             ------------------------------------------------------------
+             function(e) 
+                native.setActivityIndicator( false ) 
+                --debugpopup ("here from get policies")
+                if not e.error then  
+                     
+                    for i = 1, #e.response.result do
+                        local resgroup = e.response.result[i][1]
+                        myApp.authentication.policies[resgroup["policyNumber"]] = resgroup
+                        print("policy Number" .. resgroup["policyNumber"])
+                        if #resgroup.policyTerms[1] > 0 then
+                            myApp.authentication.agencycode = resgroup.policyTerms[1][1].agencyCode or ""
+                       end
+                    end
+                    Runtime:dispatchEvent{ name="policieschanged", value=myApp.authentication.loggedin }
+                    
+                    ------------------------------
+                    -- go grab agent
+                    ------------------------------
+                    if myApp.authentication.agencycode ~= "" then
+                       --print("function name" .. myApp.mappings.objects.Agency.functionname.details)
+                       --print("agency code" .. myApp.authentication.agencycode)
+                       native.setActivityIndicator( true ) 
+                       parse:run(
+                                   myApp.mappings.objects.Agency.functionname.details,
+                                   {
+                                      ["agencyCode"] = myApp.authentication.agencycode
+                                   },
+                                   function(e) 
+                                      native.setActivityIndicator( false ) 
+                                      if not e.error then 
+                                          if #e.response.result > 0 then
+                                             myApp.authentication.agencies = e.response.result[1]
+                                             --print("agency name" .. myApp.authentication.agencies.agencyName)
+                                          end
+                                      end
+                                      Runtime:dispatchEvent{ name="agencieschanged", value=myApp.authentication.loggedin }
+                                   end
+                                )
+                    else      -- no agencycode
+                       Runtime:dispatchEvent{ name="agencieschanged", value=myApp.authentication.loggedin }
+                    end      -- have agencycode
 
-                          ------------------------------
-                          -- go grab agent
-                          ------------------------------
-                          if myApp.authentication.agencycode ~= "" then
-                             --print("function name" .. myApp.mappings.objects.Agency.functionname.details)
-                             --print("agency code" .. myApp.authentication.agencycode)
-                             parse:run(
-                                         myApp.mappings.objects.Agency.functionname.details,
-                                         {
-                                            ["agencyCode"] = myApp.authentication.agencycode
-                                         },
-                                         function(e) 
-                                            if not e.error then 
-                                                if #e.response.result > 0 then
-                                                   myApp.authentication.agencies = e.response.result[1]
-                                                   --print("agency name" .. myApp.authentication.agencies.agencyName)
-                                                end
-                                            end
-                                         end
-                                      )
-                          end
-                          native.setActivityIndicator( false ) 
- 
-                      else
-                        native.setActivityIndicator( false ) 
-                       --buildMap()     no need to do. Nothing to mark
-                      end  -- end of error check
-                  end )  -- end of parse call
 
-   end
+                else    -- on get policies rturn error check    error on the getpolicies
+                    Runtime:dispatchEvent{ name="agencieschanged", value=myApp.authentication.loggedin }
+                    Runtime:dispatchEvent{ name="policieschanged", value=myApp.authentication.loggedin }
+                end  -- end of error check
+             end )  -- end of policies parse call anf callback
+   else
+            ---------------------------------
+            -- logged out - dispatch event
+            ---------------------------------
+            Runtime:dispatchEvent{ name="policieschanged", value=myApp.authentication.loggedin }
+            Runtime:dispatchEvent{ name="agencieschanged", value=myApp.authentication.loggedin }
+   end     -- loggin check
+
 end
 
 -------------------------------

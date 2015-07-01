@@ -97,8 +97,19 @@ local function addtabBtn(tkey)
         ---------------------------------
         btnrntry.sel=tabCnt                         -- add a sequence
         btnrntry.key=tkey                           -- add the key to the table
+
+        ----------------------------------
+        -- Track special tabs like myagent. The actual key could be anything
+        ----------------------------------
+        if btnrntry.objectexisting  then
+            if btnrntry.objectexisting == "myagent" then
+                myApp.tabMyAgentKey = tkey
+            end
+        end
+
         local tabitem = 
             {
+                id = tkey,
                 label = btnrntry.label,
                 defaultFile = myApp.imgfld .. btnrntry.def,
                 overFile = myApp.imgfld .. btnrntry.over,

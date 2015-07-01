@@ -14,6 +14,99 @@ Parse.Cloud.define("hellogoodbye", function(request, response) {
   response.success("hellogoodbye world!");
    
 });
+
+Parse.Cloud.define("addpolicyforuser", function(request, response) {
+
+   var PolicyRelationship = Parse.Object.extend("PolicyRelationship");
+   var querypolrel = new Parse.Query(PolicyRelationship);
+   querypolrel.equalTo("policyNumber",request.params.policyNumber);
+   querypolrel.find( {
+     success: function(results) {
+     	//---------------------------------------
+        // Already exists  in a relationship to a user?
+        //---------------------------------------
+        if (results.length > 0) 
+        {
+            response.error("Policy Is Already Assigned");
+        }
+        else
+        {
+           //---------------------------
+           // Must match policynumber, zip and the objectid
+           //-----------------------------------
+           var Policy  = Parse.Object.extend("Policy");
+           var querypol = new Parse.Query(Policy);
+           querypol.equalTo("policyNumber",request.params.policyNumber);
+           querypol.equalTo("policyPostalCode",request.params.policyPostalCode);
+           querypol.equalTo("objectId",request.params.policyObjectId);
+
+           querypol.find( {
+               success: function(resultspol) {
+                   if (resultspol.length > 0)       // if they get access to 1 of the policy terms, they have accesss to all since it is based on policyNumber
+                   {
+
+                         var User  = Parse.Object.extend("User");
+                         var queryuser = new Parse.Query(User);
+                         queryuser.equalTo("objectId",request.params.userId);
+                         queryuser.equalTo("emailVerified",true);
+
+                         queryuser.find( {
+                             success: function(resultspol) {
+                                   if (resultspol.length > 0) 
+                                   {
+
+                                            var newPolicyRelationship  = Parse.Object.extend("PolicyRelationship");
+                                            var polRel = new newPolicyRelationship();
+
+                                            polRel.set("policyNumber",request.params.policyNumber);
+                                            polRel.set("userId",request.params.userId);
+
+                                            polRel.save(null,{
+                                              success:function(polRel) { 
+                                                response.success(polRel);
+                                              },
+                                              error:function(error) {
+                                                response.error(error);
+                                              }
+                                            });
+
+                                   }
+                                   else
+                                   {
+                                      response.error("User Not Found Or Email Not Verified");
+                                   }
+                             },
+                             error: function(object, error) {
+                               // The object was not retrieved successfully.
+                               // error is a Parse.Error with an error code and description.
+                             },
+
+                         });
+
+                   }
+                   else
+                   {
+                      response.error("Policy Not Found");
+                   }
+
+               },
+               error: function(object, error) {
+                 // The object was not retrieved successfully.
+                 // error is a Parse.Error with an error code and description.
+               },
+
+           });
+
+        }
+      },
+     error: function(object, error) {
+       // The object was not retrieved successfully.
+       // error is a Parse.Error with an error code and description.
+     }
+   });
+                
+});
+
 Parse.Cloud.define("getpoliciesforuser", function(request, response) {
         var _ = require('underscore');
         //-----------------------------------

@@ -13,6 +13,7 @@ local login = require( myApp.classfld .. "classlogin" )
 
 local currScene = (composer.getSceneName( "current" ) or "unknown")
 local sceneparams
+local sceneid
 local sbi
 local container
 local scrollView
@@ -51,7 +52,7 @@ function scene:show( event )
         if sceneparams and justcreated == false then
           print ("scene compare " .. sceneparams.navigation.composer.id .. " " .. event.params.navigation.composer.id )
           if  sceneparams.navigation.composer then
-             if sceneparams.navigation.composer.id == event.params.navigation.composer.id then
+             if sceneid == event.params.navigation.composer.id then
                runit = false
              end
           end
@@ -61,6 +62,8 @@ function scene:show( event )
         -- update sceneparams now, not before as we check prior scene
         --------------------
         sceneparams = event.params or {}
+        sceneid = sceneparams.navigation.composer.id       --- new field otherwise it is a refernce and some calls here send a reference so comparing id's is useless         
+
 
 
         --------------------------------------
