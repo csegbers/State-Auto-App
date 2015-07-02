@@ -197,13 +197,70 @@ local otherscenes = {
                                          effectback="slideRight",
                                       },},
                         },
-              account = {
-                           functionname = {
+              myaccount = {
+                            functionname = {
                                        getpolicies = "getpoliciesforuser",
                                        addpolicy =   "addpolicyforuser",
                                          },
+                            groupwidth = 240,
+                            groupmaxwidth = 320,     -- we will allow to grow to fit better if there is extra edging. This would be max however
+                            groupheight = 140,
+                            groupheaderheight = 30,
+                            groupbetween = 10,
+                            groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
+                            groupheader = { r=25/255, g=75/255, b=150/255, a=1 },
+                            iconwidth = 60,    -- can be overidden in item
+                            iconheight = 60,   -- can be overidden in item
+                            headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
+                            headerfontsize = 15,  
+                            textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                            textfontsize=12   ,       
+                            textbottomedge =12   , 
 
                         },
+              myagent = {    
+                                animation=false,
+                                animationtime=300,
+                                edge=10,
+                                groupheight = 90,
+                                groupbackground = { r=25/255, g=75/255, b=150/255, a=1 },
+                                groupstrokewidth = 0,
+                                cornerradius = 3,
+
+                                textcolor = { r=255/255, g=255/255, b=255/255, a=1 },   
+                                textfontsize=18  ,   
+                                textbottomedge =5   ,
+                                textfontsizeaddress=14  ,  
+                                textcoloraddress = { r=200/255, g=200/255, b=200/255, a=1 },   
+
+                                tableheight=180,  
+                                row={
+                                       height=60,
+                                       rowColor = { 1, 1, 1 },
+                                       lineColor = { 220/255 },
+                                       titletextfontsize=16  , 
+                                       titletexty = 20,
+                                       titletextx = 60,
+                                       titletextColor = 0,
+                                       desctextfontsize=12  , 
+                                       desctexty = 40,
+                                       desctextx = 60,
+                                       desctextColor = 0.5,
+
+                                       iconwidth = 40,
+                                       iconheight = 40,
+
+                                       includedirections = true,
+
+                                    },
+                                map = {
+                                          latitudespan = .1,
+                                          longitudespan = .1,
+                                          type = "standard" ,
+                                      },
+
+                                 
+                       },                       
    
           }
 return otherscenes

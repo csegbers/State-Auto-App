@@ -25,14 +25,22 @@ local M = {
             titleBarHeight = 50,
             titleBarEdge = 10,
             titleBarTextColor = { r=255/255, g=255/255, b=255/255, a=1 },
+            ------------------------------
+            -- folders
+            ------------------------------
             imgfld = "images/",
+            htmlfld = "html/",
             myappadds = "myappadds.",
             scenesfld = "scenes.",
             utilsfld = "utils.",
             classfld = "classes.",
+
+            ------------------------------
+            -- database stuff
+            ------------------------------            
             databasename= "insapp.db",
             hashkey = "aXaLwATgS3lPh848glLpugq5sqcHi8T2jfDQeWz1",
-            htmlfld = "html/",
+
             theme = "widget_theme_ios7",
             font =  "HelveticaNeue-Light",
             fontBold = "HelveticaNeue",
@@ -46,13 +54,18 @@ local M = {
             scenemaskFile = "",
             splash = {image = "splash.jpg", delay = 150, },
             promptforphonecalls = true,
+
+
             composer = {
                           recycleOnSceneChange = false,
                        },
+
+
             webview = {
                          pageloadwaittime = 10000,
                          timeoutmessage = "Page taking too long to load.",
                      },
+
 
             objecttypes = {
                         phone = {
@@ -133,6 +146,10 @@ local M = {
 
                            },    --objecttypes
 
+
+            ------------------------------
+            -- maps
+            ------------------------------            
             maps = {
                       --googlemapapp = "comgooglemaps-x-callback://",
                       google = 
@@ -156,7 +173,9 @@ local M = {
                                               },
                              },
                    },
- 
+            ------------------------------
+            -- gps
+            ------------------------------            
             gps = {
                      --timer = 30000,                           --30 seconds
                      --timebetweenattempts = 100,              --1 seconds
@@ -188,6 +207,11 @@ local M = {
                                     },
                                   
                   },
+
+
+            ------------------------------
+            -- authentication
+            ------------------------------            
             authentication = {
                                   loggedin = false,
                                   email="",
@@ -197,7 +221,7 @@ local M = {
                                   sessionToken="",
                                   policies = {},
                                   agencies = {},
-                                  agencycode = "",      -- will be first code if ,ultiple policieis
+                                  agencycode = "",      -- will be first code if multiple policieis
                               },
 
             titleGradient = {
@@ -218,7 +242,10 @@ local M = {
                               },
                         sheet = "ios7icons.png",
                 },
-            parse = {
+            ------------------------------
+            -- parse
+            ------------------------------            
+           parse = {
                         appId = 'nShcc7IgtlMjqroizNXtlVwjtwjfJgLsiRVgvUfA',
                         restApikey = 'DeOzYBpk6bBSha0SJ9cRUc36EbWUmuseajSyBrlF',
                         url = "https://api.parse.com/1",

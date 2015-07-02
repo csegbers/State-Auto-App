@@ -15,7 +15,7 @@ function myApp.fncUserUpdatePolicies ()
    -----------------------------------------------
    if myApp.authentication.loggedin   then
          native.setActivityIndicator( true ) 
-         parse:run(myApp.otherscenes.account.functionname.getpolicies,
+         parse:run(myApp.otherscenes.myaccount.functionname.getpolicies,
             {
              ["userId"] = myApp.authentication.objectId 
              },

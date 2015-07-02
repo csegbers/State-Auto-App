@@ -16,6 +16,7 @@ print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
 local sceneparams
 local sceneid
+local sceneinfo
 local container
 local myList
 local runit  
@@ -28,6 +29,7 @@ local myObject     -- response object from the services call or nil if no hit or
 local objectgroup -- pointer to the mappings stuff
 local curitemGrpy  
 local curmyListy 
+
 
 ------------------------------------------------------
 -- Row is rendered
@@ -42,19 +44,19 @@ local  onRowRender = function ( event )
 
          if ( event.row.params ) then    
  
-            row.titleText = display.newText( myApp.objecttypes[params.fieldtype].title, 0, 0, myApp.fontBold, myApp.locatedetails.row.titletextfontsize )
+            row.titleText = display.newText( myApp.objecttypes[params.fieldtype].title, 0, 0, myApp.fontBold, sceneinfo.row.titletextfontsize )
             row.titleText.anchorX = 0
             row.titleText.anchorY = 0.5
-            row.titleText:setFillColor( myApp.locatedetails.row.titletextcolor )
-            row.titleText.y = myApp.locatedetails.row.titletexty
-            row.titleText.x = myApp.locatedetails.row.titletextx
+            row.titleText:setFillColor( sceneinfo.row.titletextcolor )
+            row.titleText.y = sceneinfo.row.titletexty
+            row.titleText.x = sceneinfo.row.titletextx
 
-            row.descText = display.newText( params.value, 0, 0, myApp.fontBold, myApp.locatedetails.row.desctextfontsize )
+            row.descText = display.newText( params.value, 0, 0, myApp.fontBold, sceneinfo.row.desctextfontsize )
             row.descText.anchorX = 0
             row.descText.anchorY = 0.5
-            row.descText:setFillColor( myApp.locatedetails.row.desctextColor )
-            row.descText.y = myApp.locatedetails.row.desctexty
-            row.descText.x = myApp.locatedetails.row.desctextx
+            row.descText:setFillColor( sceneinfo.row.desctextColor )
+            row.descText.y = sceneinfo.row.desctexty
+            row.descText.x = sceneinfo.row.desctextx
 
 
             row:insert( row.titleText )
@@ -66,10 +68,10 @@ local  onRowRender = function ( event )
 
             local iconimage = myApp.objecttypes[params.fieldtype].pic
             if iconimage then
-                 row.myIcon = display.newImageRect(myApp.imgfld .. iconimage,  myApp.locatedetails.row.iconwidth , myApp.locatedetails.row.iconheight )
-                 common.fitImage( row.myIcon,  myApp.locatedetails.row.iconwidth   )
-                 row.myIcon.y = myApp.locatedetails.row.height / 2
-                 row.myIcon.x = myApp.locatedetails.row.iconwidth/2 + myApp.locatedetails.edge
+                 row.myIcon = display.newImageRect(myApp.imgfld .. iconimage,  sceneinfo.row.iconwidth , sceneinfo.row.iconheight )
+                 common.fitImage( row.myIcon,  sceneinfo.row.iconwidth   )
+                 row.myIcon.y = sceneinfo.row.height / 2
+                 row.myIcon.x = sceneinfo.row.iconwidth/2 + sceneinfo.edge
                  row:insert( row.myIcon )
             end
 
@@ -180,19 +182,19 @@ local function buildMap( event )
           if  myObject[objectgroup.mapping.geo]  then
               native.setActivityIndicator( true ) 
 
-              local mapheight = myApp.sceneHeight-myList.height-itemGrp.height-myApp.locatedetails.edge*2
-              myMap = native.newMapView( 0, 0, myApp.sceneWidth-myApp.locatedetails.edge , mapheight  )   -- cause
+              local mapheight = myApp.sceneHeight-myList.height-itemGrp.height-sceneinfo.edge*2
+              myMap = native.newMapView( 0, 0, myApp.sceneWidth-sceneinfo.edge , mapheight  )   -- cause
               if myMap then
-                 myMap.mapType = myApp.locatedetails.map.type -- other mapType options are "satellite" or "hybrid"
+                 myMap.mapType = sceneinfo.map.type -- other mapType options are "satellite" or "hybrid"
 
               -- The MapView is just another Corona display object, and can be moved or rotated, etc.
                  myMap.x = myApp.cCx
-                 myMap.y = myApp.sceneStartTop + itemGrp.height  + myApp.locatedetails.edge+ mapheight/2 + myApp.locatedetails.edge/2
+                 myMap.y = myApp.sceneStartTop + itemGrp.height  + sceneinfo.edge+ mapheight/2 + sceneinfo.edge/2
 
                  
                  if myObject[objectgroup.mapping.geo].latitude and myObject[objectgroup.mapping.geo].longitude then
                     myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, false )
-                    myMap:setRegion( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, myApp.locatedetails.map.latitudespan, myApp.locatedetails.map.longitudespan, false)
+                    myMap:setRegion( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude, sceneinfo.map.latitudespan, sceneinfo.map.longitudespan, false)
 
                     local options = { 
                               title=myObject[objectgroup.mapping.name], 
@@ -220,66 +222,66 @@ function scene:create(event)
     local group = self.view
     sceneparams = event.params            
      
-     container  = common.SceneContainer()
-     group:insert(container )
+     -- container  = common.SceneContainer()
+     -- group:insert(container )
 
-     ---------------------------------------------
-     -- Header group
-     -- text gets set in Show evvent
-     ---------------------------------------------
+     -- ---------------------------------------------
+     -- -- Header group
+     -- -- text gets set in Show evvent
+     -- ---------------------------------------------
 
-     itemGrp = display.newGroup(  )
-     local startX = 0
-     local startY = 0 -myApp.cH/2 + myApp.locatedetails.groupheight/2  + myApp.sceneStartTop
+     -- itemGrp = display.newGroup(  )
+     -- local startX = 0
+     -- local startY = 0 -myApp.cH/2 + myApp.locatedetails.groupheight/2  + myApp.sceneStartTop
 
-     local groupwidth = myApp.sceneWidth-myApp.locatedetails.edge
-     local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsize})
+     -- local groupwidth = myApp.sceneWidth-myApp.locatedetails.edge
+     -- local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsize})
 
-     local textHeightSingleLine = dumText.height
+     -- local textHeightSingleLine = dumText.height
      
-     -------------------------------------------------
-     -- Background
-     -------------------------------------------------
-     local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locatedetails.groupstrokewidth*2,myApp.locatedetails.groupheight, myApp.locatedetails.cornerradius )
-     myRoundedRect:setFillColor(myApp.locatedetails.groupbackground.r,myApp.locatedetails.groupbackground.g,myApp.locatedetails.groupbackground.b,myApp.locatedetails.groupbackground.a )
-     itemGrp:insert(myRoundedRect)
+     -- -------------------------------------------------
+     -- -- Background
+     -- -------------------------------------------------
+     -- local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-myApp.locatedetails.groupstrokewidth*2,myApp.locatedetails.groupheight, myApp.locatedetails.cornerradius )
+     -- myRoundedRect:setFillColor(myApp.locatedetails.groupbackground.r,myApp.locatedetails.groupbackground.g,myApp.locatedetails.groupbackground.b,myApp.locatedetails.groupbackground.a )
+     -- itemGrp:insert(myRoundedRect)
 
-     local startYother = startY- myApp.locatedetails.groupheight/2  
+     -- local startYother = startY- myApp.locatedetails.groupheight/2  
 
-     -------------------------------------------------
-     -- Name text - will be set in show
-     -------------------------------------------------
-     myName = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-myApp.locatedetails.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsize,align="left" })
-     --myName.y=myRoundedRect.y --startYother+myApp.locatedetails.groupheight - (myName.height) -  myApp.locatedetails.textbottomedge
-     myName.anchorY = 0
-     myName.y = myRoundedRect.y - myRoundedRect.height/2 + myApp.locatedetails.edge/2
-     myName:setFillColor( myApp.locatedetails.textcolor.r,myApp.locatedetails.textcolor.g,myApp.locatedetails.textcolor.b,myApp.locatedetails.textcolor.a )
-     itemGrp:insert(myName)
+     -- -------------------------------------------------
+     -- -- Name text - will be set in show
+     -- -------------------------------------------------
+     -- myName = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-myApp.locatedetails.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsize,align="left" })
+     -- --myName.y=myRoundedRect.y --startYother+myApp.locatedetails.groupheight - (myName.height) -  myApp.locatedetails.textbottomedge
+     -- myName.anchorY = 0
+     -- myName.y = myRoundedRect.y - myRoundedRect.height/2 + myApp.locatedetails.edge/2
+     -- myName:setFillColor( myApp.locatedetails.textcolor.r,myApp.locatedetails.textcolor.g,myApp.locatedetails.textcolor.b,myApp.locatedetails.textcolor.a )
+     -- itemGrp:insert(myName)
 
-     -------------------------------------------------
-     -- address text - will be set in show
-     -------------------------------------------------
-     myAddress = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-myApp.locatedetails.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsizeaddress,align="left" })
-     myAddress.anchorY = 0
-     myAddress.y = 0 -- myRoundedRect.y - myRoundedRect.height/2 + myApp.locatedetails.edge/2
-     myAddress:setFillColor( myApp.locatedetails.textcoloraddress.r,myApp.locatedetails.textcoloraddress.g,myApp.locatedetails.textcoloraddress.b,myApp.locatedetails.textcoloraddress.a )
-     itemGrp:insert(myAddress)
+     -- -------------------------------------------------
+     -- -- address text - will be set in show
+     -- -------------------------------------------------
+     -- myAddress = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-myApp.locatedetails.edge*2 ,font= myApp.fontBold, fontSize=myApp.locatedetails.textfontsizeaddress,align="left" })
+     -- myAddress.anchorY = 0
+     -- myAddress.y = 0 -- myRoundedRect.y - myRoundedRect.height/2 + myApp.locatedetails.edge/2
+     -- myAddress:setFillColor( myApp.locatedetails.textcoloraddress.r,myApp.locatedetails.textcoloraddress.g,myApp.locatedetails.textcoloraddress.b,myApp.locatedetails.textcoloraddress.a )
+     -- itemGrp:insert(myAddress)
 
-     container:insert(itemGrp)
+     -- container:insert(itemGrp)
 
-     ------------------------------------------------------
-     -- Table View
-     ------------------------------------------------------
-     myList = widget.newTableView {
-           x=0,
-           y= myApp.cH/2 -  myApp.locatedetails.tableheight/2 - myApp.tabs.tabBarHeight-myApp.locatedetails.edge, 
-           width = myApp.sceneWidth-myApp.locatedetails.edge, 
-           height = myApp.locatedetails.tableheight,
-           onRowRender = onRowRender,
-           onRowTouch = onRowTouch,
-           listener = scrollListener,
-        }
-     container:insert(myList )
+     -- ------------------------------------------------------
+     -- -- Table View
+     -- ------------------------------------------------------
+     -- myList = widget.newTableView {
+     --       x=0,
+     --       y= myApp.cH/2 -  myApp.locatedetails.tableheight/2 - myApp.tabs.tabBarHeight-myApp.locatedetails.edge, 
+     --       width = myApp.sceneWidth-myApp.locatedetails.edge, 
+     --       height = myApp.locatedetails.tableheight,
+     --       onRowRender = onRowRender,
+     --       onRowTouch = onRowTouch,
+     --       listener = scrollListener,
+     --    }
+     -- container:insert(myList )
 
 
 
@@ -312,27 +314,105 @@ function scene:show( event )
              end
           end
         end
-        ------------------------------------------------
-        -- clear thing out for this luanhc
-        ------------------------------------------------
-        if (runit or justcreated) then 
-            myObject = nil
-            myName.text = ""  
-            myAddress.text = ""  
-            myList:deleteAllRows()
-            if myApp.locatedetails.animation then
-               curitemGrpy = itemGrp.y
-               curmyListy = myList.y
-               itemGrp.y = itemGrp.y - itemGrp.height
-               myList.y = myList.y + myList.height
-            end
-        end
+
         ----------------------------
         -- now go ahead
         --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ------------------------------
         sceneparams = event.params  
         sceneid = sceneparams.navigation.composer.id       --- new field otherwise it is a refernce and some calls here send a reference so comparing id's is useless         
+        sceneinfo = myApp.locatedetails
+        if sceneparams.objectexisting then
+           sceneinfo =  myApp.otherscenes[sceneparams.objectexisting]  
+        end
+
+        ------------------------------------------------
+        -- clear thing out for this luanhc
+        ------------------------------------------------
+        if (runit or justcreated) then 
+
+
+             display.remove( container )           -- wont exist initially no biggie
+             container = nil
+
+             display.remove( myList )           -- wont exist initially no biggie
+             myList = nil
+
+             container  = common.SceneContainer()
+             group:insert(container )
+
+             ---------------------------------------------
+             -- Header group
+             -- text gets set in Show evvent
+             ---------------------------------------------
+
+             itemGrp = display.newGroup(  )
+             local startX = 0
+             local startY = 0 -myApp.cH/2 + sceneinfo.groupheight/2  + myApp.sceneStartTop
+
+             local groupwidth = myApp.sceneWidth-sceneinfo.edge
+             local dumText = display.newText( {text="X",font= myApp.fontBold, fontSize=sceneinfo.textfontsize})
+
+             local textHeightSingleLine = dumText.height
+             
+             -------------------------------------------------
+             -- Background
+             -------------------------------------------------
+             local myRoundedRect = display.newRoundedRect(startX, startY , groupwidth-sceneinfo.groupstrokewidth*2,sceneinfo.groupheight, sceneinfo.cornerradius )
+             myRoundedRect:setFillColor(sceneinfo.groupbackground.r,sceneinfo.groupbackground.g,sceneinfo.groupbackground.b,sceneinfo.groupbackground.a )
+             itemGrp:insert(myRoundedRect)
+
+             local startYother = startY- sceneinfo.groupheight/2  
+
+             -------------------------------------------------
+             -- Name text - will be set in show
+             -------------------------------------------------
+             myName = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-sceneinfo.edge*2 ,font= myApp.fontBold, fontSize=sceneinfo.textfontsize,align="left" })
+             --myName.y=myRoundedRect.y --startYother+sceneinfo.groupheight - (myName.height) -  sceneinfo.textbottomedge
+             myName.anchorY = 0
+             myName.y = myRoundedRect.y - myRoundedRect.height/2 + sceneinfo.edge/2
+             myName:setFillColor( sceneinfo.textcolor.r,sceneinfo.textcolor.g,sceneinfo.textcolor.b,sceneinfo.textcolor.a )
+             itemGrp:insert(myName)
+
+             -------------------------------------------------
+             -- address text - will be set in show
+             -------------------------------------------------
+             myAddress = display.newText( {text="", x=startX , y=0, height=0,width=groupwidth-sceneinfo.edge*2 ,font= myApp.fontBold, fontSize=sceneinfo.textfontsizeaddress,align="left" })
+             myAddress.anchorY = 0
+             myAddress.y = 0 -- myRoundedRect.y - myRoundedRect.height/2 + sceneinfo.edge/2
+             myAddress:setFillColor( sceneinfo.textcoloraddress.r,sceneinfo.textcoloraddress.g,sceneinfo.textcoloraddress.b,sceneinfo.textcoloraddress.a )
+             itemGrp:insert(myAddress)
+
+             container:insert(itemGrp)
+
+             ------------------------------------------------------
+             -- Table View
+             ------------------------------------------------------
+             myList = widget.newTableView {
+                   x=0,
+                   y= myApp.cH/2 -  sceneinfo.tableheight/2 - myApp.tabs.tabBarHeight-sceneinfo.edge, 
+                   width = myApp.sceneWidth-sceneinfo.edge, 
+                   height = sceneinfo.tableheight,
+                   onRowRender = onRowRender,
+                   onRowTouch = onRowTouch,
+                   listener = scrollListener,
+                }
+             container:insert(myList )
+
+
+
+
+            myObject = nil
+            --myName.text = ""  
+            --myAddress.text = ""  
+            --myList:deleteAllRows()    -- really not needed
+            if sceneinfo.animation then
+               curitemGrpy = itemGrp.y
+               curmyListy = myList.y
+               itemGrp.y = itemGrp.y - itemGrp.height
+               myList.y = myList.y + myList.height
+            end
+        end
 
     ----------------------------------
     -- Did Show
@@ -359,9 +439,9 @@ function scene:show( event )
                 myName.text = (myObject[objectgroup.mapping.name] or "") 
                 myAddress.text = (myObject[objectgroup.mapping.street] or "") .. "\n" .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "") .. " " .. (myObject[objectgroup.mapping.zip] or "") 
                 myAddress.y = myName.y+ myName.height  
-                if myApp.locatedetails.animation then
-                    transition.to(  itemGrp, { time=myApp.locatedetails.animationtime, y = curitemGrpy , transition=easing.outQuint})
-                    transition.to(  myList, { time=myApp.locatedetails.animationtime, y = curmyListy , transition=easing.outQuint})
+                if sceneinfo.animation then
+                    transition.to(  itemGrp, { time=sceneinfo.animationtime, y = curitemGrpy , transition=easing.outQuint})
+                    transition.to(  myList, { time=sceneinfo.animationtime, y = curmyListy , transition=easing.outQuint})
                 end
 
                 ---------------------------------------------
@@ -377,10 +457,10 @@ function scene:show( event )
                 local insertObject = function ( rowparms )
                       haveitems = true
                       myList:insertRow{
-                        rowHeight = myApp.locatedetails.row.height,
+                        rowHeight = sceneinfo.row.height,
                         isCategory = false,
-                        rowColor = myApp.locatedetails.row.rowColor,
-                        lineColor = myApp.locatedetails.row.lineColor,
+                        rowColor = sceneinfo.row.rowColor,
+                        lineColor = sceneinfo.row.lineColor,
 
                         params = rowparms, --{
                                     -- fieldtype = rowparms.fieldtype,  -- will point to object table
@@ -392,7 +472,7 @@ function scene:show( event )
                 ---------------------------------------------
                 -- Generate a get directions row ?
                 --------------------------------------------- 
-                if myApp.locatedetails.row.includedirections and myObject[objectgroup.mapping.street] then
+                if sceneinfo.row.includedirections and myObject[objectgroup.mapping.street] then
                    local address = (myObject[objectgroup.mapping.street] or "") .. " " .. (myObject[objectgroup.mapping.city] or "") .. ", " .. (myObject[objectgroup.mapping.state] or "")   --.. " " .. (myObject[objectgroup.mapping.zip] or ""
                    local addresswithzip = address .. " " .. (myObject[objectgroup.mapping.zip] or "")
                    insertObject({
@@ -410,7 +490,9 @@ function scene:show( event )
                     -- is the field there  in the response?
                     ---------------------------
                     if myObject[objectgroup.launchobjects[k].field] then  
-                       insertObject({fieldtype = objectgroup.launchobjects[k].type,value = myObject[objectgroup.launchobjects[k].field], })
+                       local fieldval = myObject[objectgroup.launchobjects[k].field]
+                       if objectgroup.launchobjects[k].type == "phone" then fieldval = common.phoneformat(fieldval) end
+                       insertObject({fieldtype = objectgroup.launchobjects[k].type,  value = fieldval, })
                     end   -- does field exist
                 end   --loop
 

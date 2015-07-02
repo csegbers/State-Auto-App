@@ -513,10 +513,11 @@ function myApp.navigationCommon(parms)
                       url = "tel:" .. digitsonly
                       if myApp.promptforphonecalls then
                            -- Show alert with two buttons
-                          local disphone = ("(" .. string.sub(digitsonly, 1,3) .. ") " .. string.sub(digitsonly, 4,6) .. "-" .. string.sub(digitsonly, 7) )
-                          if string.len( digitsonly) ~= 10 then
-                            disphone = digitsonly
-                          end
+                          -- local disphone = ("(" .. string.sub(digitsonly, 1,3) .. ") " .. string.sub(digitsonly, 4,6) .. "-" .. string.sub(digitsonly, 7) )
+                          -- if string.len( digitsonly) ~= 10 then
+                          --   disphone = digitsonly
+                          -- end
+                          local disphone = common.phoneformat(digitsonly)
                           native.showAlert( myApp.appName, "Call " .. disphone .. " ?" , { "OK", "Cancel" },  function( event ) if event.action == "clicked" then   local i = event.index if i == 2 then dothenavigation = false end goUrl() end end)
                      else
                           goUrl()

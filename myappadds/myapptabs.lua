@@ -33,7 +33,7 @@ local tabs = {
                                                htmlinfo = {},
                                                scrollblockinfo = { },
                                              },
-                        navigation = { composer = { id = "account",lua="account" ,time=250, effect="slideDown" },},
+                        navigation = { composer = { id = "myaccount",lua="account" ,time=250, effect="crossFade" },},
                     },
 
           zdebug = {

@@ -17,6 +17,13 @@ local M = { }
 --    return t2
 -- end
 
+function M.phoneformat(str)
+   local digitsonly = (string.gsub( str, "[^0-9]", "" )  or "")
+   local disphone = ("(" .. string.sub(digitsonly, 1,3) .. ") " .. string.sub(digitsonly, 4,6) .. "-" .. string.sub(digitsonly, 7) )
+   if string.len( digitsonly) ~= 10 then  disphone = digitsonly end
+   return disphone
+end
+
 function M.urlencode(str)
    if (str) then
       str = string.gsub (str, "\n", "\r\n")
