@@ -7,6 +7,7 @@ local M = {
             appName = "State Auto Insured App" ,
             appNameSmall = "Insured App" ,
             tabMyAgentKey = "",     -- will be key of myagent if used
+            tabMyAccountKey = "",     -- will be key of myaccount if used
             tabCurrentKey = "",     -- will change as we tab
             urlScheme = "rockhillapp",
             cW = display.contentWidth,

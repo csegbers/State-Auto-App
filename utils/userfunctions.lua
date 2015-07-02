@@ -29,10 +29,15 @@ function myApp.fncUserUpdatePolicies ()
                      
                     for i = 1, #e.response.result do
                         local resgroup = e.response.result[i][1]
-                        myApp.authentication.policies[resgroup["policyNumber"]] = resgroup
+                        --myApp.authentication.policies[resgroup["policyNumber"]] = resgroup
+                        myApp.authentication.policies[resgroup["policyNumber"]] = {}
+                        myApp.authentication.policies[resgroup["policyNumber"]].policyTerms = {}
                         print("policy Number" .. resgroup["policyNumber"])
                         if #resgroup.policyTerms[1] > 0 then
                             myApp.authentication.agencycode = resgroup.policyTerms[1][1].agencyCode or ""
+                            for pt = 1, #resgroup.policyTerms[1]  do
+                                table.insert (myApp.authentication.policies[resgroup["policyNumber"]].policyTerms, pt, resgroup.policyTerms[1][pt])
+                            end
                        end
                     end
                     Runtime:dispatchEvent{ name="policieschanged", value=myApp.authentication.loggedin }

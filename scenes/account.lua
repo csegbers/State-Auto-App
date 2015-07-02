@@ -19,6 +19,7 @@ local container
 local scrollView
 local justcreated  
 local runit  
+ 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
 --
@@ -35,6 +36,7 @@ function scene:show( event )
     local group = self.view
     local phase = event.phase
     print ("Show:" .. phase.. " " .. currScene)
+    sbi = myApp.otherscenes.myaccount 
 
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
@@ -62,7 +64,7 @@ function scene:show( event )
         sceneparams = event.params or {}
         sceneid = sceneparams.navigation.composer.id       --- new field otherwise it is a refernce and some calls here send a reference so comparing id's is useless         
 
-        sbi = myApp.otherscenes.myaccount 
+        
        --debugpopup (sceneparams.sceneinfo.scrollblockinfo.navigate)
 
         if (runit or justcreated) then 
@@ -151,8 +153,9 @@ function scene:show( event )
 
              for k,v in pairs(myApp.authentication.policies) do 
                     local polgroup = myApp.authentication.policies[k]
- 
-                    print ("account page item " .. k)
+                    local polcurrentterm = polgroup.policyTerms[1]    -- should be the current term as the rest service sorrted and we instered in order
+                    
+                    print ("account page item " .. k .. polcurrentterm.policyInsuredName)
  
                      --------------------------------------
                      -- need to start a new row ?
@@ -201,26 +204,31 @@ function scene:show( event )
                      -------------------------------------------------
                      -- Header text
                      -------------------------------------------------
-                     local myText = display.newText( (k), startX, startYother,  myApp.fontBold, sbi.headerfontsize )
+                     local myText = display.newText( (polcurrentterm.policyType or ""), startX, startYother,  myApp.fontBold, sbi.headerfontsize )
                      myText:setFillColor( sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b,sbi.headercolor.a )
                      itemGrp:insert(myText)
 
                      -------------------------------------------------
-                     -- Icon ?
+                     -- Lob image ?
                      -------------------------------------------------
-                     -- if v.pic then
-                     --     local myIcon = display.newImageRect(myApp.imgfld .. v.pic, v.originaliconwidth or sbi.iconwidth ,v.originaliconheight or sbi.iconheight )
-                     --     common.fitImage( myIcon, v.iconwidth or sbi.iconwidth   )
-                     --     myIcon.x = startX
-                     --     myIcon.y = startYother + itemGrp.height/2 - 10 --- sbi.iconwidth
-                     --     itemGrp:insert(myIcon)
-                     -- end
+                     local lob = string.lower( (polcurrentterm.policyLOB or "") )
+                     local lobimage  =  sbi.lobimages[lob]
+                     if lobimage == nil then
+                        lobimage  =  sbi.lobimages.default
+                     end
+                     if lobimage then
+                         local myIcon = display.newImageRect(myApp.imgfld .. lobimage,  sbi.iconwidth , sbi.iconheight )
+                         common.fitImage( myIcon,   sbi.iconwidth   )
+                         myIcon.x = startX - cellgroupwidth/2 + myIcon.width/2  
+                         myIcon.y = startYother  + myIcon.height/2  - sbi.groupheaderheight / 2
+                         itemGrp:insert(myIcon)
+                     end
 
                      -------------------------------------------------
                      -- Desc text
                      -------------------------------------------------
                      
-                     local myDesc = display.newText( {text=("xxx"), x=startX, y=0, height=0,width=cellgroupwidth-5 ,font= myApp.fontBold, fontSize=sbi.textfontsize,align="center" })
+                     local myDesc = display.newText( {text=(polcurrentterm.policyInsuredName or ""), x=startX, y=0, height=0,width=cellgroupwidth-5 ,font= myApp.fontBold, fontSize=sbi.textfontsize,align="center" })
                      myDesc.y=startYother+groupheight - (myDesc.height/2) - sbi.textbottomedge
                      myDesc:setFillColor( sbi.textcolor.r,sbi.textcolor.g,sbi.textcolor.b,sbi.textcolor.a )
                      itemGrp:insert(myDesc)
@@ -249,6 +257,28 @@ function scene:show( event )
               -- stick in a buffer for the scroll
               ----------------------------------------------
                scrollView:insert(display.newRoundedRect(1, (sbi.groupbetween*(row+1)) + row*sbi.groupheight ,1, sbi.groupbetween, 1 ))
+               
+             ---------------------------------------------
+             -- Use Current Location button
+             ---------------------------------------------
+              curlocButton = widget.newButton {
+                    shape=sbi.shape,
+                    fillColor = { default={ sbi.groupheader.r, sbi.groupheader.g, sbi.groupheader.b, sbi.btndefaultcoloralpha}, over={ sbi.groupheader.r, sbi.groupheader.g, sbi.groupheader.b, sbi.btnovercoloralpha } },
+                    label = sbi.addpolicybtntext,
+                    labelColor = { default={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b }, over={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b, .75 } },
+                    fontSize = sbi.headerfontsize,
+                    font = myApp.fontBold,
+                    width = 100,
+                    height = sbi.btnheight,
+                    x = 10,
+                    y = 100 + 30 + sbi.btnheight /2 + 30,
+                    --onRelease = function() 
+                            --        myApp.getCurrentLocation({callback=curlocReleaseback}) 
+                             --   end,
+                  }
+               container:insert(curlocButton)
+
+
                print ("end of will show")
         end -- runit ?
        

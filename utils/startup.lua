@@ -174,7 +174,8 @@ function  myApp.evtagencieschanged( event )
      -- generate new id so the scene will refresh itself if has already been run for the myagent
      -- if never run, no biggie
      ----------------------------
-     myApp.tabs.btns[myApp.tabMyAgentKey].navigation.composer.id = os.date( '*t' )  
+
+     myApp.tabs.btns[myApp.tabMyAgentKey].navigation.composer.id = tostring(math.random(10000)) 
      
      ------------------------------
      -- are we on this tab currently ? including drill down scenes
@@ -187,6 +188,31 @@ function  myApp.evtagencieschanged( event )
 
 end
 Runtime:addEventListener( "agencieschanged", myApp.evtagencieschanged )
+
+
+-------------------------------------
+-- policies changes ?
+---------------------------------------
+function  myApp.evtpolicieschanged( event )
+
+  if (myApp.tabMyAccountKey or "") ~= "" then 
+     ----------------------------
+     -- generate new id so the scene will refresh itself if has already been run for the myagent
+     -- if never run, no biggie
+     ----------------------------
+     myApp.tabs.btns[myApp.tabMyAccountKey].navigation.composer.id = tostring(math.random(10000))  
+     
+     ------------------------------
+     -- are we on this tab currently ? including drill down scenes
+     -- start over on the tab
+     ----------------------------
+     if myApp.tabCurrentKey == myApp.tabMyAccountKey then
+        myApp.showScreen({instructions=myApp.tabs.btns[myApp.tabMyAccountKey]})
+     end 
+  end
+
+end
+Runtime:addEventListener( "policieschanged", myApp.evtpolicieschanged )
 
 --------------------------------------
 -- log me out ?

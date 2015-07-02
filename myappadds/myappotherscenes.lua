@@ -204,7 +204,7 @@ local otherscenes = {
                                          },
                             groupwidth = 240,
                             groupmaxwidth = 320,     -- we will allow to grow to fit better if there is extra edging. This would be max however
-                            groupheight = 140,
+                            groupheight = 120,
                             groupheaderheight = 30,
                             groupbetween = 10,
                             groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
@@ -216,6 +216,17 @@ local otherscenes = {
                             textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
                             textfontsize=12   ,       
                             textbottomedge =12   , 
+                            shape="roundedRect",
+                            addpolicybtntext = "Add A Policy To Your Account",
+                            btndefaultcoloralpha = 0.7,
+                            btnovercoloralpha = 0.3,
+                            btnheight = 35,
+                            lobimages = {
+                                           default = "lobdefault.png",
+                                           home = "lobhome.png",            -- keep lower case !!!
+                                           autop = "lobautop.png",
+                                           pumbr = "lobpumbr.png",
+                                       },
 
                         },
               myagent = {    

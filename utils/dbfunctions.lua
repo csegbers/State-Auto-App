@@ -77,6 +77,7 @@ function myApp.fncCCDBFlushUpdates()
           local defsetup = [[Update ]] .. parms.table .. [[ set ]] ..upstr.. [[ where ]] .. parms.key .. [[ = ]] .. parms.defrec .. [[;]] -- 1 record
           myApp.mydb.dbref:exec( defsetup )
           if myApp.mydb.dbref:errcode() ~= 0 then 
+             parse:logEvent( "Error", { ["name"] = "dbupdate",["errorcode"] = myApp.mydb.dbref:errcode() ,["errormessage"] = myApp.mydb.dbref:errmsg() } )
              native.showAlert( "Error Saving User Defaults",("Write User Defaults Failed - Reason failed: " .. myApp.mydb.dbref:errcode() .. "-" .. myApp.mydb.dbref:errmsg()),{ "OK" })
           end
         end   -- if upstr 

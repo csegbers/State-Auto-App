@@ -104,6 +104,8 @@ local function addtabBtn(tkey)
         if btnrntry.objectexisting  then
             if btnrntry.objectexisting == "myagent" then
                 myApp.tabMyAgentKey = tkey
+            elseif btnrntry.objectexisting == "myaccount" then
+                myApp.tabMyAccountKey = tkey
             end
         end
 

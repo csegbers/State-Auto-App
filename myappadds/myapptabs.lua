@@ -29,6 +29,8 @@ local tabs = {
                     },
           caccount = {
                         label="My Account",  title="My Account" ,def="account.png",over="account-down.png",
+                         objecttype = "",  -- not used
+                         objectexisting = "myaccount",
                          sceneinfo = { 
                                                htmlinfo = {},
                                                scrollblockinfo = { },
