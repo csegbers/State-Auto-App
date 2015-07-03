@@ -24,6 +24,23 @@ function M.phoneformat(str)
    return disphone
 end
 
+function M.dateDisplayFromIso(isoString)
+    --then = makeTimeStamp("2013-01-01T00:00:00Z")
+   --                       2015-12-08T10:08:00.000Z
+ -- print ("iso date " .. isoString)
+ --    local pattern = "(%d+)%-(%d+)%-(%d+)%a(%d+)%:(%d+)%:([%d%.]+)([Z%p])(%d%d)%:?(%d%d)"
+ --    local year, month, day, hour, minute, seconds, tzoffset, offsethour, offsetmin =
+ --      isoString:match( pattern )
+ --      print ("iso date day " .. day)
+ --    local convertedTimestamp = os.time({year = year, month = month, 
+ --        day = day, hour = hour, min = minute, sec = seconds})
+ 
+     local pattern = "(%d+)%-(%d+)%-(%d+)"
+     local year, month, day  = isoString:match( pattern )
+     local convertedTimestamp = os.time({year = year, month = month, day = day })
+     return os.date("%m/%d/%Y",convertedTimestamp)
+end
+
 function M.urlencode(str)
    if (str) then
       str = string.gsub (str, "\n", "\r\n")

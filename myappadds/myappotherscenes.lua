@@ -213,11 +213,28 @@ local otherscenes = {
                             iconheight = 60,   -- can be overidden in item
                             headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
                             headerfontsize = 15,  
-                            textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
-                            textfontsize=12   ,       
-                            textbottomedge =12   , 
+                            textbottomedge =12  ,
+
+
+                            textalignx = 70, 
+
+                            policytextcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                            policytextfontsize=12   ,       
+                            policytextlabel = "Policy Number: ",
+
+
+                            nametextcolor = { r=140/255, g=130/255, b=30/255, a=1 },   
+                            nametextfontsize=15   ,       
+
+
+                            termtextcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                            termtextfontsize=12   ,       
+ 
+                            termtextlabel = "Coverage From: ",
+
+
                             shape="roundedRect",
-                            addpolicybtntext = "Add A Policy To Your Account",
+                            addpolicybtntext = "+ Add A Policy To Your Account",
                             btndefaultcoloralpha = 0.7,
                             btnovercoloralpha = 0.3,
                             btnheight = 35,

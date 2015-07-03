@@ -85,9 +85,9 @@ function scene:show( event )
             scrollView = widget.newScrollView
                 {
                     x = 0,
-                    y = 0,
+                    y = 0 - sbi.btnheight/2 - sbi.groupbetween/2,
                     width = myApp.sceneWidth, 
-                    height =  myApp.sceneHeight,
+                    height =  myApp.sceneHeight - sbi.btnheight - sbi.groupbetween,
                     listener = scrollListener,
                     horizontalScrollDisabled = true,
                     hideBackground = true,
@@ -204,8 +204,10 @@ function scene:show( event )
                      -------------------------------------------------
                      -- Header text
                      -------------------------------------------------
-                     local myText = display.newText( (polcurrentterm.policyType or ""), startX, startYother,  myApp.fontBold, sbi.headerfontsize )
+                     local myText = display.newText( (polcurrentterm.policyType or ""), 0, startYother,  myApp.fontBold, sbi.headerfontsize )
                      myText:setFillColor( sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b,sbi.headercolor.a )
+                     myText.anchorX = 0
+                     myText.x=sbi.textalignx
                      itemGrp:insert(myText)
 
                      -------------------------------------------------
@@ -224,14 +226,47 @@ function scene:show( event )
                          itemGrp:insert(myIcon)
                      end
 
+
+                     local textwidth = cellgroupwidth  -sbi.textalignx + 5
                      -------------------------------------------------
-                     -- Desc text
+                     -- Insured Name
                      -------------------------------------------------
                      
-                     local myDesc = display.newText( {text=(polcurrentterm.policyInsuredName or ""), x=startX, y=0, height=0,width=cellgroupwidth-5 ,font= myApp.fontBold, fontSize=sbi.textfontsize,align="center" })
-                     myDesc.y=startYother+groupheight - (myDesc.height/2) - sbi.textbottomedge
-                     myDesc:setFillColor( sbi.textcolor.r,sbi.textcolor.g,sbi.textcolor.b,sbi.textcolor.a )
-                     itemGrp:insert(myDesc)
+                     local myName = display.newText( {text=(polcurrentterm.policyInsuredName or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.nametextfontsize,align="left" })
+                     myName:setFillColor( sbi.nametextcolor.r,sbi.nametextcolor.g,sbi.nametextcolor.b,sbi.nametextcolor.a )
+                     myName.anchorX = 0
+                     myName.anchorY = 0.5
+                     myName.x=sbi.textalignx
+                     myName.y=startYother + sbi.groupheaderheight  + 5
+                     itemGrp:insert(myName)
+
+
+                     -------------------------------------------------
+                     -- POlicy Number 
+                     -------------------------------------------------
+                     
+                     local myPolicy = display.newText( {text=sbi.policytextlabel .. (polcurrentterm.policyNumber or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.policytextfontsize,align="left" })
+                     myPolicy:setFillColor( sbi.policytextcolor.r,sbi.policytextcolor.g,sbi.policytextcolor.b,sbi.policytextcolor.a )
+                     myPolicy.anchorX = 0
+                     myPolicy.anchorY = 0.5
+                     myPolicy.x=sbi.textalignx
+                     myPolicy.y=myName.y + myName.height  
+                     itemGrp:insert(myPolicy)
+
+
+                     -------------------------------------------------
+                     -- Terms
+                     -------------------------------------------------
+                     local effdate = common.dateDisplayFromIso(polcurrentterm.effDate.iso)
+                     local expdate = common.dateDisplayFromIso(polcurrentterm.expDate.iso)
+                     
+                     local myTerm = display.newText( {text=sbi.termtextlabel .. (effdate or "") .. " To " .. (expdate or "") , x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.termtextfontsize,align="left" })
+                     myTerm:setFillColor( sbi.termtextcolor.r,sbi.termtextcolor.g,sbi.termtextcolor.b,sbi.termtextcolor.a )
+                     myTerm.anchorX = 0
+                     myTerm.anchorY = 0.5
+                     myTerm.x=sbi.textalignx
+                     myTerm.y=myPolicy.y + myPolicy.height 
+                     itemGrp:insert(myTerm)
 
                      -------------------------------------------------
                      -- Add touch event
@@ -258,25 +293,27 @@ function scene:show( event )
               ----------------------------------------------
                scrollView:insert(display.newRoundedRect(1, (sbi.groupbetween*(row+1)) + row*sbi.groupheight ,1, sbi.groupbetween, 1 ))
                
-             ---------------------------------------------
-             -- Use Current Location button
-             ---------------------------------------------
-              curlocButton = widget.newButton {
-                    shape=sbi.shape,
-                    fillColor = { default={ sbi.groupheader.r, sbi.groupheader.g, sbi.groupheader.b, sbi.btndefaultcoloralpha}, over={ sbi.groupheader.r, sbi.groupheader.g, sbi.groupheader.b, sbi.btnovercoloralpha } },
-                    label = sbi.addpolicybtntext,
-                    labelColor = { default={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b }, over={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b, .75 } },
-                    fontSize = sbi.headerfontsize,
-                    font = myApp.fontBold,
-                    width = 100,
-                    height = sbi.btnheight,
-                    x = 10,
-                    y = 100 + 30 + sbi.btnheight /2 + 30,
-                    --onRelease = function() 
-                            --        myApp.getCurrentLocation({callback=curlocReleaseback}) 
-                             --   end,
-                  }
-               container:insert(curlocButton)
+             if myApp.authentication.loggedin then
+                 ---------------------------------------------
+                 -- Use Current Location button
+                 ---------------------------------------------
+                  addpolButton = widget.newButton {
+                        shape=sbi.shape,
+                        fillColor = { default={ sbi.groupheader.r, sbi.groupheader.g, sbi.groupheader.b, sbi.btndefaultcoloralpha}, over={ sbi.groupheader.r, sbi.groupheader.g, sbi.groupheader.b, sbi.btnovercoloralpha } },
+                        label = sbi.addpolicybtntext,
+                        labelColor = { default={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b }, over={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b, .75 } },
+                        fontSize = sbi.headerfontsize,
+                        font = myApp.fontBold,
+                        width = myApp.sceneWidth - sbi.groupbetween*2,
+                        height = sbi.btnheight,
+                        x = 0,
+                        y = scrollView.y + scrollView.height/2 + sbi.btnheight /2  + sbi.groupbetween/2,
+                        --onRelease = function() 
+                                --        myApp.getCurrentLocation({callback=curlocReleaseback}) 
+                                 --   end,
+                      }
+                   container:insert(addpolButton)
+              end
 
 
                print ("end of will show")
