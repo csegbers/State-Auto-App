@@ -28,10 +28,11 @@ local moreinfo = {
                       items = {
 
                                AAAlogin = {
-                                   title = "Login", 
+                                   title = "Authentication", 
                                    isCategory = true,
                                       },
                                aalogout = {
+                                   includeline  = false,       -- needed if prior is header otherwise it looks bad 
                                    title = "Logout", 
                                    showonlyinloggedin=true,
                                    pic="trustedchoice.png",
@@ -50,6 +51,7 @@ local moreinfo = {
                               ablogin = {
                                    includeline  = false,       -- needed if prior is header otherwise it looks bad 
                                    title = "Login", 
+                                   showonlyinloggedout=true,
                                    pic="trustedchoice.png",
                                    originaliconwidth = 196,
                                    originaliconheight = 77,

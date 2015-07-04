@@ -85,9 +85,10 @@ local tabButtons = {}
 local tabCnt = 0
 local function addtabBtn(tkey)
     local btnrntry = myApp.tabs.btns[tkey]      -- will refernece same copy no biggie for now
-    local showbtn =   true
-    if (btnrntry.showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
-    if (btnrntry.showonlyinloggedin and myApp.authentication.loggedin == false) then showbtn = false  end
+    -- local showbtn =   true
+    -- if (btnrntry.showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
+    -- if (btnrntry.showonlyinloggedin and myApp.authentication.loggedin == false) then showbtn = false  end
+    local showbtn = common.appCondition(btnrntry)
 
     if showbtn then
         tabCnt = tabCnt + 1

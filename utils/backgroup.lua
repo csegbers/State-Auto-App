@@ -172,9 +172,12 @@ function myApp.BuildMoreInfoList(  )
               lineColor = defaultcolor
           end
 
-          local showbtn =   true
-          if (myApp.moreinfo.items[k].showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
-          if (myApp.moreinfo.items[k].showonlyinloggedin and myApp.authentication.loggedin == false) then showbtn = false  end
+          -- local showbtn =   true
+          -- if (myApp.moreinfo.items[k].showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
+          -- if (myApp.moreinfo.items[k].showonlyinloggedin and myApp.authentication.loggedin == false) then showbtn = false  end
+          -- if (myApp.moreinfo.items[k].showonlyinloggedout and myApp.authentication.loggedin == true) then showbtn = false  end
+          local showbtn = common.appCondition(myApp.moreinfo.items[k])
+           
           if showbtn then
                myMoreList:insertRow({
                   rowHeight = rowHeight, 

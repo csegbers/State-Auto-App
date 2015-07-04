@@ -176,9 +176,10 @@ function scene:show( event )
              for i,k in ipairs(a) do 
                  local v = sbi.items[k]
                  print ("home page item " .. k)
-                 local showbtn = true
-                 if (v.showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
-                 if (v.showonlyinloggedin and myApp.authentication.loggedin == false) then showbtn = false  end
+                 -- local showbtn = true
+                 -- if (v.showonlyindebugMode and myApp.debugMode == false) then showbtn = false end
+                 -- if (v.showonlyinloggedin and myApp.authentication.loggedin == false) then showbtn = false  end
+                 local showbtn = common.appCondition(v)
 
                  if showbtn then
                      --------------------------------------

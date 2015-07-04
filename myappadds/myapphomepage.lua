@@ -123,7 +123,7 @@ local homepage = {
                                navigation = { search = { q="Gas Station" },},
                                       
                                   },
-                           ec3t = {title = "Directions to segbers", pic="map.png",text="Get directions to segber shouse" ,
+                           ec3t = {title = "Directions to segbers", pic="map.png",text="Get directions to segber shouse" ,showonlyindebugMode=true,
                                navigation = { directions = { address="12293 Mallard Pond Ct Pickerington Ohio 43147" },},
                                       
                                   },

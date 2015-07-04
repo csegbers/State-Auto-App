@@ -153,158 +153,162 @@ function scene:show( event )
 
              for k,v in pairs(myApp.authentication.policies) do 
                     local polgroup = myApp.authentication.policies[k]
-                    local polcurrentterm = polgroup.policyTerms[1]    -- should be the current term as the rest service sorrted and we instered in order
-                    
-                    print ("account page item " .. k .. polcurrentterm.policyInsuredName)
- 
-                     --------------------------------------
-                     -- need to start a new row ?
-                     --------------------------------------
-                     if col > groupsPerRow then
-                          row = row + 1
-                          col = 1
-                     end
+                    -----------------------------
+                    -- is there a relationship to a policy that no longer the polciy exists ? policyTerms count would be 0
+                    -----------------------------
+                    if #polgroup.policyTerms > 0 then
+                        local polcurrentterm = polgroup.policyTerms[1]    -- should be the current term as the rest service sorrted and we instered in order
+                        
+                        print ("account page item " .. k .. polcurrentterm.policyInsuredName)
+     
+                         --------------------------------------
+                         -- need to start a new row ?
+                         --------------------------------------
+                         if col > groupsPerRow then
+                              row = row + 1
+                              col = 1
+                         end
 
-                     local cellworkingGroupWidth = workingGroupWidth
-                     local cellgroupwidth = groupwidth 
-                     -- if v.doublewide then 
-                     --    cellworkingGroupWidth = cellworkingGroupWidth * 2  
-                     --    cellgroupwidth = cellgroupwidth * 2 + sbi.groupbetween
-                     --    --col = col + 1
-                     --    if col == groupsPerRow then
-                     --      row = row + 1
-                     --       col = 1
-                     --     end
-                     -- end
+                         local cellworkingGroupWidth = workingGroupWidth
+                         local cellgroupwidth = groupwidth 
+                         -- if v.doublewide then 
+                         --    cellworkingGroupWidth = cellworkingGroupWidth * 2  
+                         --    cellgroupwidth = cellgroupwidth * 2 + sbi.groupbetween
+                         --    --col = col + 1
+                         --    if col == groupsPerRow then
+                         --      row = row + 1
+                         --       col = 1
+                         --     end
+                         -- end
 
-                     ---------------------------------------------
-                     -- lets create the group
-                     ---------------------------------------------
-                     local itemGrp = display.newGroup(  )
-                     itemGrp.id = k
-                     local startX = cellworkingGroupWidth*(col-1) + leftY + cellgroupwidth/2
-                     local startY = (groupheight/2 +sbi.groupbetween*row) + (row-1)* groupheight
-                     
-                     -------------------------------------------------
-                     -- Background
-                     -------------------------------------------------
-                     local myRoundedRect = display.newRoundedRect(startX, startY ,cellgroupwidth,  groupheight, 1 )
-                     myRoundedRect:setFillColor(sbi.groupbackground.r,sbi.groupbackground.g,sbi.groupbackground.b,sbi.groupbackground.a )
-                     itemGrp:insert(myRoundedRect)
+                         ---------------------------------------------
+                         -- lets create the group
+                         ---------------------------------------------
+                         local itemGrp = display.newGroup(  )
+                         itemGrp.id = k
+                         local startX = cellworkingGroupWidth*(col-1) + leftY + cellgroupwidth/2
+                         local startY = (groupheight/2 +sbi.groupbetween*row) + (row-1)* groupheight
+                         
+                         -------------------------------------------------
+                         -- Background
+                         -------------------------------------------------
+                         local myRoundedRect = display.newRoundedRect(startX, startY ,cellgroupwidth,  groupheight, 1 )
+                         myRoundedRect:setFillColor(sbi.groupbackground.r,sbi.groupbackground.g,sbi.groupbackground.b,sbi.groupbackground.a )
+                         itemGrp:insert(myRoundedRect)
 
-                     -------------------------------------------------
-                     -- Header Background
-                     -------------------------------------------------
-                     local startYother = startY- groupheight/2 + sbi.groupbetween
-                     local myRoundedTop = display.newRoundedRect(startX, startYother ,cellgroupwidth, sbi.groupheaderheight, 1 )
-                     --local headcolor = sbi.groupheader
-                     --myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
-                     myRoundedTop:setFillColor(sbi.groupheader)
-                     itemGrp:insert(myRoundedTop)
-                     
-                     -------------------------------------------------
-                     -- Header text
-                     -------------------------------------------------
-                     local myText = display.newText( (polcurrentterm.policyType or ""), 0, startYother,  myApp.fontBold, sbi.headerfontsize )
-                     myText:setFillColor( sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b,sbi.headercolor.a )
-                     myText.anchorX = 0
-                     myText.x=sbi.textalignx
-                     itemGrp:insert(myText)
+                         -------------------------------------------------
+                         -- Header Background
+                         -------------------------------------------------
+                         local startYother = startY- groupheight/2 + sbi.groupbetween
+                         local myRoundedTop = display.newRoundedRect(startX, startYother ,cellgroupwidth, sbi.groupheaderheight, 1 )
+                         --local headcolor = sbi.groupheader
+                         --myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
+                         myRoundedTop:setFillColor(sbi.groupheader)
+                         itemGrp:insert(myRoundedTop)
+                         
+                         -------------------------------------------------
+                         -- Header text
+                         -------------------------------------------------
+                         local myText = display.newText( (polcurrentterm.policyType or ""), 0, startYother,  myApp.fontBold, sbi.headerfontsize )
+                         myText:setFillColor( sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b,sbi.headercolor.a )
+                         myText.anchorX = 0
+                         myText.x=sbi.textalignx
+                         itemGrp:insert(myText)
 
-                     -------------------------------------------------
-                     -- Lob image ?
-                     -------------------------------------------------
-                     local lob = string.lower( (polcurrentterm.policyLOB or "") )
-                     local lobimage  =  sbi.lobimages[lob]
-                     if lobimage == nil then
-                        lobimage  =  sbi.lobimages.default
-                     end
-                     if lobimage then
-                         local myIcon = display.newImageRect(myApp.imgfld .. lobimage,  sbi.iconwidth , sbi.iconheight )
-                         common.fitImage( myIcon,   sbi.iconwidth   )
-                         myIcon.x = startX - cellgroupwidth/2 + myIcon.width/2  
-                         myIcon.y = startYother  + myIcon.height/2  - sbi.groupheaderheight / 2
-                         itemGrp:insert(myIcon)
-                     end
-
-
-                     local textwidth = cellgroupwidth  -sbi.textalignx + 5
-                     -------------------------------------------------
-                     -- Insured Name
-                     -------------------------------------------------
-                     
-                     local myName = display.newText( {text=(polcurrentterm.policyInsuredName or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.nametextfontsize,align="left" })
-                     myName:setFillColor( sbi.nametextcolor.r,sbi.nametextcolor.g,sbi.nametextcolor.b,sbi.nametextcolor.a )
-                     myName.anchorX = 0
-                     myName.anchorY = 0
-                     myName.x=sbi.textalignx
-                     myName.y=startYother + sbi.groupheaderheight 
-                     itemGrp:insert(myName)
+                         -------------------------------------------------
+                         -- Lob image ?
+                         -------------------------------------------------
+                         local lob = string.lower( (polcurrentterm.policyLOB or "") )
+                         local lobimage  =  sbi.lobimages[lob]
+                         if lobimage == nil then
+                            lobimage  =  sbi.lobimages.default
+                         end
+                         if lobimage then
+                             local myIcon = display.newImageRect(myApp.imgfld .. lobimage,  sbi.iconwidth , sbi.iconheight )
+                             common.fitImage( myIcon,   sbi.iconwidth   )
+                             myIcon.x = startX - cellgroupwidth/2 + myIcon.width/2  
+                             myIcon.y = startYother  + myIcon.height/2  - sbi.groupheaderheight / 2
+                             itemGrp:insert(myIcon)
+                         end
 
 
-                     -------------------------------------------------
-                     -- Balance label
-                     -------------------------------------------------
-                     
-                     local myBalanceLabel = display.newText( {text=sbi.balancelabellabel  , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sbi.balancelabelfontsize })
-                     myBalanceLabel:setFillColor( sbi.balancelabelcolor.r,sbi.balancelabelcolor.g,sbi.balancelabelcolor.b,sbi.balancelabelcolor.a )
-                     myBalanceLabel.x=startX - cellgroupwidth/2 + sbi.iconwidth /2  
-                     myBalanceLabel.y=myName.y + 20
-                     itemGrp:insert(myBalanceLabel)
-
-                     -------------------------------------------------
-                     -- Balance
-                     -------------------------------------------------
-                      
-                     local myBalanceText = display.newText( {text=string.format("%6.2f",(polcurrentterm.policyDue or "") ) , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sbi.balancetextfontsize })
-                     myBalanceText:setFillColor( sbi.balancetextcolor.r,sbi.balancetextcolor.g,sbi.balancetextcolor.b,sbi.balancetextcolor.a )
-                     myBalanceText.x=myBalanceLabel.x
-                     myBalanceText.y=myBalanceLabel.y + myBalanceLabel.height  
-                     itemGrp:insert(myBalanceText)
-
-                     -------------------------------------------------
-                     -- POlicy Number 
-                     -------------------------------------------------
-                     
-                     local myPolicy = display.newText( {text=sbi.policytextlabel .. (polcurrentterm.policyNumber or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.policytextfontsize,align="left" })
-                     myPolicy:setFillColor( sbi.policytextcolor.r,sbi.policytextcolor.g,sbi.policytextcolor.b,sbi.policytextcolor.a )
-                     myPolicy.anchorX = 0
-                     myPolicy.anchorY = 0.5
-                     myPolicy.x=sbi.textalignx
-                     myPolicy.y=myName.y + myName.height  + 10
-                     itemGrp:insert(myPolicy)
+                         local textwidth = cellgroupwidth  -sbi.textalignx + 5
+                         -------------------------------------------------
+                         -- Insured Name
+                         -------------------------------------------------
+                         
+                         local myName = display.newText( {text=(polcurrentterm.policyInsuredName or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.nametextfontsize,align="left" })
+                         myName:setFillColor( sbi.nametextcolor.r,sbi.nametextcolor.g,sbi.nametextcolor.b,sbi.nametextcolor.a )
+                         myName.anchorX = 0
+                         myName.anchorY = 0
+                         myName.x=sbi.textalignx
+                         myName.y=startYother + sbi.groupheaderheight 
+                         itemGrp:insert(myName)
 
 
-                     -------------------------------------------------
-                     -- Terms
-                     -------------------------------------------------
-                     local effdate = common.dateDisplayFromIso(polcurrentterm.effDate.iso)
-                     local expdate = common.dateDisplayFromIso(polcurrentterm.expDate.iso)
-                     
-                     local myTerm = display.newText( {text=sbi.termtextlabel .. (effdate or "") .. " To " .. (expdate or "") , x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.termtextfontsize,align="left" })
-                     myTerm:setFillColor( sbi.termtextcolor.r,sbi.termtextcolor.g,sbi.termtextcolor.b,sbi.termtextcolor.a )
-                     myTerm.anchorX = 0
-                     myTerm.anchorY = 0.5
-                     myTerm.x=sbi.textalignx
-                     myTerm.y=myPolicy.y + myPolicy.height 
-                     itemGrp:insert(myTerm)
+                         -------------------------------------------------
+                         -- Balance label
+                         -------------------------------------------------
+                         
+                         local myBalanceLabel = display.newText( {text=sbi.balancelabellabel  , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sbi.balancelabelfontsize })
+                         myBalanceLabel:setFillColor( sbi.balancelabelcolor.r,sbi.balancelabelcolor.g,sbi.balancelabelcolor.b,sbi.balancelabelcolor.a )
+                         myBalanceLabel.x=startX - cellgroupwidth/2 + sbi.iconwidth /2  
+                         myBalanceLabel.y=myName.y + 20
+                         itemGrp:insert(myBalanceLabel)
 
-                     -------------------------------------------------
-                     -- Add touch event
-                     -------------------------------------------------
-                     itemGrp:addEventListener( "tap", onObjectTouch )
+                         -------------------------------------------------
+                         -- Balance
+                         -------------------------------------------------
+                          
+                         local myBalanceText = display.newText( {text=string.format("%6.2f",(polcurrentterm.policyDue or "") ) , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sbi.balancetextfontsize })
+                         myBalanceText:setFillColor( sbi.balancetextcolor.r,sbi.balancetextcolor.g,sbi.balancetextcolor.b,sbi.balancetextcolor.a )
+                         myBalanceText.x=myBalanceLabel.x
+                         myBalanceText.y=myBalanceLabel.y + myBalanceLabel.height  
+                         itemGrp:insert(myBalanceText)
 
-                     -------------------------------------------------
-                     -- insert each individual group into the master group
-                     -------------------------------------------------
+                         -------------------------------------------------
+                         -- POlicy Number 
+                         -------------------------------------------------
+                         
+                         local myPolicy = display.newText( {text=sbi.policytextlabel .. (polcurrentterm.policyNumber or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.policytextfontsize,align="left" })
+                         myPolicy:setFillColor( sbi.policytextcolor.r,sbi.policytextcolor.g,sbi.policytextcolor.b,sbi.policytextcolor.a )
+                         myPolicy.anchorX = 0
+                         myPolicy.anchorY = 0.5
+                         myPolicy.x=sbi.textalignx
+                         myPolicy.y=myName.y + myName.height  + 10
+                         itemGrp:insert(myPolicy)
 
-                     primGroup:insert(itemGrp)
 
-                     col = col+1
-                     -- if v.doublewide then 
-                     --  col = col+1
-                     -- end
-                  
+                         -------------------------------------------------
+                         -- Terms
+                         -------------------------------------------------
+                         local effdate = common.dateDisplayFromIso(polcurrentterm.effDate.iso)
+                         local expdate = common.dateDisplayFromIso(polcurrentterm.expDate.iso)
+                         
+                         local myTerm = display.newText( {text=sbi.termtextlabel .. (effdate or "") .. " To " .. (expdate or "") , x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.termtextfontsize,align="left" })
+                         myTerm:setFillColor( sbi.termtextcolor.r,sbi.termtextcolor.g,sbi.termtextcolor.b,sbi.termtextcolor.a )
+                         myTerm.anchorX = 0
+                         myTerm.anchorY = 0.5
+                         myTerm.x=sbi.textalignx
+                         myTerm.y=myPolicy.y + myPolicy.height 
+                         itemGrp:insert(myTerm)
+
+                         -------------------------------------------------
+                         -- Add touch event
+                         -------------------------------------------------
+                         itemGrp:addEventListener( "tap", onObjectTouch )
+
+                         -------------------------------------------------
+                         -- insert each individual group into the master group
+                         -------------------------------------------------
+
+                         primGroup:insert(itemGrp)
+
+                         col = col+1
+                         -- if v.doublewide then 
+                         --  col = col+1
+                         -- end
+                  end    -- end check for policyterms
               end     -- end for
 
               scrollView:insert(primGroup)

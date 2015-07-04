@@ -200,7 +200,6 @@ local otherscenes = {
               myaccount = {
                             functionname = {
                                        getpolicies = "getpoliciesforuser",
-                                       addpolicy =   "addpolicyforuser",
                                          },
                             groupwidth = 240,
                             groupmaxwidth = 320,     -- we will allow to grow to fit better if there is extra edging. This would be max however
@@ -306,6 +305,9 @@ local otherscenes = {
                        },    
 
             policyadd = {
+                       functionname = {
+                                       addpolicy =   "addpolicyforuser",
+                                         },
                         sceneinfo = { 
                                      htmlinfo = {},
                                      scrollblockinfo = { },
@@ -338,12 +340,12 @@ local otherscenes = {
                                      btnaddtext = "Add",        
                                      btnaddmessage = {
                                           errortitle = "Invalid Entries", 
-                                          errormessage = "Must have a valid email address and password entered.",
+                                          errormessage = "Must have a valid Policy Number, Zip Code and Security Code entered.",
+                                          errortitleuser = "Not Valid User", 
+                                          errormessageuser = "Must be a valid logged in and verified user.",
                                           --successtitle= "Logged In !!",
                                           --successmessage= "An email verification has been re-sent. Please follow the link in the email, return back and Login again to continue.",
                                           failuretitle= "Error With Your Request",
-                                          verifytitle= "Correct Login But No Email Verification",
-                                          verifymessage= "An email verification has been re-sent. Please check your email in a few minutes, follow the link in the email, return back and Login again to continue.",
                                       },                                     
 
                                      btnfontsize = 16,

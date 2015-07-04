@@ -16,6 +16,14 @@ local M = { }
 --    end
 --    return t2
 -- end
+function M.appCondition(parms)
+    local appcnd =   true
+    local intable = parms or {}
+    if (intable.showonlyindebugMode and myApp.debugMode == false) then appcnd = false end
+    if (intable.showonlyinloggedin and myApp.authentication.loggedin == false) then appcnd = false  end
+    if (intable.showonlyinloggedout and myApp.authentication.loggedin == true) then appcnd = false  end
+    return appcnd
+end
 
 function M.phoneformat(str)
    local digitsonly = (string.gsub( str, "[^0-9]", "" )  or "")

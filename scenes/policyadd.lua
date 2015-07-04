@@ -18,6 +18,7 @@ print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 
 local sceneparams
 local container
+
 local cancelButton
 local addButton
 
@@ -155,40 +156,50 @@ function scene:show( event )
                     -- stick inside a time to prevent the buton press from passing thru to the current scene
                     ---------------------------------
                     onRelease = function() 
-                                        local inputemail = policyField.textField.text or ""
-                                        local inputpwd = zipField.textField.text or ""
-                                        if inputemail == "" or inputpwd == "" then
-                                           native.showAlert( sceneinfo.btnaddmessage.errortitle, sceneinfo.btnaddmessage.errormessage, { "Okay" } )
+                                        local inputpolicy = policyField.textField.text or ""
+                                        local inputzip = zipField.textField.text or ""
+                                        local inputsec = secField.textField.text or ""
+                                        if (myApp.authentication.objectId or "") == "" or (myApp.authentication.loggedin or false ) == false then
+                                            native.showAlert( sceneinfo.btnaddmessage.errortitleuser, sceneinfo.btnaddmessage.errormessageuser, { "Okay" } )
                                         else
-                                            native.setActivityIndicator( true )
-                                            local userDataTable = { ["username"] = inputemail, ["password"] = inputpwd }
-                                            parse:clearSessionToken ()
-                                            parse:loginUser( 
-                                                              userDataTable,  
-                                                              function(event)
-                                                                   native.setActivityIndicator( false )
-                                                                   if not event.error then
-                                                                      myApp.fncPutUD("email",inputemail)
-                                                                      myApp.fncUserLogInfo(event.response)
-                                                                      if myApp.authentication.emailVerified == false then
-                                                                        -----------------------------------------------
-                                                                        -- resend another email verification. Prior ones invalid
-                                                                        -- only way to do this is update email to "" then reupdate
-                                                                        ------------------------------------------------
-                                                                        parse:updateUser( myApp.authentication.objectId, { ["email"] = "" } ,function() parse:updateUser(myApp.authentication.objectId, { ["email"] = inputemail } ) end)
-                                                                        native.showAlert( sceneinfo.btnaddmessage.verifytitle, sceneinfo.btnaddmessage.verifymessage, { "Okay" } )
-                                                                      else
-                                                                        timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
-                                                                      end
-                                                                    -- native.showAlert( sceneinfo.btnaddmessage.successtitle, sceneinfo.btnaddmessage.successmessage, { "Okay" } )
-                                                                     
-                                                                     -- stay here becuase they most likely will get the email and need to login again  
-                                                                   else
-                                                                      native.showAlert( sceneinfo.btnaddmessage.failuretitle, event.error, { "Okay" } )
-                                                                   end
-                                                              end    --- return function from parse
-                                                             )   -- end of parse
-                                         end -- end of checking for valid input
+                                            if inputpolicy == "" or inputzip == "" or inputsec == "" then
+                                               native.showAlert( sceneinfo.btnaddmessage.errortitle, sceneinfo.btnaddmessage.errormessage, { "Okay" } )
+                                            else
+                                                native.setActivityIndicator( true )
+                                                local userDataTable = { ["userId"] = myApp.authentication.objectId , ["policyNumber"] = inputpolicy, ["policyPostalCode"] = inputzip , ["policyObjectId"] = inputsec }
+                                                parse:run(        myApp.otherscenes.policyadd.functionname.addpolicy,
+                                                                  userDataTable,  
+                                                                  function(event)
+                                                                       native.setActivityIndicator( false )
+                                                                       if not event.error then
+                                                                          --myApp.fncPutUD("email",inputemail)
+                                                                          --myApp.fncUserLogInfo(event.response)
+                                                                          --if myApp.authentication.emailVerified == false then
+                                                                            -----------------------------------------------
+                                                                            -- resend another email verification. Prior ones invalid
+                                                                            -- only way to do this is update email to "" then reupdate
+                                                                            ------------------------------------------------
+                                                                            --parse:updateUser( myApp.authentication.objectId, { ["email"] = "" } ,function() parse:updateUser(myApp.authentication.objectId, { ["email"] = inputemail } ) end)
+                                                                            --native.showAlert( sceneinfo.btnaddmessage.verifytitle, sceneinfo.btnaddmessage.verifymessage, { "Okay" } )
+                                                                          --else
+                                                                            
+                                                                            timer.performWithDelay(10,
+                                                                                          function () 
+                                                                                              myApp.hideOverlay({callback=nill}) 
+                                                                                              timer.performWithDelay(10,function () myApp.fncUserUpdatePolicies() end) 
+                                                                                          end
+                                                                                          ) 
+                                                                          --end
+                                                                        -- native.showAlert( sceneinfo.btnaddmessage.successtitle, sceneinfo.btnaddmessage.successmessage, { "Okay" } )
+                                                                         
+                                                                         -- stay here becuase they most likely will get the email and need to login again  
+                                                                       else
+                                                                          native.showAlert( sceneinfo.btnaddmessage.failuretitle, event.error, { "Okay" } )
+                                                                       end
+                                                                  end    --- return function from parse
+                                                                 )   -- end of parse
+                                             end -- end of checking for valid input
+                                         end -- end of myApp.authentication.objectId  check
                                  end,    -- end onrelease
                   }
                addButton.anchorX = 0
