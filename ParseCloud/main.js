@@ -15,6 +15,70 @@ Parse.Cloud.define("hellogoodbye", function(request, response) {
    
 });
 
+
+Parse.Cloud.define("getdocsforpolicy", function(request, response) {
+        var _ = require('underscore');
+        //-----------------------------------
+        // Create a query for Policy
+        //-----------------------------------
+        var Policy = Parse.Object.extend("Policy");
+        var query = new Parse.Query(Policy);
+  
+        //-----------------------------------
+        // Quesy withing X miles
+        //-----------------------------------
+        query.equalTo("policyNumber",request.params.policyNumber);
+        query.descending("effDate");
+ 
+        var newresultsJson = [];
+        var outputRecs = [];
+        var policyDocs = [];
+ 
+        //-----------------------------------
+        // Quesy against policy table
+        //-----------------------------------     
+        query.find().then(function(results) 
+          {
+                var promise = Parse.Promise.as();
+                _.each(results, function(resultObj) 
+                { 
+     
+                    promise = promise.then(function() 
+                      {
+                          outputRecs = [];
+                          policyDocs = (resultObj.toJSON());
+                          policyDocs["policyDocs"] =[ ];
+            
+                          var PolicyDocs  = Parse.Object.extend("PolicyDocs");
+                          var querypolicydocs = new Parse.Query(PolicyDocs);
+                          querypolicydocs.equalTo("policyNumber", resultObj.get("policyNumber"));
+                          querypolicydocs.equalTo("policyMod", resultObj.get("policyMod"));
+                          querypolicydocs.descending("docDate");
+
+                          //-----------------------------------
+                          // Quesy against policy table
+                          //----------------------------------- 
+                          var subPromise = Parse.Promise.as();
+                          return querypolicydocs.find().then(
+                                       function(thePolicyDocs)
+                                             {
+                                               policyDocs["policyDocs"].push(thePolicyDocs);
+                                             }
+                                          ).then(function() { outputRecs.push(policyDocs); });   // for each term in Policy table
+                                        
+                       }).then(function() { newresultsJson.push(outputRecs); });  // _promise
+                       
+                 });   // _each loop for each policy in Relationship table
+                 return promise;
+
+         }, function (error) {response.error("Error "+error.message); // everything is done and error on the first query find
+         }).then(function() {response.success(newresultsJson);  });   // everything is done and good on the first query find
+ 
+       
+  
+                    
+});    // the function
+
 Parse.Cloud.define("addpolicyforuser", function(request, response) {
 
    var PolicyRelationship = Parse.Object.extend("PolicyRelationship");
@@ -107,16 +171,19 @@ Parse.Cloud.define("addpolicyforuser", function(request, response) {
                 
 });
 
+
+
+
 Parse.Cloud.define("getpoliciesforuser", function(request, response) {
         var _ = require('underscore');
         //-----------------------------------
-        // Create a query for Policy
+        // Create a query for Policy Relationship
         //-----------------------------------
         var PolicyRelationship = Parse.Object.extend("PolicyRelationship");
         var query = new Parse.Query(PolicyRelationship);
   
         //-----------------------------------
-        // Quesy withing X miles
+        // Create a query for Policy Relationship
         //-----------------------------------
         query.equalTo("userId",request.params.userId);
  
