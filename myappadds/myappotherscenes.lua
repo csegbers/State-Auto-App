@@ -208,24 +208,37 @@ local otherscenes = {
                             groupheaderheight = 30,
                             groupbetween = 10,
                             groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
-                            groupheader = { r=25/255, g=75/255, b=150/255, a=1 },
+                            
                             iconwidth = 60,    -- can be overidden in item
                             iconheight = 60,   -- can be overidden in item
                             headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
+                           -- groupheader = { r=15/255, g=50/255, b=170/255, a=1 },
+                            groupheader = {
+                                      type = 'gradient',
+                                      color1 = { 189/255, 203/255, 220/255, 1 }, 
+                                      color2 = { 89/255, 116/255, 152/255, 1 },
+                                      direction = "down"
+                               },
                             headerfontsize = 15,  
                             textbottomedge =12  ,
 
 
                             textalignx = 70, 
 
+
+                            nametextcolor = { r=140/255, g=130/255, b=30/255, a=1 },   
+                            nametextfontsize=16   ,
+
+                            balancelabelcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                            balancelabelfontsize=12 ,       
+                            balancelabellabel = "Balance",
+
+                            balancetextcolor = { r=50/255, g=130/255, b=60/255, a=1 },   
+                            balancetextfontsize=12  ,       
+
                             policytextcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
                             policytextfontsize=12   ,       
                             policytextlabel = "Policy Number: ",
-
-
-                            nametextcolor = { r=140/255, g=130/255, b=30/255, a=1 },   
-                            nametextfontsize=15   ,       
-
 
                             termtextcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
                             termtextfontsize=12   ,       
@@ -235,6 +248,7 @@ local otherscenes = {
 
                             shape="roundedRect",
                             addpolicybtntext = "+ Add A Policy To Your Account",
+                            btncolor = { r=15/255, g=50/255, b=170/255, a=1 },
                             btndefaultcoloralpha = 0.7,
                             btnovercoloralpha = 0.3,
                             btnheight = 35,
@@ -252,6 +266,7 @@ local otherscenes = {
                                 edge=10,
                                 groupheight = 90,
                                 groupbackground = { r=25/255, g=75/255, b=150/255, a=1 },
+
                                 groupstrokewidth = 0,
                                 cornerradius = 3,
 
@@ -288,7 +303,92 @@ local otherscenes = {
                                       },
 
                                  
-                       },                       
+                       },    
+
+            policyadd = {
+                        sceneinfo = { 
+                                     htmlinfo = {},
+                                     scrollblockinfo = { },
+
+                                     edge = 15,
+                                     height = 250,
+                                     cornerradius = 2,
+                                     groupbackground = { r=235/255, g=235/255, b=235/255, a=1 },
+                                     strokecolor = { r=150/255, g=150/255, b=150/255, a=1 },
+                                     strokewidth = 1,
+
+                                     policylabel = "Policy Number",
+                                     ziplabel = "Policy Zip Code",
+                                     seclabel = "Security Code",
+
+                                     textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                                     textfontsize=18  ,
+                                     btnshape= "rect", --roundedRect",
+
+                                     btncanceldefcolor = { r=160/255, g=160/255, b=160/255, a=1 },  
+                                     btncancelovcolor = { r=130/255, g=130/255, b=130/255, a=1 }, 
+                                     btncanceldeflabelcolor = { r=255/255, g=255/255, b=255/255, a=1 }, 
+                                     btncancelovlabelcolor = { r=100/255, g=100/255, b=100/255, a=1 },  
+                                     btncanceltext = "Cancel",
+
+                                     btnadddefcolor = { r=0/255, g=100/255, b=0/255, a=1 },  
+                                     btnaddovcolor = { r=0/255, g=150/255, b=0/255, a=1 }, 
+                                     btnadddeflabelcolor = { r=255/255, g=255/255, b=255/255, a=1 }, 
+                                     btnaddovlabelcolor = { r=230/255, g=230/255, b=230/255, a=1 },  
+                                     btnaddtext = "Add",        
+                                     btnaddmessage = {
+                                          errortitle = "Invalid Entries", 
+                                          errormessage = "Must have a valid email address and password entered.",
+                                          --successtitle= "Logged In !!",
+                                          --successmessage= "An email verification has been re-sent. Please follow the link in the email, return back and Login again to continue.",
+                                          failuretitle= "Error With Your Request",
+                                          verifytitle= "Correct Login But No Email Verification",
+                                          verifymessage= "An email verification has been re-sent. Please check your email in a few minutes, follow the link in the email, return back and Login again to continue.",
+                                      },                                     
+
+                                     btnfontsize = 16,
+                                     btnheight = 30,
+                                     btnwidth = 90,
+
+                                     policyfieldfontsize=14  , 
+                                     policyfieldheight = 25,
+                                     policyfieldcornerradius = 6,
+                                     policyfieldplaceholder = "",
+                                     policyfieldmessage = {
+                                          errortitle = "xxxx", 
+                                          errormessage = "yyyy",
+                                      },
+
+                                     zipfieldfontsize=14  , 
+                                     zipfieldheight = 25,
+                                     zipfieldcornerradius = 6,
+                                     zipfieldplaceholder = "",
+                                     zipfieldmessage = {
+                                          errortitle = "xxxx", 
+                                          errormessage = "yyyy",
+                                      },
+
+                                     secfieldfontsize=14  , 
+                                     secfieldheight = 25,
+                                     secfieldcornerradius = 6,
+                                     secfieldplaceholder = "",
+                                     secfieldmessage = {
+                                          errortitle = "xxxx", 
+                                          errormessage = "yyyy",
+                                      },
+
+
+                                   },
+                        navigation = { composer = {
+                                   id = "policyadd",
+                                   isModal = true,
+                                   lua="policyadd",
+                                   overlay=true,
+                                   time=700, 
+                                   effect= "slideDown",
+                                   effectback="slideUp",
+                                },},
+                    },                   
    
           }
 return otherscenes

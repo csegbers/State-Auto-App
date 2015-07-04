@@ -197,8 +197,9 @@ function scene:show( event )
                      -------------------------------------------------
                      local startYother = startY- groupheight/2 + sbi.groupbetween
                      local myRoundedTop = display.newRoundedRect(startX, startYother ,cellgroupwidth, sbi.groupheaderheight, 1 )
-                     local headcolor = sbi.groupheader
-                     myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
+                     --local headcolor = sbi.groupheader
+                     --myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
+                     myRoundedTop:setFillColor(sbi.groupheader)
                      itemGrp:insert(myRoundedTop)
                      
                      -------------------------------------------------
@@ -235,11 +236,31 @@ function scene:show( event )
                      local myName = display.newText( {text=(polcurrentterm.policyInsuredName or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.nametextfontsize,align="left" })
                      myName:setFillColor( sbi.nametextcolor.r,sbi.nametextcolor.g,sbi.nametextcolor.b,sbi.nametextcolor.a )
                      myName.anchorX = 0
-                     myName.anchorY = 0.5
+                     myName.anchorY = 0
                      myName.x=sbi.textalignx
-                     myName.y=startYother + sbi.groupheaderheight  + 5
+                     myName.y=startYother + sbi.groupheaderheight 
                      itemGrp:insert(myName)
 
+
+                     -------------------------------------------------
+                     -- Balance label
+                     -------------------------------------------------
+                     
+                     local myBalanceLabel = display.newText( {text=sbi.balancelabellabel  , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sbi.balancelabelfontsize })
+                     myBalanceLabel:setFillColor( sbi.balancelabelcolor.r,sbi.balancelabelcolor.g,sbi.balancelabelcolor.b,sbi.balancelabelcolor.a )
+                     myBalanceLabel.x=startX - cellgroupwidth/2 + sbi.iconwidth /2  
+                     myBalanceLabel.y=myName.y + 20
+                     itemGrp:insert(myBalanceLabel)
+
+                     -------------------------------------------------
+                     -- Balance
+                     -------------------------------------------------
+                      
+                     local myBalanceText = display.newText( {text=string.format("%6.2f",(polcurrentterm.policyDue or "") ) , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sbi.balancetextfontsize })
+                     myBalanceText:setFillColor( sbi.balancetextcolor.r,sbi.balancetextcolor.g,sbi.balancetextcolor.b,sbi.balancetextcolor.a )
+                     myBalanceText.x=myBalanceLabel.x
+                     myBalanceText.y=myBalanceLabel.y + myBalanceLabel.height  
+                     itemGrp:insert(myBalanceText)
 
                      -------------------------------------------------
                      -- POlicy Number 
@@ -250,7 +271,7 @@ function scene:show( event )
                      myPolicy.anchorX = 0
                      myPolicy.anchorY = 0.5
                      myPolicy.x=sbi.textalignx
-                     myPolicy.y=myName.y + myName.height  
+                     myPolicy.y=myName.y + myName.height  + 10
                      itemGrp:insert(myPolicy)
 
 
@@ -299,18 +320,19 @@ function scene:show( event )
                  ---------------------------------------------
                   addpolButton = widget.newButton {
                         shape=sbi.shape,
-                        fillColor = { default={ sbi.groupheader.r, sbi.groupheader.g, sbi.groupheader.b, sbi.btndefaultcoloralpha}, over={ sbi.groupheader.r, sbi.groupheader.g, sbi.groupheader.b, sbi.btnovercoloralpha } },
+                        fillColor = { default={ sbi.btncolor.r, sbi.btncolor.g, sbi.btncolor.b , sbi.btndefaultcoloralpha}, over={ sbi.btncolor.r, sbi.btncolor.g, sbi.btncolor.b, sbi.btnovercoloralpha } },
                         label = sbi.addpolicybtntext,
-                        labelColor = { default={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b }, over={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b, .75 } },
+                        labelColor = { default={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b }, over={ sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b, sbi.btnovercoloralpha } },
                         fontSize = sbi.headerfontsize,
                         font = myApp.fontBold,
                         width = myApp.sceneWidth - sbi.groupbetween*2,
                         height = sbi.btnheight,
                         x = 0,
                         y = scrollView.y + scrollView.height/2 + sbi.btnheight /2  + sbi.groupbetween/2,
-                        --onRelease = function() 
-                                --        myApp.getCurrentLocation({callback=curlocReleaseback}) 
-                                 --   end,
+                        onRelease = function() 
+                                      myApp.showSubScreen({instructions=myApp.otherscenes.policyadd}) 
+
+                                     end,
                       }
                    container:insert(addpolButton)
               end
