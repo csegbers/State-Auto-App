@@ -198,6 +198,7 @@ local otherscenes = {
                                       },},
                         },
               myaccount = {
+
                             functionname = {
                                        getpolicies = "getpoliciesforuser",
                                          },
@@ -247,16 +248,11 @@ local otherscenes = {
 
                             shape="roundedRect",
                             addpolicybtntext = "+ Add A Policy To Your Account",
-                            btncolor = { r=15/255, g=50/255, b=170/255, a=1 },
-                            btndefaultcoloralpha = 0.7,
+                            btncolor = { r=100/255, g=140/255, b=160/255, a=1 },
+                            btndefaultcoloralpha = 1,
                             btnovercoloralpha = 0.3,
                             btnheight = 35,
-                            lobimages = {
-                                           default = "lobdefault.png",
-                                           home = "lobhome.png",            -- keep lower case !!!
-                                           autop = "lobautop.png",
-                                           pumbr = "lobpumbr.png",
-                                       },
+
 
                         },
               myagent = {    
@@ -390,7 +386,76 @@ local otherscenes = {
                                    effect= "slideDown",
                                    effectback="slideUp",
                                 },},
-                    },                   
+                    },  
+
+          policydetails = {  
+
+                            backtext = "<",
+                            tableheight=180,  
+                            edge=10,
+
+
+
+                            groupwidth = 240,
+                            groupmaxwidth = 320,     -- we will allow to grow to fit better if there is extra edging. This would be max however
+                            groupheight = 110,
+                            groupheaderheight = 30,
+                            groupbetween = 10,
+                            groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
+                            
+                            iconwidth = 60,    -- can be overidden in item
+                            iconheight = 60,   -- can be overidden in item
+                            headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
+                           -- groupheader = { r=15/255, g=50/255, b=170/255, a=1 },
+                            groupheader = {
+                                      type = 'gradient',
+                                      color1 = { 189/255, 203/255, 220/255, 1 }, 
+                                      color2 = { 89/255, 116/255, 152/255, 1 },
+                                      direction = "down"
+                               },
+                            headerfontsize = 15,  
+                            textbottomedge =12  ,
+
+
+                            textalignx = 70, 
+
+
+                            nametextcolor = { r=140/255, g=130/255, b=30/255, a=1 },   
+                            nametextfontsize=16   ,
+
+                            balancelabelcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                            balancelabelfontsize=12 ,       
+                            balancelabellabel = "Balance",
+
+                            balancetextcolor = { r=50/255, g=130/255, b=60/255, a=1 },   
+                            balancetextfontsize=12  ,       
+
+                            policytextcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                            policytextfontsize=12   ,       
+                            policytextlabel = "Policy Number: ",
+
+                            termtextcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
+                            termtextfontsize=12   ,       
+ 
+                            termtextlabel = "Coverage From: ",
+
+                            shape="roundedRect",
+                            addpolicybtntext = "Make A Payment >",
+                            claimsbtntext = "Claims >",
+                            btncolor = { r=100/255, g=140/255, b=160/255, a=1 },
+                            btndefaultcoloralpha = 1,
+                            btnovercoloralpha = 0.3,
+                            btnheight = 35,
+
+
+                            navigation = { composer = {
+                                         id = "poldetails",
+                                         lua="policydetails",
+                                         time=250, 
+                                         effect="slideLeft",
+                                         effectback="slideRight",
+                                      },},
+                        },                 
    
           }
 return otherscenes

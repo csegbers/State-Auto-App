@@ -66,7 +66,12 @@ local M = {
                          pageloadwaittime = 10000,
                          timeoutmessage = "Page taking too long to load.",
                      },
-
+           lobimages = {
+                               default = "lobdefault.png",
+                               home = "lobhome.png",            -- keep lower case !!!
+                               autop = "lobautop.png",
+                               pumbr = "lobpumbr.png",
+                           },
 
             objecttypes = {
                         phone = {

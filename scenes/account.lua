@@ -19,6 +19,7 @@ local container
 local scrollView
 local justcreated  
 local runit  
+local btnpushed = false
  
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -106,6 +107,35 @@ function scene:show( event )
                 -- Pass in our scene info for the new scene callback
                 -------------------------------------------
                 local function onObjectTouchAction(  )
+                      local policysceneinfo = myApp.otherscenes.policydetails
+                      -------------------------------------------------
+                      -- policy object pressed return
+                      -------------------------------------------------   
+                      local policylaunch = {  
+                                 title = event.target.title , --rowitem, --sceneparams.title, 
+                                 backtext = policysceneinfo.backtext,
+                                 navigation = { 
+                                       composer = {
+                                                      -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
+                                                     id = rowitem,  
+                                                     lua=policysceneinfo.navigation.composer.lua ,
+                                                     time=policysceneinfo.navigation.composer.time, 
+                                                     effect=policysceneinfo.navigation.composer.effect,
+                                                     effectback=policysceneinfo.navigation.composer.effectback,
+                                                  },
+                                             },
+                                 }      
+
+                         local parentinfo =  sceneparams 
+                         -----------------------------------------
+                         -- are being used as a main tabbar scene ?
+                         -----------------------------------------
+                         if myApp.MainSceneNavidate(parentinfo) then
+                           myApp.navigationCommon(policylaunch)
+                         else
+                            policylaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                            myApp.showSubScreen ({instructions=policylaunch})
+                         end
 
                 end       
                 ---------------------------------------------
@@ -186,6 +216,7 @@ function scene:show( event )
                          ---------------------------------------------
                          local itemGrp = display.newGroup(  )
                          itemGrp.id = k
+                         itemGrp.title = (polcurrentterm.policyType or k)
                          local startX = cellworkingGroupWidth*(col-1) + leftY + cellgroupwidth/2
                          local startY = (groupheight/2 +sbi.groupbetween*row) + (row-1)* groupheight
                          
@@ -219,9 +250,9 @@ function scene:show( event )
                          -- Lob image ?
                          -------------------------------------------------
                          local lob = string.lower( (polcurrentterm.policyLOB or "") )
-                         local lobimage  =  sbi.lobimages[lob]
+                         local lobimage  =  myApp.lobimages[lob]
                          if lobimage == nil then
-                            lobimage  =  sbi.lobimages.default
+                            lobimage  =  myApp.lobimages.default
                          end
                          if lobimage then
                              local myIcon = display.newImageRect(myApp.imgfld .. lobimage,  sbi.iconwidth , sbi.iconheight )
@@ -334,8 +365,11 @@ function scene:show( event )
                         x = 0,
                         y = scrollView.y + scrollView.height/2 + sbi.btnheight /2  + sbi.groupbetween/2,
                         onRelease = function() 
-                                      myApp.showSubScreen({instructions=myApp.otherscenes.policyadd}) 
-
+                                     -- if btnpushed == false then
+                                    --     btnpushed = true
+                                         myApp.showSubScreen({instructions=myApp.otherscenes.policyadd}) 
+                                     --    timer.performWithDelay(1000, function() btnpushed = false end)
+                                    --  end
                                      end,
                       }
                    container:insert(addpolButton)

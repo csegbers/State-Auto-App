@@ -34,6 +34,7 @@ local tabs = {
                          sceneinfo = { 
                                                htmlinfo = {},
                                                scrollblockinfo = { },
+                                               usage = { navigate = "mainscene"},
                                              },
                         navigation = { composer = { id = "myaccount",lua="account" ,time=250, effect="crossFade" },},
                     },
