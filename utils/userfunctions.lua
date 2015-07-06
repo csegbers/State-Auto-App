@@ -6,9 +6,11 @@ local parse = require( myApp.utilsfld .. "mod_parse" )
 
  
 function myApp.fncUserUpdatePolicies ()
+
    myApp.authentication.policies =  {}
    myApp.authentication.agencies =  {}
    myApp.authentication.agencycode = ""
+   print ("clear out authentication")
 
    -----------------------------------------------
    -- logged in ?

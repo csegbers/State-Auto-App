@@ -17,7 +17,7 @@ print ("Inxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " .. currScene .. " Scene")
 local sceneparams
 local sceneid
 local sceneinfo
-local polgroup
+
 
 local runit  
 local justcreated  
@@ -45,38 +45,17 @@ local  onRowRender = function ( event )
          local params = event.row.params
 
          if ( event.row.params ) then    
+               print ("in the row " .. (params.title or ""))
+
+               row.nameText = display.newText( (params.title or ""), 0, 0, myApp.fontBold, myApp.moreinfo.row.textfontsize )
+               row.nameText.anchorX = 0
+               row.nameText.anchorY = 0.5
+               row.nameText:setFillColor( 200/255 )
+               row.nameText.y = row.height / 2
+               row.nameText.x = myApp.moreinfo.row.indent
+               if row.isCategory then row.nameText.x = myApp.moreinfo.row.indent/2 end
+               row:insert( row.nameText )
  
-            row.titleText = display.newText( myApp.objecttypes[params.fieldtype].title, 0, 0, myApp.fontBold, sceneinfo.row.titletextfontsize )
-            row.titleText.anchorX = 0
-            row.titleText.anchorY = 0.5
-            row.titleText:setFillColor( sceneinfo.row.titletextcolor )
-            row.titleText.y = sceneinfo.row.titletexty
-            row.titleText.x = sceneinfo.row.titletextx
-
-            row.descText = display.newText( params.value, 0, 0, myApp.fontBold, sceneinfo.row.desctextfontsize )
-            row.descText.anchorX = 0
-            row.descText.anchorY = 0.5
-            row.descText:setFillColor( sceneinfo.row.desctextColor )
-            row.descText.y = sceneinfo.row.desctexty
-            row.descText.x = sceneinfo.row.desctextx
-
-
-            row:insert( row.titleText )
-            row:insert( row.descText )
-
-             -------------------------------------------------
-             -- Icon ?
-             -------------------------------------------------
-
-            local iconimage = myApp.objecttypes[params.fieldtype].pic
-            if iconimage then
-                 row.myIcon = display.newImageRect(myApp.imgfld .. iconimage,  sceneinfo.row.iconwidth , sceneinfo.row.iconheight )
-                 common.fitImage( row.myIcon,  sceneinfo.row.iconwidth   )
-                 row.myIcon.y = sceneinfo.row.height / 2
-                 row.myIcon.x = sceneinfo.row.iconwidth/2 + sceneinfo.edge
-                 row:insert( row.myIcon )
-            end
-
 
          end
          return true
@@ -248,7 +227,7 @@ function scene:show( event )
              itemGrp = display.newGroup(  )
              local startX = 0
 
-             polgroup = myApp.authentication.policies[sceneid]
+             local polgroup = myApp.authentication.policies[sceneparams.policynumber]
        
              -----------------------------
              -- is there a relationship to a policy that no longer the polciy exists ? policyTerms count would be 0
@@ -258,7 +237,7 @@ function scene:show( event )
                  local row = 1
                  local polcurrentterm = polgroup.policyTerms[1]    -- should be the current term as the rest service sorrted and we instered in order
                 
-                 print ("policy" .. sceneid .. polcurrentterm.policyInsuredName)
+                 print ("policy" .. sceneparams.policynumber .. polcurrentterm.policyInsuredName)
 
 
                 --groupsPerRow   -- not really used on this screen
@@ -414,7 +393,7 @@ function scene:show( event )
                  makepaymentButton = widget.newButton {
                         shape=sceneinfo.shape,
                         fillColor = { default={ sceneinfo.btncolor.r, sceneinfo.btncolor.g, sceneinfo.btncolor.b , sceneinfo.btndefaultcoloralpha}, over={ sceneinfo.btncolor.r, sceneinfo.btncolor.g, sceneinfo.btncolor.b, sceneinfo.btnovercoloralpha } },
-                        label = sceneinfo.addpolicybtntext,
+                        label = sceneinfo.makepaymentbtntext,
                         labelColor = { default={ sceneinfo.headercolor.r,sceneinfo.headercolor.g,sceneinfo.headercolor.b }, over={ sceneinfo.headercolor.r,sceneinfo.headercolor.g,sceneinfo.headercolor.b, sceneinfo.btnovercoloralpha } },
                         fontSize = sceneinfo.headerfontsize,
                         font = myApp.fontBold,
@@ -422,8 +401,14 @@ function scene:show( event )
                         height = sceneinfo.btnheight,
                         x = 0,
                         y = startY + groupheight/2 + sceneinfo.btnheight/2 + sceneinfo.groupbetween,
+
                         onRelease = function() 
-                                      myApp.showSubScreen({instructions=myApp.otherscenes.policyadd}) 
+                                      local parentinfo =  sceneparams 
+                                      local paylaunch =  myApp.otherscenes.policydetails.makepaymentinfo
+                                      paylaunch.navigation.composer.id = (polcurrentterm.policyNumber or "")
+                                      paylaunch.title = "Pay: " .. (polcurrentterm.policyNumber or "")
+                                      paylaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                                      myApp.showSubScreen({instructions=paylaunch}) 
 
                                      end,
                       }
@@ -457,44 +442,144 @@ function scene:show( event )
  
                  container:insert(itemGrp)
 
-                 ----------------------------------------------------
-                 -- Table View
-                 ----------------------------------------------------
-                 myList = widget.newTableView {
-                       x=0,
-                       y= 0 + sceneinfo.groupheight/2 +  sceneinfo.btnheight/2 + sceneinfo.groupbetween , --myApp.cH/2 -  sceneinfo.tableheight/2 - myApp.tabs.tabBarHeight-sceneinfo.edge, 
-                       width = cellgroupwidth , 
-                       height = myApp.sceneHeight - sceneinfo.groupheight - sceneinfo.btnheight - sceneinfo.groupbetween*4,
-                       onRowRender = onRowRender,
-                       onRowTouch = onRowTouch,
-                       listener = scrollListener,
-                    }
-                 container:insert(myList )
+  
 
-                 if common.testNetworkConnection()  then
 
-                     native.setActivityIndicator( true ) 
-                     parse:run(myApp.otherscenes.policydetails.functionname.getdocuments,
-                        {
-                         ["policyNumber"] = (polcurrentterm.policyNumber or ""),
-                         },
-                         ------------------------------------------------------------
-                         -- Callback inline function
-                         ------------------------------------------------------------
-                         function(e) 
-                            native.setActivityIndicator( false ) 
-                            --debugpopup ("here from get policies")
-                            if not e.error then  
-                                 
+                    ------------------------------------------------------
+                    -- Table View
+                    ------------------------------------------------------
+                  myList = widget.newTableView {
+                           x=0,
+                           y= 0 + sceneinfo.groupheight/2 +  sceneinfo.btnheight/2 + sceneinfo.groupbetween , --myApp.cH/2 -  sceneinfo.tableheight/2 - myApp.tabs.tabBarHeight-sceneinfo.edge, 
+                           width = cellgroupwidth , 
+                           height = myApp.sceneHeight - sceneinfo.groupheight - sceneinfo.btnheight - sceneinfo.groupbetween*4,
+                           onRowRender = onRowRender,
+                           onRowTouch = onRowTouch,
  
+                        }
+                    container:insert(myList)
 
-                            else    -- on get policies rturn error check    error on the getpolicies
+                  local BuildTheDocList = function ( )
+                        local a = {}
+                        for n in pairs(polgroup.policyDocs) do table.insert(a, n) end
+                        table.sort(a)
+                        for i,k in ipairs(a) do  
 
-                            end  -- end of error check
-                         end )  -- end of policies parse call anf callback
+                        --for i = 1, #e.response.result do
+                            local termgroup = polgroup.policyDocs[k]
+                            print("policy docs stuff " ..   " - " .. termgroup["policymod"])
+                           
+
+                            local effdate = common.dateDisplayFromIso(termgroup["effdate"] )
+                            local expdate = common.dateDisplayFromIso(termgroup["expdate"] )
 
 
-                 end    -- end of network connection check
+                            myList:insertRow{
+                                rowHeight = 50,
+                                isCategory = true,
+                                rowColor = myApp.locate.row.rowColor,
+                                lineColor = myApp.locate.row.lineColor,
+
+                                params = {
+                                             id = termgroup["policymod"],
+                                             title = "Term: " .. (effdate or "") .. " To " .. (expdate or "") ,
+
+                                          }  -- params
+                                }   --myList:insertRow
+
+
+                            if #termgroup.documents > 0 then
+
+                                 for pt = 1, #termgroup.documents  do
+                                    local docgroup = termgroup.documents[pt]
+                                    print ("doc group " .. (docgroup.docdescription or ""))
+                                    local docdate = common.dateDisplayFromIso(docgroup["docdate"] )
+                                    myList:insertRow{
+                                        rowHeight = 50,
+                                        isCategory = false,
+                                        rowColor = myApp.locate.row.rowColor,
+                                        lineColor = myApp.locate.row.lineColor,
+
+                                        params = {
+                                                     objectId = docgroup["objectId"],
+                                                     id = docgroup["objectId"],
+                                                     title = docdate .. " " .. (docgroup.docdescription or "") ,
+
+                                                  }  -- params
+                                        }   --myList:insertRow
+                                    --table.insert (myApp.authentication.policies[resgroup["policyNumber"]].policyTerms, pt, resgroup.policyTerms[1][pt])
+                                end
+                           end
+                           myList:scrollToIndex( 1 ) 
+                        end
+
+ 
+                  end
+
+
+                 ----------------------------------
+                 -- do we have docs or atleast attempted to get them for this policy  ?
+                 ----------------------------------
+                 if polgroup.policyDocs then 
+                    BuildTheDocList()
+                 else
+                    polgroup.policyDocs = {} 
+                    print ("Getting docs")
+                    if common.testNetworkConnection()  then
+
+                         native.setActivityIndicator( true ) 
+                         parse:run(myApp.otherscenes.policydetails.functionname.getdocuments,
+                            {
+                             ["policyNumber"] = (polcurrentterm.policyNumber or ""),
+                             },
+                             ------------------------------------------------------------
+                             -- Callback inline function
+                             ------------------------------------------------------------
+                             function(e) 
+                                native.setActivityIndicator( false ) 
+                                --debugpopup ("here from get policies")
+                                if not e.error then  
+                                                 
+                                    for i = 1, #e.response.result do
+                                        local resgroup = e.response.result[i][1]
+                                        local termkey = tostring(i)
+                                        polgroup.policyDocs[termkey] = {}   -- so we can sort
+                                        --local termdocgroup = polgroup.policyDocs[resgroup["policyMod"]]
+                                        local termdocgroup = polgroup.policyDocs[termkey]      -- so we can sort
+                                        termdocgroup.policynumber = resgroup.policyNumber
+                                        termdocgroup.policymod = resgroup.policyMod
+                                        termdocgroup.effdate = resgroup.effDate.iso
+                                        termdocgroup.expdate = resgroup.expDate.iso
+                                        termdocgroup.documents = {}     -- will contain collection of docs for this term
+
+                                        if #resgroup.policyDocs[1] > 0 then
+                                             for pt = 1, #resgroup.policyDocs[1]  do
+                                                local docresgroup = {}
+                                                docresgroup.doctype = resgroup.policyDocs[1][pt].docType
+                                                docresgroup.docdate = resgroup.policyDocs[1][pt].docDate.iso
+                                                docresgroup.docfile = resgroup.policyDocs[1][pt].docFile
+                                                docresgroup.docdescription = resgroup.policyDocs[1][pt].docDescription
+                                                docresgroup.objectId = resgroup.policyDocs[1][pt].objectId
+                                                print ("doc group " .. (docresgroup.docdescription or ""))
+                                          
+                                                table.insert (termdocgroup.documents, pt, docresgroup)
+
+                                            end
+                                       end
+                                        
+                                    end
+                                    BuildTheDocList()
+                                else    -- on get policies rturn error check    error on the getpolicies
+
+                                end  -- end of error check
+                             end )  -- end of policies parse call anf callback
+
+
+                     end    -- end of network connection check                    
+                 end  
+
+
+ 
  
             end    -- end check for policyterms
  

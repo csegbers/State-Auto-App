@@ -444,12 +444,32 @@ local otherscenes = {
                             termtextlabel = "Coverage From: ",
 
                             shape="roundedRect",
-                            addpolicybtntext = "Make A Payment >",
+                            
                             claimsbtntext = "Claims >",
                             btncolor = { r=100/255, g=140/255, b=160/255, a=1 },
                             btndefaultcoloralpha = 1,
                             btnovercoloralpha = 0.3,
                             btnheight = 35,
+
+                            makepaymentbtntext = "Make A Payment >",
+                            makepaymentinfo = {title = "Make A Payment", 
+                                              pic="web.png",
+                                              text="Make A Payment",
+                                              backtext = "<",
+                                              forwardtext = ">",
+                                             sceneinfo = { 
+                                                               htmlinfo = {url="https://secure4.billerweb.com/sai/JustPayIt/jpt.do" ,},
+                                                               scrollblockinfo = { },
+                                                             },
+                                              navigation = { composer = {
+                                                   id = "makepayment",
+                                                   lua="webview",
+                                                   time=250, 
+                                                   effect="slideLeft",
+                                                   effectback="slideRight",
+                                                },},
+                                
+                                },
 
 
                             navigation = { composer = {

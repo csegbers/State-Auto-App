@@ -107,16 +107,21 @@ function scene:show( event )
                 -------------------------------------------
                 local function onObjectTouchAction(  )
                       local policysceneinfo = myApp.otherscenes.policydetails
+                      --debugpopup (rowitem)
                       -------------------------------------------------
                       -- policy object pressed return
-                      -------------------------------------------------   
+                      -------------------------------------------------  
+
                       local policylaunch = {  
                                  title = event.target.title , --rowitem, --sceneparams.title, 
                                  backtext = policysceneinfo.backtext,
+                                 policynumber = rowitem,
                                  navigation = { 
                                        composer = {
                                                       -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
-                                                     id = rowitem,  
+                                                      -- we include this scene id plus the row id which is policy number
+                                                      -- the reason is if they log out / in this sceene id is random thus we make sure we start fresh
+                                                     id = sceneid .. rowitem,  
                                                      lua=policysceneinfo.navigation.composer.lua ,
                                                      time=policysceneinfo.navigation.composer.time, 
                                                      effect=policysceneinfo.navigation.composer.effect,
