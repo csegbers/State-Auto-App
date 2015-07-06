@@ -395,7 +395,7 @@ local otherscenes = {
                                          },
 
                             backtext = "<",
-                            tableheight=280,  
+  
                             edge=10,
 
 
@@ -419,10 +419,28 @@ local otherscenes = {
                                },
                             headerfontsize = 15,  
                             textbottomedge =12  ,
-
-
                             textalignx = 70, 
 
+                            tableheight=280,
+                            row={
+                                       height=60,
+                                       rowColor = { 1, 1, 1 },
+                                       lineColor = { 220/255 },
+                                       textfontsize = 12,
+                                       indent = 50,
+                                       textColor = 0,
+
+                                       catheight = 30,
+                                       catColor = { default={ 180/255, 180/255, 180/255 } }, --s
+                                       catlineColor = { r=255/255, g=255/255, b=255/255, a=0 },
+                                       cattextcolor = 255/255,
+                                       cattextfontsize = 14,
+                                       catindent = 10,
+
+
+                                       
+ 
+                                    },
 
                             nametextcolor = { r=140/255, g=130/255, b=30/255, a=1 },   
                             nametextfontsize=16   ,

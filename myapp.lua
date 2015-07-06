@@ -73,6 +73,11 @@ local M = {
                                autop = "lobautop.png",
                                pumbr = "lobpumbr.png",
                            },
+            docimages = {
+                               default = "docdefault.png",
+                               pdf = "pdf.png",            -- keep lower case !!!
+ 
+                           },
 
             objecttypes = {
                         phone = {

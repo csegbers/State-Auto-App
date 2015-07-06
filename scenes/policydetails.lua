@@ -18,7 +18,6 @@ local sceneparams
 local sceneid
 local sceneinfo
 
-
 local runit  
 local justcreated  
 
@@ -28,9 +27,8 @@ local myList
 local myName
 local myAddress
 local itemGrp
-local objectgroup -- pointer to the mappings stuff
-local curitemGrpy  
-local curmyListy 
+ 
+
 
 
 ------------------------------------------------------
@@ -47,13 +45,46 @@ local  onRowRender = function ( event )
          if ( event.row.params ) then    
                print ("in the row " .. (params.title or ""))
 
-               row.nameText = display.newText( (params.title or ""), 0, 0, myApp.fontBold, myApp.moreinfo.row.textfontsize )
-               row.nameText.anchorX = 0
-               row.nameText.anchorY = 0.5
-               row.nameText:setFillColor( 200/255 )
-               row.nameText.y = row.height / 2
-               row.nameText.x = myApp.moreinfo.row.indent
-               if row.isCategory then row.nameText.x = myApp.moreinfo.row.indent/2 end
+
+
+                -- -------------------------------------------------
+                --  -- Lob image ?
+                --  -------------------------------------------------
+                --  local lob = string.lower( (polcurrentterm.policyLOB or "") )
+                --  local lobimage  =  myApp.lobimages[lob]
+                --  if lobimage == nil then
+                --     lobimage  =  myApp.lobimages.default
+                --  end
+                --  if lobimage then
+                --      local myIcon = display.newImageRect(myApp.imgfld .. lobimage,  sceneinfo.iconwidth , sceneinfo.iconheight )
+                --      common.fitImage( myIcon,   sceneinfo.iconwidth   )
+                --      myIcon.x = startX - cellgroupwidth/2 + myIcon.width/2  
+                --      myIcon.y = startYother  + myIcon.height/2  - sceneinfo.groupheaderheight / 2
+                --      itemGrp:insert(myIcon)
+                --  end
+
+
+
+
+               if row.isCategory then 
+                   row.nameText = display.newText( (params.title or ""), 0, 0, myApp.fontBold, sceneinfo.row.cattextfontsize )
+                   row.nameText.anchorX = 0
+                   row.nameText.anchorY = 0.5
+               
+                   row.nameText.y = row.height / 2
+                   row.nameText.x = sceneinfo.row.catindent
+                   row.nameText:setFillColor( sceneinfo.row.cattextcolor )
+ 
+               else
+                   row.nameText = display.newText( (params.title or ""), 0, 0, myApp.fontBold, sceneinfo.row.textfontsize )
+                   row.nameText.anchorX = 0
+                   row.nameText.anchorY = 0.5
+               
+                   row.nameText.y = row.height / 2
+                   row.nameText.x = sceneinfo.row.indent
+                   row.nameText:setFillColor( sceneinfo.row.textcolor  )
+               end
+
                row:insert( row.nameText )
  
 
@@ -65,98 +96,94 @@ end
 -- what launch object ?
 ------------------------------------------------------
 local onRowTouch = function( event )
-        local row = event.row
-        local params = row.params
-        local obgroup = myApp.objecttypes[row.params.fieldtype]
-        local navgroup = obgroup.navigation
+    --     local row = event.row
+    --     local params = row.params
+    --     local obgroup = myApp.objecttypes[row.params.fieldtype]
+    --     local navgroup = obgroup.navigation
 
-        -----------------------
-        -- center the map if we got off wack
-        ------------------------
-        if navgroup.directions  then
-            -- if myMap and myObject then 
-            --   if myObject[objectgroup.mapping.geo] then myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude ,true ) end
-            -- end
-        end
+    --     -----------------------
+    --     -- center the map if we got off wack
+    --     ------------------------
+    --     if navgroup.directions  then
+    --         -- if myMap and myObject then 
+    --         --   if myObject[objectgroup.mapping.geo] then myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude ,true ) end
+    --         -- end
+    --     end
         
-        if event.phase == "press"  then     
+    --     if event.phase == "press"  then     
 
-        elseif event.phase == "tap" then
+    --     elseif event.phase == "tap" then
               
-        elseif event.phase == "swipeLeft" then
+    --     elseif event.phase == "swipeLeft" then
 
-        elseif event.phase == "swipeRight" then
+    --     elseif event.phase == "swipeRight" then
  
-        elseif event.phase == "release" then
+    --     elseif event.phase == "release" then
 
 
-           if navgroup then
-               if navgroup.tabbar then
-                  myApp.showScreen({instructions=myApp.tabs.btns[navgroup.tabbar.key]})
-               else
-                   -----------------------------
-                   -- launching "external ? ""
-                   ---------------------------- 
-                   if navgroup.directions then  
-                       myApp.navigationCommon ({launch = obgroup.launch, navigation = { directions = { address=string.format( (navgroup.directions.address or ""),  row.params.fulladdress )},},} )
-                   else 
-                       if navgroup.popup then 
-                         myApp.navigationCommon ({launch = obgroup.launch, navigation = { popup = { type = navgroup.popup.type, options ={to=string.format( (navgroup.popup.options.to or ""),  row.params.value )},},} ,})
-                       else
-                           if navgroup.systemurl then 
-                              myApp.navigationCommon( {launch = obgroup.launch, navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
-                           else
-                                if navgroup.composer then
-                                    local locatelaunch =                          
-                                         {
-                                            title = obgroup.title, 
-                                            text=myName.text,
-                                            backtext = obgroup.backtext ,
-                                            forwardtext = obgroup.forwardtext ,
-                                            pic=obgroup.pic,
-                                            -- htmlinfo = { 
-                                            --               url=row.params.value ,
-                                            --            },
-                                            sceneinfo = obgroup.sceneinfo,
-                                            navigation = 
-                                             { 
-                                                composer = 
-                                                    { 
-                                                       id = row.params.value ,
-                                                       lua=navgroup.composer.lua,
-                                                       time=navgroup.composer.time, 
-                                                       effect=navgroup.composer.effect,
-                                                       effectback=navgroup.composer.effectback,              
-                                                    }
-                                            ,}
-                                        ,}
-                                     locatelaunch.sceneinfo.htmlinfo.url =  row.params.value   
-                                     local parentinfo =  sceneparams 
-                                     -----------------------------------------
-                                     -- are being used as a main tabbar scene ?
-                                     -----------------------------------------
-                                     if myApp.MainSceneNavidate(parentinfo) then
-                                       myApp.navigationCommon(locatelaunch)
-                                     else
-                                        locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
-                                        myApp.showSubScreen ({instructions=locatelaunch})
-                                     end
+    --        if navgroup then
+    --            if navgroup.tabbar then
+    --               myApp.showScreen({instructions=myApp.tabs.btns[navgroup.tabbar.key]})
+    --            else
+    --                -----------------------------
+    --                -- launching "external ? ""
+    --                ---------------------------- 
+    --                if navgroup.directions then  
+    --                    myApp.navigationCommon ({launch = obgroup.launch, navigation = { directions = { address=string.format( (navgroup.directions.address or ""),  row.params.fulladdress )},},} )
+    --                else 
+    --                    if navgroup.popup then 
+    --                      myApp.navigationCommon ({launch = obgroup.launch, navigation = { popup = { type = navgroup.popup.type, options ={to=string.format( (navgroup.popup.options.to or ""),  row.params.value )},},} ,})
+    --                    else
+    --                        if navgroup.systemurl then 
+    --                           myApp.navigationCommon( {launch = obgroup.launch, navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
+    --                        else
+    --                             if navgroup.composer then
+    --                                 local locatelaunch =                          
+    --                                      {
+    --                                         title = obgroup.title, 
+    --                                         text=myName.text,
+    --                                         backtext = obgroup.backtext ,
+    --                                         forwardtext = obgroup.forwardtext ,
+    --                                         pic=obgroup.pic,
+    --                                         -- htmlinfo = { 
+    --                                         --               url=row.params.value ,
+    --                                         --            },
+    --                                         sceneinfo = obgroup.sceneinfo,
+    --                                         navigation = 
+    --                                          { 
+    --                                             composer = 
+    --                                                 { 
+    --                                                    id = row.params.value ,
+    --                                                    lua=navgroup.composer.lua,
+    --                                                    time=navgroup.composer.time, 
+    --                                                    effect=navgroup.composer.effect,
+    --                                                    effectback=navgroup.composer.effectback,              
+    --                                                 }
+    --                                         ,}
+    --                                     ,}
+    --                                  locatelaunch.sceneinfo.htmlinfo.url =  row.params.value   
+    --                                  local parentinfo =  sceneparams 
+    --                                  -----------------------------------------
+    --                                  -- are being used as a main tabbar scene ?
+    --                                  -----------------------------------------
+    --                                  if myApp.MainSceneNavidate(parentinfo) then
+    --                                    myApp.navigationCommon(locatelaunch)
+    --                                  else
+    --                                     locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+    --                                     myApp.showSubScreen ({instructions=locatelaunch})
+    --                                  end
                                      
-                                end   -- if composer
-                           end  -- if systemurl
-                       end   -- popup
-                   end -- directions
-               end -- tabbar
-           end   -- if navigation
+    --                             end   -- if composer
+    --                        end  -- if systemurl
+    --                    end   -- popup
+    --                end -- directions
+    --            end -- tabbar
+    --        end   -- if navigation
 
             
-        end
-    return true
+    --     end
+    -- return true
 end
-
-
-
-
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -209,7 +236,6 @@ function scene:show( event )
         ------------------------------------------------
         if (runit or justcreated) then 
 
-
              display.remove( container )           -- wont exist initially no biggie
              container = nil
 
@@ -227,10 +253,13 @@ function scene:show( event )
              itemGrp = display.newGroup(  )
              local startX = 0
 
+             -----------------------------------------
+             -- polgroup will point to the primary policy info in the global cache for this policy
+             -----------------------------------------
              local polgroup = myApp.authentication.policies[sceneparams.policynumber]
        
              -----------------------------
-             -- is there a relationship to a policy that no longer the polciy exists ? policyTerms count would be 0
+             -- should have atleast that 1 term
              -----------------------------
              if #polgroup.policyTerms > 0 then
                  local col = 1
@@ -238,10 +267,7 @@ function scene:show( event )
                  local polcurrentterm = polgroup.policyTerms[1]    -- should be the current term as the rest service sorrted and we instered in order
                 
                  print ("policy" .. sceneparams.policynumber .. polcurrentterm.policyInsuredName)
-
-
                 --groupsPerRow   -- not really used on this screen
-
 
                  local groupheight = sceneinfo.groupheight
                  local groupwidth = sceneinfo.groupwidth                                -- starting width of the selection box
@@ -276,7 +302,7 @@ function scene:show( event )
                  local  cellgroupwidth = groupwidth 
 
                  ---------------------------------------------
-                 -- lets create the group
+                 -- lets create the group for the general info
                  ---------------------------------------------
                  local itemGrp = display.newGroup(  )
                  itemGrp.id = k
@@ -332,7 +358,6 @@ function scene:show( event )
                  -------------------------------------------------
                  -- Insured Name
                  -------------------------------------------------
-                 
                  local myName = display.newText( {text=(polcurrentterm.policyInsuredName or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sceneinfo.nametextfontsize,align="left" })
                  myName:setFillColor( sceneinfo.nametextcolor.r,sceneinfo.nametextcolor.g,sceneinfo.nametextcolor.b,sceneinfo.nametextcolor.a )
                  myName.anchorX = 0
@@ -344,8 +369,7 @@ function scene:show( event )
 
                  -------------------------------------------------
                  -- Balance label
-                 -------------------------------------------------
-                 
+                 -------------------------------------------------       
                  local myBalanceLabel = display.newText( {text=sceneinfo.balancelabellabel  , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sceneinfo.balancelabelfontsize })
                  myBalanceLabel:setFillColor( sceneinfo.balancelabelcolor.r,sceneinfo.balancelabelcolor.g,sceneinfo.balancelabelcolor.b,sceneinfo.balancelabelcolor.a )
                  myBalanceLabel.x=startX - cellgroupwidth/2 + sceneinfo.iconwidth /2  
@@ -355,7 +379,6 @@ function scene:show( event )
                  -------------------------------------------------
                  -- Balance
                  -------------------------------------------------
-                  
                  local myBalanceText = display.newText( {text=string.format("%6.2f",(polcurrentterm.policyDue or "") ) , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sceneinfo.balancetextfontsize })
                  myBalanceText:setFillColor( sceneinfo.balancetextcolor.r,sceneinfo.balancetextcolor.g,sceneinfo.balancetextcolor.b,sceneinfo.balancetextcolor.a )
                  myBalanceText.x=myBalanceLabel.x
@@ -389,7 +412,9 @@ function scene:show( event )
                  myTerm.y=myName.y + myName.height  + 10
                  itemGrp:insert(myTerm)
 
-
+                 -------------------------------------------------
+                 -- Make a payment button
+                 -------------------------------------------------
                  makepaymentButton = widget.newButton {
                         shape=sceneinfo.shape,
                         fillColor = { default={ sceneinfo.btncolor.r, sceneinfo.btncolor.g, sceneinfo.btncolor.b , sceneinfo.btndefaultcoloralpha}, over={ sceneinfo.btncolor.r, sceneinfo.btncolor.g, sceneinfo.btncolor.b, sceneinfo.btnovercoloralpha } },
@@ -415,6 +440,9 @@ function scene:show( event )
                  makepaymentButton.x = 0 - makepaymentButton.width/2 - sceneinfo.groupbetween
                  container:insert(makepaymentButton)
 
+                 -------------------------------------------------
+                 -- Claims info
+                 -------------------------------------------------
                  claimsButton = widget.newButton {
                         shape=sceneinfo.shape,
                         fillColor = { default={ sceneinfo.btncolor.r, sceneinfo.btncolor.g, sceneinfo.btncolor.b , sceneinfo.btndefaultcoloralpha}, over={ sceneinfo.btncolor.r, sceneinfo.btncolor.g, sceneinfo.btncolor.b, sceneinfo.btnovercoloralpha } },
@@ -434,21 +462,16 @@ function scene:show( event )
                  claimsButton.x = 0 + claimsButton.width/2  + sceneinfo.groupbetween
                  container:insert(claimsButton)
 
-
-
                  -------------------------------------------------
-                 -- insert each individual group into the master group
+                 -- insert the primary policy info group
                  -------------------------------------------------
  
                  container:insert(itemGrp)
 
-  
-
-
-                    ------------------------------------------------------
-                    -- Table View
-                    ------------------------------------------------------
-                  myList = widget.newTableView {
+                 ------------------------------------------------------
+                 -- Table View - used for docs
+                 ------------------------------------------------------
+                 myList = widget.newTableView {
                            x=0,
                            y= 0 + sceneinfo.groupheight/2 +  sceneinfo.btnheight/2 + sceneinfo.groupbetween , --myApp.cH/2 -  sceneinfo.tableheight/2 - myApp.tabs.tabBarHeight-sceneinfo.edge, 
                            width = cellgroupwidth , 
@@ -457,9 +480,9 @@ function scene:show( event )
                            onRowTouch = onRowTouch,
  
                         }
-                    container:insert(myList)
+                 container:insert(myList)
 
-                  local BuildTheDocList = function ( )
+                 local BuildTheDocList = function ( )
                         local a = {}
                         for n in pairs(polgroup.policyDocs) do table.insert(a, n) end
                         table.sort(a)
@@ -475,15 +498,13 @@ function scene:show( event )
 
 
                             myList:insertRow{
-                                rowHeight = 50,
+                                rowHeight =  sceneinfo.row.catheight,
                                 isCategory = true,
-                                rowColor = myApp.locate.row.rowColor,
-                                lineColor = myApp.locate.row.lineColor,
+                                rowColor = sceneinfo.row.catColor,
+                                lineColor = sceneinfo.row.catlineColor,
 
-                                params = {
-                                             id = termgroup["policymod"],
+                                params = {   id = termgroup["policymod"],
                                              title = "Term: " .. (effdate or "") .. " To " .. (expdate or "") ,
-
                                           }  -- params
                                 }   --myList:insertRow
 
@@ -516,9 +537,10 @@ function scene:show( event )
  
                   end
 
-
                  ----------------------------------
                  -- do we have docs or atleast attempted to get them for this policy  ?
+                 --
+                 -- polgroup actually is a reference to myApp.authentication.policies[sceneparams.policynumber]
                  ----------------------------------
                  if polgroup.policyDocs then 
                     BuildTheDocList()
@@ -540,17 +562,27 @@ function scene:show( event )
                                 --debugpopup ("here from get policies")
                                 if not e.error then  
                                                  
+                                    -----------------------------------
+                                    -- results will come back with policyterm as aheader group
+                                    -----------------------------------
                                     for i = 1, #e.response.result do
                                         local resgroup = e.response.result[i][1]
+                                        ----------------------------------
+                                        -- the key is only used for sorting otherwise does not do anything
+                                        ----------------------------------
                                         local termkey = tostring(i)
                                         polgroup.policyDocs[termkey] = {}   -- so we can sort
-                                        --local termdocgroup = polgroup.policyDocs[resgroup["policyMod"]]
+                                        
                                         local termdocgroup = polgroup.policyDocs[termkey]      -- so we can sort
                                         termdocgroup.policynumber = resgroup.policyNumber
                                         termdocgroup.policymod = resgroup.policyMod
                                         termdocgroup.effdate = resgroup.effDate.iso
                                         termdocgroup.expdate = resgroup.expDate.iso
                                         termdocgroup.documents = {}     -- will contain collection of docs for this term
+
+                                        -------------------------------------
+                                        -- now go grab the actuakl docs
+                                        -------------------------------------
 
                                         if #resgroup.policyDocs[1] > 0 then
                                              for pt = 1, #resgroup.policyDocs[1]  do
