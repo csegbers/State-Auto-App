@@ -253,7 +253,7 @@ function scene:show( event )
                          -------------------------------------------------
                          -- Lob image ?
                          -------------------------------------------------
-                         local lob = string.lower( (polcurrentterm.policyLOB or "") )
+                         local lob = string.lower( (polcurrentterm.policyLOB or "default") )
                          local lobimage  =  myApp.lobimages[lob]
                          if lobimage == nil then
                             lobimage  =  myApp.lobimages.default

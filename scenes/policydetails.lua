@@ -40,31 +40,10 @@ local  onRowRender = function ( event )
 
          local row = event.row
          local id = row.index
-         local params = event.row.params
+         local params = row.params
 
          if ( event.row.params ) then    
                print ("in the row " .. (params.title or ""))
-
-
-
-                -- -------------------------------------------------
-                --  -- Lob image ?
-                --  -------------------------------------------------
-                --  local lob = string.lower( (polcurrentterm.policyLOB or "") )
-                --  local lobimage  =  myApp.lobimages[lob]
-                --  if lobimage == nil then
-                --     lobimage  =  myApp.lobimages.default
-                --  end
-                --  if lobimage then
-                --      local myIcon = display.newImageRect(myApp.imgfld .. lobimage,  sceneinfo.iconwidth , sceneinfo.iconheight )
-                --      common.fitImage( myIcon,   sceneinfo.iconwidth   )
-                --      myIcon.x = startX - cellgroupwidth/2 + myIcon.width/2  
-                --      myIcon.y = startYother  + myIcon.height/2  - sceneinfo.groupheaderheight / 2
-                --      itemGrp:insert(myIcon)
-                --  end
-
-
-
 
                if row.isCategory then 
                    row.nameText = display.newText( (params.title or ""), 0, 0, myApp.fontBold, sceneinfo.row.cattextfontsize )
@@ -74,18 +53,46 @@ local  onRowRender = function ( event )
                    row.nameText.y = row.height / 2
                    row.nameText.x = sceneinfo.row.catindent
                    row.nameText:setFillColor( sceneinfo.row.cattextcolor )
+                   row:insert( row.nameText )
  
                else
-                   row.nameText = display.newText( (params.title or ""), 0, 0, myApp.fontBold, sceneinfo.row.textfontsize )
+                    
+                   row.nameText = display.newText( (common.dateDisplayFromIso(params.docdate ) or ""), 0, 0, myApp.fontBold, sceneinfo.row.textfontsize )
                    row.nameText.anchorX = 0
                    row.nameText.anchorY = 0.5
                
-                   row.nameText.y = row.height / 2
+                   row.nameText.y = row.height / 2 - row.nameText.height/2
                    row.nameText.x = sceneinfo.row.indent
                    row.nameText:setFillColor( sceneinfo.row.textcolor  )
+                   row:insert( row.nameText )
+
+                   row.nameText2 = display.newText( (params.docdescription or ""), 0, 0, myApp.fontBold, sceneinfo.row.textfontsize )
+                   row.nameText2.anchorX = 0
+                   row.nameText2.anchorY = 0.5
+               
+                   row.nameText2.y = row.height / 2 + row.nameText.height/2
+                   row.nameText2.x = sceneinfo.row.indent
+                   row.nameText2:setFillColor( sceneinfo.row.textcolor  )
+                   row:insert( row.nameText2 )
+
+                    -- -------------------------------------------------
+                    --   doc image ?
+                    --  -------------------------------------------------
+                    local docimage  =  myApp.docimages[string.lower( (params.doctype or "default") )]
+                    if docimage == nil then
+                        docimage  =  myApp.docimages.default
+                    end
+                    if docimage then
+                         row.myIcon = display.newImageRect(myApp.imgfld .. docimage,  sceneinfo.row.iconwidth , sceneinfo.row.iconheight )
+                         common.fitImage( row.myIcon,  sceneinfo.row.iconwidth   )
+                         row.myIcon.y = sceneinfo.row.height / 2 - 5
+                         row.myIcon.x = sceneinfo.row.iconwidth/2 + sceneinfo.edge
+                         row:insert( row.myIcon )
+                    end
+
                end
 
-               row:insert( row.nameText )
+               
  
 
          end
@@ -96,93 +103,23 @@ end
 -- what launch object ?
 ------------------------------------------------------
 local onRowTouch = function( event )
-    --     local row = event.row
-    --     local params = row.params
-    --     local obgroup = myApp.objecttypes[row.params.fieldtype]
-    --     local navgroup = obgroup.navigation
+        local row = event.row
+        local params = row.params
 
-    --     -----------------------
-    --     -- center the map if we got off wack
-    --     ------------------------
-    --     if navgroup.directions  then
-    --         -- if myMap and myObject then 
-    --         --   if myObject[objectgroup.mapping.geo] then myMap:setCenter( myObject[objectgroup.mapping.geo].latitude, myObject[objectgroup.mapping.geo].longitude ,true ) end
-    --         -- end
-    --     end
         
-    --     if event.phase == "press"  then     
+        if event.phase == "press"  then     
 
-    --     elseif event.phase == "tap" then
+        elseif event.phase == "tap" then
               
-    --     elseif event.phase == "swipeLeft" then
+        elseif event.phase == "swipeLeft" then
 
-    --     elseif event.phase == "swipeRight" then
+        elseif event.phase == "swipeRight" then
  
-    --     elseif event.phase == "release" then
+        elseif event.phase == "release" then
 
-
-    --        if navgroup then
-    --            if navgroup.tabbar then
-    --               myApp.showScreen({instructions=myApp.tabs.btns[navgroup.tabbar.key]})
-    --            else
-    --                -----------------------------
-    --                -- launching "external ? ""
-    --                ---------------------------- 
-    --                if navgroup.directions then  
-    --                    myApp.navigationCommon ({launch = obgroup.launch, navigation = { directions = { address=string.format( (navgroup.directions.address or ""),  row.params.fulladdress )},},} )
-    --                else 
-    --                    if navgroup.popup then 
-    --                      myApp.navigationCommon ({launch = obgroup.launch, navigation = { popup = { type = navgroup.popup.type, options ={to=string.format( (navgroup.popup.options.to or ""),  row.params.value )},},} ,})
-    --                    else
-    --                        if navgroup.systemurl then 
-    --                           myApp.navigationCommon( {launch = obgroup.launch, navigation = { systemurl = { url=string.format( (navgroup.systemurl.url or ""),  row.params.value )},},} )
-    --                        else
-    --                             if navgroup.composer then
-    --                                 local locatelaunch =                          
-    --                                      {
-    --                                         title = obgroup.title, 
-    --                                         text=myName.text,
-    --                                         backtext = obgroup.backtext ,
-    --                                         forwardtext = obgroup.forwardtext ,
-    --                                         pic=obgroup.pic,
-    --                                         -- htmlinfo = { 
-    --                                         --               url=row.params.value ,
-    --                                         --            },
-    --                                         sceneinfo = obgroup.sceneinfo,
-    --                                         navigation = 
-    --                                          { 
-    --                                             composer = 
-    --                                                 { 
-    --                                                    id = row.params.value ,
-    --                                                    lua=navgroup.composer.lua,
-    --                                                    time=navgroup.composer.time, 
-    --                                                    effect=navgroup.composer.effect,
-    --                                                    effectback=navgroup.composer.effectback,              
-    --                                                 }
-    --                                         ,}
-    --                                     ,}
-    --                                  locatelaunch.sceneinfo.htmlinfo.url =  row.params.value   
-    --                                  local parentinfo =  sceneparams 
-    --                                  -----------------------------------------
-    --                                  -- are being used as a main tabbar scene ?
-    --                                  -----------------------------------------
-    --                                  if myApp.MainSceneNavidate(parentinfo) then
-    --                                    myApp.navigationCommon(locatelaunch)
-    --                                  else
-    --                                     locatelaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
-    --                                     myApp.showSubScreen ({instructions=locatelaunch})
-    --                                  end
-                                     
-    --                             end   -- if composer
-    --                        end  -- if systemurl
-    --                    end   -- popup
-    --                end -- directions
-    --            end -- tabbar
-    --        end   -- if navigation
-
-            
-    --     end
-    -- return true
+          print ("doc file " .. params.docfileurl)
+        end
+    return true
 end
 
 ------------------------------------------------------
@@ -514,7 +451,7 @@ function scene:show( event )
                                  for pt = 1, #termgroup.documents  do
                                     local docgroup = termgroup.documents[pt]
                                     print ("doc group " .. (docgroup.docdescription or ""))
-                                    local docdate = common.dateDisplayFromIso(docgroup["docdate"] )
+                                    
                                     myList:insertRow{
                                         rowHeight = 50,
                                         isCategory = false,
@@ -522,10 +459,14 @@ function scene:show( event )
                                         lineColor = myApp.locate.row.lineColor,
 
                                         params = {
-                                                     objectId = docgroup["objectId"],
-                                                     id = docgroup["objectId"],
-                                                     title = docdate .. " " .. (docgroup.docdescription or "") ,
-
+                                                     id = docgroup.objectId,
+                                                     docdate = docgroup.docdate  ,
+                                                     docdescription =  (docgroup.docdescription or "") ,
+                                                     title =  (docgroup.docdescription or "") ,
+                                                     doctype = docgroup.doctype ,
+                                                     docfileurl = docgroup.docfileurl,
+                                                     docfilename = docgroup.docfilename,
+                                                     docfiletype = docgroup.docfiletype,
                                                   }  -- params
                                         }   --myList:insertRow
                                     --table.insert (myApp.authentication.policies[resgroup["policyNumber"]].policyTerms, pt, resgroup.policyTerms[1][pt])
@@ -589,7 +530,9 @@ function scene:show( event )
                                                 local docresgroup = {}
                                                 docresgroup.doctype = resgroup.policyDocs[1][pt].docType
                                                 docresgroup.docdate = resgroup.policyDocs[1][pt].docDate.iso
-                                                docresgroup.docfile = resgroup.policyDocs[1][pt].docFile
+                                                docresgroup.docfiletype = resgroup.policyDocs[1][pt].docFile.__type
+                                                docresgroup.docfilename = resgroup.policyDocs[1][pt].docFile.name
+                                                docresgroup.docfileurl = resgroup.policyDocs[1][pt].docFile.url
                                                 docresgroup.docdescription = resgroup.policyDocs[1][pt].docDescription
                                                 docresgroup.objectId = resgroup.policyDocs[1][pt].objectId
                                                 print ("doc group " .. (docresgroup.docdescription or ""))

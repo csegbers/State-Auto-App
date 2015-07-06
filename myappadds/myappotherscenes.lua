@@ -437,7 +437,8 @@ local otherscenes = {
                                        cattextfontsize = 14,
                                        catindent = 10,
 
-
+                                       iconwidth = 30,
+                                       iconheight = 30,
                                        
  
                                     },
