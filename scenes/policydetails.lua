@@ -28,7 +28,6 @@ local myList
 local myName
 local myAddress
 local itemGrp
-local myObject     -- response object from the services call or nil if no hit or if existing like agent info
 local objectgroup -- pointer to the mappings stuff
 local curitemGrpy  
 local curmyListy 
@@ -189,7 +188,6 @@ function scene:create(event)
     justcreated = true
     sceneparams = event.params            
      
-
 end
 
 function scene:show( event )
@@ -295,8 +293,8 @@ function scene:show( event )
                  end
 
 
-                 local cellworkingGroupWidth = workingGroupWidth
-                 local cellgroupwidth = groupwidth 
+                 local  cellworkingGroupWidth = workingGroupWidth
+                 local  cellgroupwidth = groupwidth 
 
                  ---------------------------------------------
                  -- lets create the group
@@ -444,7 +442,7 @@ function scene:show( event )
                         x = 0,
                         y = makepaymentButton.y,
                         onRelease = function() 
-                                      myApp.showSubScreen({instructions=myApp.otherscenes.policyadd}) 
+                                      
 
                                      end,
                       }
@@ -458,29 +456,48 @@ function scene:show( event )
                  -------------------------------------------------
  
                  container:insert(itemGrp)
+
+                 ----------------------------------------------------
+                 -- Table View
+                 ----------------------------------------------------
+                 myList = widget.newTableView {
+                       x=0,
+                       y= 0 + sceneinfo.groupheight/2 +  sceneinfo.btnheight/2 + sceneinfo.groupbetween , --myApp.cH/2 -  sceneinfo.tableheight/2 - myApp.tabs.tabBarHeight-sceneinfo.edge, 
+                       width = cellgroupwidth , 
+                       height = myApp.sceneHeight - sceneinfo.groupheight - sceneinfo.btnheight - sceneinfo.groupbetween*4,
+                       onRowRender = onRowRender,
+                       onRowTouch = onRowTouch,
+                       listener = scrollListener,
+                    }
+                 container:insert(myList )
+
+                 if common.testNetworkConnection()  then
+
+                     native.setActivityIndicator( true ) 
+                     parse:run(myApp.otherscenes.policydetails.functionname.getdocuments,
+                        {
+                         ["policyNumber"] = (polcurrentterm.policyNumber or ""),
+                         },
+                         ------------------------------------------------------------
+                         -- Callback inline function
+                         ------------------------------------------------------------
+                         function(e) 
+                            native.setActivityIndicator( false ) 
+                            --debugpopup ("here from get policies")
+                            if not e.error then  
+                                 
+ 
+
+                            else    -- on get policies rturn error check    error on the getpolicies
+
+                            end  -- end of error check
+                         end )  -- end of policies parse call anf callback
+
+
+                 end    -- end of network connection check
  
             end    -- end check for policyterms
  
-             ------------------------------------------------------
-             -- Table View
-             ------------------------------------------------------
-             -- myList = widget.newTableView {
-             --       x=0,
-             --       y= myApp.cH/2 -  sceneinfo.tableheight/2 - myApp.tabs.tabBarHeight-sceneinfo.edge, 
-             --       width = myApp.sceneWidth-sceneinfo.edge, 
-             --       height = sceneinfo.tableheight,
-             --       onRowRender = onRowRender,
-             --       onRowTouch = onRowTouch,
-             --       listener = scrollListener,
-             --    }
-             -- container:insert(myList )
-
-
-
-
-            myObject = nil
-
-
         end
 
     ----------------------------------
@@ -489,16 +506,6 @@ function scene:show( event )
     elseif ( phase == "did" ) then
         parse:logEvent( "Scene", { ["name"] = currScene} )
  
-        local BuildTheScene = function (resp)
-
-        end 
-
-        if (runit or justcreated) then 
-            if common.testNetworkConnection()  then
-
-            end    -- end of network connection check
-        end    -- (runit or justcreated)
-        
 
         justcreated = false
     end   -- phase check
@@ -520,7 +527,7 @@ function scene:hide( event )
 end
 
 function scene:destroy( event )
-	local group = self.view
+	 
     print ("Destroy "   .. currScene)
 end
 

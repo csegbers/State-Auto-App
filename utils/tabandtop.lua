@@ -170,6 +170,7 @@ function myApp.hideOverlay(parms)
        local v =  composer.getScene( currOverlay).myparams()
        print ("overlay effect back " .. v.navigation.composer.effectback)
        composer.hideOverlay(  v.navigation.composer.effectback , v.navigation.composer.time * 2 )   -- for some reason the time goes twice as fast
+       timer.performWithDelay(v.navigation.composer.time * 2  ,function() myApp.composer.inoverlay = false end)   -- flag no longer in overlay
        if parms.callback then timer.performWithDelay(v.navigation.composer.time /2,parms.callback) end
     else
        if parms.callback then parms.callback() end
@@ -455,6 +456,7 @@ function myApp.showSubScreen(parms)
                     -- tripping on each other
                     -------------------------------------
                     if currOverlay == nil then
+                       myApp.composer.inoverlay = true
                        composer.showOverlay(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time,effect=tnt.navigation.composer.effect,isModal=tnt.navigation.composer.isModal, params = tnt ,})
                     end
                 else

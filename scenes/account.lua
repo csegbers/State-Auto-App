@@ -19,7 +19,6 @@ local container
 local scrollView
 local justcreated  
 local runit  
-local btnpushed = false
  
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -365,11 +364,9 @@ function scene:show( event )
                         x = 0,
                         y = scrollView.y + scrollView.height/2 + sbi.btnheight /2  + sbi.groupbetween/2,
                         onRelease = function() 
-                                     -- if btnpushed == false then
-                                    --     btnpushed = true
-                                         myApp.showSubScreen({instructions=myApp.otherscenes.policyadd}) 
-                                     --    timer.performWithDelay(1000, function() btnpushed = false end)
-                                    --  end
+                                         if myApp.composer.inoverlay == false then
+                                                myApp.showSubScreen({instructions=myApp.otherscenes.policyadd}) 
+                                          end
                                      end,
                       }
                    container:insert(addpolButton)
@@ -405,7 +402,7 @@ function scene:hide( event )
 end
 
 function scene:destroy( event )
-    local group = self.view
+ 
     print ("Destroy "   .. currScene)
 end
 

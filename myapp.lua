@@ -59,6 +59,7 @@ local M = {
 
             composer = {
                           recycleOnSceneChange = false,
+                          inoverlay = false,        -- our internal tracker
                        },
 
 

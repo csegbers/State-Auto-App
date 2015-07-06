@@ -390,7 +390,7 @@ function scene:hide( event )
 end
 
 function scene:destroy( event )
-	local group = self.view
+	 
     print ("Destroy "   .. currScene)
 end
 

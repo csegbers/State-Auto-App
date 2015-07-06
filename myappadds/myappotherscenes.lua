@@ -390,8 +390,12 @@ local otherscenes = {
 
           policydetails = {  
 
+                           functionname = {
+                                       getdocuments= "getdocsforpolicy",
+                                         },
+
                             backtext = "<",
-                            tableheight=180,  
+                            tableheight=280,  
                             edge=10,
 
 
