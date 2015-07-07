@@ -15,6 +15,33 @@ Parse.Cloud.define("hellogoodbye", function(request, response) {
    
 });
 
+Parse.Cloud.define("getvehsforpolicy", function(request, response) {
+ 
+        //-----------------------------------
+        // Create a query for Policy
+        //-----------------------------------
+        var PolicyVehs = Parse.Object.extend("PolicyVehs");
+        var query = new Parse.Query(PolicyVehs);
+  
+        //-----------------------------------
+        // Quesy  
+        //-----------------------------------
+        query.equalTo("policyNumber",request.params.policyNumber);
+        query.equalTo("policyMod",request.params.policyMod);
+
+        query.find( {
+         success: function(results) {
+            // The object was retrieved successfully.
+            response.success(results);
+          },
+         error: function(object, error) {
+           // The object was not retrieved successfully.
+           // error is a Parse.Error with an error code and description.
+         }
+       });
+    
+                    
+});    // the function
 
 Parse.Cloud.define("getdocsforpolicy", function(request, response) {
         var _ = require('underscore');
@@ -56,7 +83,7 @@ Parse.Cloud.define("getdocsforpolicy", function(request, response) {
                           querypolicydocs.descending("docDate");
 
                           //-----------------------------------
-                          // Quesy against policy table
+                          // Quesy against doc table
                           //----------------------------------- 
                           var subPromise = Parse.Promise.as();
                           return querypolicydocs.find().then(

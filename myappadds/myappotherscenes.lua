@@ -489,7 +489,24 @@ local otherscenes = {
                                                 },},
                                 
                                 },
-
+                            displaydocument = {title = "Document", 
+                                              pic="web.png",
+                                              text="Document",
+                                              backtext = "<",
+                                              --forwardtext = ">",
+                                              sceneinfo = { 
+                                                               htmlinfo = {url="",},     --- must supply
+                                                               scrollblockinfo = { },
+                                                             },
+                                              navigation = { composer = {
+                                                   id = "Document",
+                                                   lua="webview",
+                                                   time=250, 
+                                                   effect="slideLeft",
+                                                   effectback="slideRight",
+                                                },},
+                                
+                                },
 
                             navigation = { composer = {
                                          id = "poldetails",

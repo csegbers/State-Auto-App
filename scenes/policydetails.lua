@@ -27,9 +27,6 @@ local myList
 local myName
 local myAddress
 local itemGrp
- 
-
-
 
 ------------------------------------------------------
 -- Row is rendered
@@ -118,6 +115,15 @@ local onRowTouch = function( event )
         elseif event.phase == "release" then
 
           print ("doc file " .. params.docfileurl)
+
+              local parentinfo =  sceneparams 
+              local doclaunch =  myApp.otherscenes.policydetails.displaydocument
+              doclaunch.navigation.composer.id =  params.id 
+              doclaunch.sceneinfo.htmlinfo.url =  params.docfileurl 
+              doclaunch.title =  (params.docdescription or "")
+              doclaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+              myApp.showSubScreen({instructions=doclaunch}) 
+
         end
     return true
 end
