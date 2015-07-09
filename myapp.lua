@@ -3,7 +3,7 @@
 -- Store variables used across the entire app 
 -------------------------------------------------------
 local M = { 
-            debugMode = true,
+            debugMode = false,
             appName = "State Auto Insured App" ,
             appNameSmall = "Insured App" ,
             tabMyAgentKey = "",     -- will be key of myagent if used
@@ -83,8 +83,8 @@ local M = {
                               },
                            },
             docimages = {
-                               default = "docdefault.png",
-                               pdf = "pdf.png",            -- keep lower case !!!
+                               default = {image ="docdefault.png",},
+                               pdf = { image =  "pdf.png",  },          -- keep lower case !!!
  
                            },
             vehinfo = {

@@ -41,6 +41,8 @@ local  onRowRender = function ( event )
          local row = event.row
          local id = row.index
          local params = row.params
+         local textline1
+         local textline2
 
          if ( event.row.params ) then    
                print ("in the row " .. (params.title or ""))
@@ -56,8 +58,19 @@ local  onRowRender = function ( event )
                    row:insert( row.nameText )
  
                else
+                   if params.rowtype == "docimages" then
+                       textline1 = (common.dateDisplayFromIso(params.docdate ) or "")
+                       textline2 = (params.docdescription or "")
+                   elseif params.rowtype == "vehinfo"  then
+                       textline1 = params.vehyear .. "  " .. params.vehmake ..  " " .. params.vehmodel
+                       textline2 = params.vehvin
+                   else
+                       textline1 = "Unknown"
+                       textline2 = "Unknown"
+                   end
+
                     
-                   row.nameText = display.newText( (common.dateDisplayFromIso(params.docdate ) or ""), 0, 0, myApp.fontBold, sceneinfo.row.textfontsize )
+                   row.nameText = display.newText( textline1, 0, 0, myApp.fontBold, sceneinfo.row.textfontsize )
                    row.nameText.anchorX = 0
                    row.nameText.anchorY = 0.5
                
@@ -66,7 +79,9 @@ local  onRowRender = function ( event )
                    row.nameText:setFillColor( sceneinfo.row.textcolor  )
                    row:insert( row.nameText )
 
-                   row.nameText2 = display.newText( (params.docdescription or ""), 0, 0, myApp.fontBold, sceneinfo.row.textfontsize )
+
+
+                   row.nameText2 = display.newText( textline2, 0, 0, myApp.fontBold, sceneinfo.row.textfontsize )
                    row.nameText2.anchorX = 0
                    row.nameText2.anchorY = 0.5
                
@@ -76,14 +91,14 @@ local  onRowRender = function ( event )
                    row:insert( row.nameText2 )
 
                     -- -------------------------------------------------
-                    --   doc image ?
+                    --    image of the object ?
                     --  -------------------------------------------------
-                    local docimage  =  myApp.docimages[string.lower( (params.doctype or "default") )]
-                    if docimage == nil then
-                        docimage  =  myApp.docimages.default
+                    local rowimage  =  myApp[params.rowtype][string.lower( (params.rowobject or "default") )].image
+                    if rowimage == nil then
+                        rowimage  =  myApp[params.rowtype].default.image
                     end
-                    if docimage then
-                         row.myIcon = display.newImageRect(myApp.imgfld .. docimage,  sceneinfo.row.iconwidth , sceneinfo.row.iconheight )
+                    if rowimage then
+                         row.myIcon = display.newImageRect(myApp.imgfld .. rowimage,  sceneinfo.row.iconwidth , sceneinfo.row.iconheight )
                          common.fitImage( row.myIcon,  sceneinfo.row.iconwidth   )
                          row.myIcon.y = sceneinfo.row.height / 2 - 5
                          row.myIcon.x = sceneinfo.row.iconwidth/2 + sceneinfo.edge
@@ -117,15 +132,17 @@ local onRowTouch = function( event )
  
         elseif event.phase == "release" then
 
-          print ("doc file " .. params.docfileurl)
-
+          
               local parentinfo =  sceneparams 
-              local doclaunch =  myApp.otherscenes.policydetails.displaydocument
-              doclaunch.navigation.composer.id =  params.id 
-              doclaunch.sceneinfo.htmlinfo.url =  params.docfileurl 
-              doclaunch.title =  (params.docdescription or "")
-              doclaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
-              myApp.showSubScreen({instructions=doclaunch}) 
+              if params.rowtype == "docimages" then
+                  print ("doc file " .. params.docfileurl)
+                  local doclaunch =  myApp.otherscenes.policydetails.displaydocument
+                  doclaunch.navigation.composer.id =  params.id 
+                  doclaunch.sceneinfo.htmlinfo.url =  params.docfileurl 
+                  doclaunch.title =  (params.docdescription or "")
+                  doclaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                  myApp.showSubScreen({instructions=doclaunch}) 
+              end
 
         end
     return true
@@ -440,12 +457,15 @@ function scene:show( event )
                         for i,k in ipairs(a) do  
 
                         --for i = 1, #e.response.result do
-                            local termgroup = polgroup.policyDocs[k]
-                            print("policy docs stuff " ..   " - " .. termgroup["policymod"])
+                            ---------------------------------------------
+                            -- insert the term as a aheader. The same header will be used for vehicles as well
+                            ---------------------------------------------
+                            local termgroupdoc = polgroup.policyDocs[k]
+                            print("policy docs stuff " ..   " - " .. termgroupdoc["policymod"])
                            
 
-                            local effdate = common.dateDisplayFromIso(termgroup["effdate"] )
-                            local expdate = common.dateDisplayFromIso(termgroup["expdate"] )
+                            local effdate = common.dateDisplayFromIso(termgroupdoc["effdate"] )
+                            local expdate = common.dateDisplayFromIso(termgroupdoc["expdate"] )
 
 
                             myList:insertRow{
@@ -454,16 +474,18 @@ function scene:show( event )
                                 rowColor = sceneinfo.row.catColor,
                                 lineColor = sceneinfo.row.catlineColor,
 
-                                params = {   id = termgroup["policymod"],
+                                params = {   id = termgroupdoc["policymod"],
                                              title = "Term: " .. (effdate or "") .. " To " .. (expdate or "") ,
                                           }  -- params
                                 }   --myList:insertRow
 
+                            ---------------------------------------------
+                            -- insert the documents for the term
+                            ---------------------------------------------
+                            if #termgroupdoc.documents > 0 then
 
-                            if #termgroup.documents > 0 then
-
-                                 for pt = 1, #termgroup.documents  do
-                                    local docgroup = termgroup.documents[pt]
+                                 for pt = 1, #termgroupdoc.documents  do
+                                    local docgroup = termgroupdoc.documents[pt]
                                     print ("doc group " .. (docgroup.docdescription or ""))
                                     
                                     myList:insertRow{
@@ -474,20 +496,66 @@ function scene:show( event )
 
                                         params = {
                                                      id = docgroup.objectId,
+                                                     rowtype = "docimages",
+                                                     rowobject = docgroup.doctype ,
                                                      docdate = docgroup.docdate  ,
                                                      docdescription =  (docgroup.docdescription or "") ,
                                                      title =  (docgroup.docdescription or "") ,
-                                                     doctype = docgroup.doctype ,
+                                                     
                                                      docfileurl = docgroup.docfileurl,
                                                      docfilename = docgroup.docfilename,
                                                      docfiletype = docgroup.docfiletype,
                                                   }  -- params
                                         }   --myList:insertRow
-                                    --table.insert (myApp.authentication.policies[resgroup["policyNumber"]].policyTerms, pt, resgroup.policyTerms[1][pt])
-                                end
-                           end
-                           myList:scrollToIndex( 1 ) 
-                        end
+                                     end    -- for pt = 1, #termgroupdoc.documents  do
+                            end    -- #termgroupdoc.documents > 0
+                            ------------------------------------------------
+                            -- any vehicles ?
+                            -- no need to sort since we loop thru everything looking for matching mod. veh order doesnt matter
+                            -- the key oon the group is just a sequence loke docs
+                            ------------------------------------------------
+                            --print ("looking at policy vehs")
+                            --print (#polgroup.policyVehs)
+                            for kv,iv in pairs(polgroup.policyVehs) do
+                           -- for iv,kv in ipairs(polgroup.policyVehs) do  
+ 
+                                 local termgroupveh = polgroup.policyVehs[kv]
+                                 if termgroupveh  then
+                                    --print ("looking at policy vehs 2.5" .. kv .. " " .. termgroupveh["policymod"] .. " " .. termgroupdoc["policymod"])
+                                     if #termgroupveh.vehicles > 0 and termgroupveh["policymod"] == termgroupdoc["policymod"] then
+ 
+                                         for ptv = 1, #termgroupveh.vehicles  do
+                                            local vehgroup = termgroupveh.vehicles[ptv]
+                                            print ("veh group " .. (vehgroup.vehvin or ""))
+
+                                            
+                                            myList:insertRow{
+                                                rowHeight = 50,
+                                                isCategory = false,
+                                                rowColor = myApp.locate.row.rowColor,
+                                                lineColor = myApp.locate.row.lineColor,
+
+                                                params = {
+                                                             id = vehgroup.objectId,
+                                                             rowtype = "vehinfo",
+                                                             rowobject = vehgroup.vehtype ,
+
+                                                             vehvin = (vehgroup.vehvin or "") ,
+                                                             vehyear = (vehgroup.vehyear or "") ,
+                                                             vehmake = (vehgroup.vehmake or "") ,
+                                                             vehmodel = (vehgroup.vehmodel or "") ,
+
+
+                                                          }  -- params
+                                                }    
+                                            
+                                        end    -- for ptv = 1, #termgroupveh.vehicles  do
+
+                                     end   -- if #termgroupveh.vehicles > 0 then
+                                 end   -- if termgroupveh then
+                            end
+                            myList:scrollToIndex( 1 ) 
+                        end  -- for i,k in ipairs(a) do 
 
  
                   end
@@ -588,6 +656,7 @@ function scene:show( event )
                                                                         termvehgroup.effdate = resgroup.effDate.iso
                                                                         termvehgroup.expdate = resgroup.expDate.iso
                                                                         termvehgroup.vehicles = {}     -- will contain collection of docs for this term
+                                                                        --print (termvehgroup.policynumber)
 
                                                                         -------------------------------------
                                                                         -- now go grab the actuakl docs
