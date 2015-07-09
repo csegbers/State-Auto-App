@@ -288,11 +288,16 @@ function scene:show( event )
                  -------------------------------------------------
                  -- Lob image ?
                  -------------------------------------------------
-                 local lob = string.lower( (polcurrentterm.policyLOB or "") )
-                 local lobimage  =  myApp.lobimages[lob]
-                 if lobimage == nil then
-                    lobimage  =  myApp.lobimages.default
+
+                 local lob = string.lower( (polcurrentterm.policyLOB or "default") )
+                 local lobimage = nil
+                 if myApp.lobinfo[lob]  then
+                    lobimage = myApp.lobinfo[lob].image
+                 else
+                    lobimage = myApp.lobinfo["default"].image
                  end
+                 if lobimage == nil then lobimage  =  myApp.lobinfo["default"].image end
+
                  if lobimage then
                      local myIcon = display.newImageRect(myApp.imgfld .. lobimage,  sceneinfo.iconwidth , sceneinfo.iconheight )
                      common.fitImage( myIcon,   sceneinfo.iconwidth   )
@@ -492,13 +497,13 @@ function scene:show( event )
                  --
                  -- polgroup actually is a reference to myApp.authentication.policies[sceneparams.policynumber]
                  ----------------------------------
-                 if polgroup.policyDocs then 
+                 if polgroup.policyDocs and polgroup.policyVehs then 
                     BuildTheDocList()
                  else
                     polgroup.policyDocs = {} 
+                    polgroup.policyVehs = {} 
                     print ("Getting docs")
                     if common.testNetworkConnection()  then
-
                          native.setActivityIndicator( true ) 
                          parse:run(myApp.otherscenes.policydetails.functionname.getdocuments,
                             {
@@ -508,7 +513,7 @@ function scene:show( event )
                              -- Callback inline function
                              ------------------------------------------------------------
                              function(e) 
-                                native.setActivityIndicator( false ) 
+                                
                                 --debugpopup ("here from get policies")
                                 if not e.error then  
                                                  
@@ -517,49 +522,109 @@ function scene:show( event )
                                     -- they will be in effdate desc order
                                     -----------------------------------
                                     for i = 1, #e.response.result do
-                                        local resgroup = e.response.result[i][1]
-                                        ----------------------------------
-                                        -- the key is only used for sorting otherwise does not do anything
-                                        ----------------------------------
-                                        local termkey = tostring(i)
-                                        polgroup.policyDocs[termkey] = {}   -- so we can sort
-                                        
-                                        local termdocgroup = polgroup.policyDocs[termkey]      -- so we can sort
-                                        termdocgroup.policynumber = resgroup.policyNumber
-                                        termdocgroup.policymod = resgroup.policyMod
-                                        termdocgroup.effdate = resgroup.effDate.iso
-                                        termdocgroup.expdate = resgroup.expDate.iso
-                                        termdocgroup.documents = {}     -- will contain collection of docs for this term
+                                            local resgroup = e.response.result[i][1]
+                                            ----------------------------------
+                                            -- the key is only used for sorting otherwise does not do anything
+                                            ----------------------------------
+                                            local termkey = tostring(i)
+                                            polgroup.policyDocs[termkey] = {}   -- so we can sort
+                                            
+                                            local termdocgroup = polgroup.policyDocs[termkey]      -- so we can sort
+                                            termdocgroup.policynumber = resgroup.policyNumber
+                                            termdocgroup.policymod = resgroup.policyMod
+                                            termdocgroup.effdate = resgroup.effDate.iso
+                                            termdocgroup.expdate = resgroup.expDate.iso
+                                            termdocgroup.documents = {}     -- will contain collection of docs for this term
 
-                                        -------------------------------------
-                                        -- now go grab the actuakl docs
-                                        -------------------------------------
+                                            -------------------------------------
+                                            -- now go grab the actuakl docs
+                                            -------------------------------------
 
-                                        if #resgroup.policyDocs[1] > 0 then
-                                             for pt = 1, #resgroup.policyDocs[1]  do
-                                                local docresgroup = {}
-                                                docresgroup.doctype = resgroup.policyDocs[1][pt].docType
-                                                docresgroup.docdate = resgroup.policyDocs[1][pt].docDate.iso
-                                                docresgroup.docfiletype = resgroup.policyDocs[1][pt].docFile.__type
-                                                docresgroup.docfilename = resgroup.policyDocs[1][pt].docFile.name
-                                                docresgroup.docfileurl = resgroup.policyDocs[1][pt].docFile.url
-                                                docresgroup.docdescription = resgroup.policyDocs[1][pt].docDescription
-                                                docresgroup.objectId = resgroup.policyDocs[1][pt].objectId
-                                                print ("doc group " .. (docresgroup.docdescription or ""))
-                                          
-                                                table.insert (termdocgroup.documents, pt, docresgroup)
+                                            if #resgroup.policyDocs[1] > 0 then
+                                                     for pt = 1, #resgroup.policyDocs[1]  do
+                                                        local docresgroup = {}
+                                                        docresgroup.doctype = resgroup.policyDocs[1][pt].docType
+                                                        docresgroup.docdate = resgroup.policyDocs[1][pt].docDate.iso
+                                                        docresgroup.docfiletype = resgroup.policyDocs[1][pt].docFile.__type
+                                                        docresgroup.docfilename = resgroup.policyDocs[1][pt].docFile.name
+                                                        docresgroup.docfileurl = resgroup.policyDocs[1][pt].docFile.url
+                                                        docresgroup.docdescription = resgroup.policyDocs[1][pt].docDescription
+                                                        docresgroup.objectId = resgroup.policyDocs[1][pt].objectId
+                                                        print ("doc group " .. (docresgroup.docdescription or ""))
+                                                  
+                                                        table.insert (termdocgroup.documents, pt, docresgroup)
+                                                     end
+                                            end  
+                                       end    -- end for loop
+                                       ------------------------------------
+                                       -- get vehicles ?
+                                       ------------------------------------
+                                       local getvehs = false
+                                       local infotbl = myApp.lobinfo[string.lower( (polcurrentterm.policyLOB or "default") )]
+                                       if infotbl then getvehs = (infotbl.vehicles or false) end
+                                       if getvehs then
+                                             print ("getting vehicles ")
+                                             parse:run(myApp.otherscenes.policydetails.functionname.getvehicles,
+                                                    {
+                                                     ["policyNumber"] = (polcurrentterm.policyNumber or ""),
+                                                     },
+                                                     ------------------------------------------------------------
+                                                     -- Callback inline function
+                                                     ------------------------------------------------------------
+                                                     function(e) 
+                                                        if not e.error then 
 
-                                            end
-                                       end
-                                        
-                                    end
-                                    BuildTheDocList()
+                                                                for i = 1, #e.response.result do
+                                                                        local resgroup = e.response.result[i][1]
+                                                                        ----------------------------------
+                                                                        -- the key is only used for sorting otherwise does not do anything
+                                                                        ----------------------------------
+                                                                        local termkey = tostring(i)
+                                                                        polgroup.policyVehs[termkey] = {}   -- so we can sort
+                                                                        
+                                                                        local termvehgroup = polgroup.policyVehs[termkey]      -- so we can sort
+                                                                        termvehgroup.policynumber = resgroup.policyNumber
+                                                                        termvehgroup.policymod = resgroup.policyMod
+                                                                        termvehgroup.effdate = resgroup.effDate.iso
+                                                                        termvehgroup.expdate = resgroup.expDate.iso
+                                                                        termvehgroup.vehicles = {}     -- will contain collection of docs for this term
+
+                                                                        -------------------------------------
+                                                                        -- now go grab the actuakl docs
+                                                                        -------------------------------------
+
+                                                                        if #resgroup.policyVehs[1] > 0 then
+                                                                                 for pt = 1, #resgroup.policyVehs[1]  do
+                                                                                    local vehresgroup = {}
+                                                                                    vehresgroup.vehtype = resgroup.policyVehs[1][pt].vehType
+                                                                                    vehresgroup.vehvin = resgroup.policyVehs[1][pt].vehVin
+                                                                                    vehresgroup.vehyear = resgroup.policyVehs[1][pt].vehYear
+                                                                                    vehresgroup.vehmake = resgroup.policyVehs[1][pt].vehMake
+                                                                                    vehresgroup.vehmodel = resgroup.policyVehs[1][pt].vehModel
+                                                                                    vehresgroup.objectId = resgroup.policyVehs[1][pt].objectId
+                                                                                    print ("veh group " .. (vehresgroup.vehvin or ""))
+                                                                              
+                                                                                    table.insert (termvehgroup.vehicles, pt, vehresgroup)
+                                                                                 end
+                                                                        end  
+                                                                   end    -- end for loop
+
+                                                        else      -- else of error check
+                                                        end       -- end of error check
+                                                        native.setActivityIndicator( false ) 
+                                                        BuildTheDocList()
+                                                     end    -- end of function return parse
+                                                 )
+                                       else
+                                           native.setActivityIndicator( false ) 
+                                           BuildTheDocList()
+                                       end              -- end of getvehs check
+
                                 else    -- on get policies rturn error check    error on the getpolicies
-
-                                end  -- end of error check
+                                    native.setActivityIndicator( false ) 
+                                    BuildTheDocList()
+                                end  -- end of error check for docs callback
                              end )  -- end of policies parse call anf callback
-
-
                      end    -- end of network connection check                    
                  end  
 

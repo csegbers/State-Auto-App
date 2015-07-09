@@ -3,7 +3,7 @@
 -- Store variables used across the entire app 
 -------------------------------------------------------
 local M = { 
-            debugMode = false,
+            debugMode = true,
             appName = "State Auto Insured App" ,
             appNameSmall = "Insured App" ,
             tabMyAgentKey = "",     -- will be key of myagent if used
@@ -67,18 +67,40 @@ local M = {
                          pageloadwaittime = 10000,
                          timeoutmessage = "Page taking too long to load.",
                      },
-           lobimages = {
-                               default = "lobdefault.png",
-                               home = "lobhome.png",            -- keep lower case !!!
-                               autop = "lobautop.png",
-                               pumbr = "lobpumbr.png",
+            lobinfo = {
+                          default = {
+                                   image = "lobdefault.png",
+                              },
+                          autop = {
+                                   image = "lobautop.png",
+                                   vehicles = true,
+                              },
+                          home = {
+                                   image = "lobhome.png",
+                              },
+                          pumbr = {
+                                   image = "lobpumbr.png",
+                              },
                            },
             docimages = {
                                default = "docdefault.png",
                                pdf = "pdf.png",            -- keep lower case !!!
  
                            },
-
+            vehinfo = {
+                               default = {
+                                    image = "vehdefault.png",
+                                    autoids = false,
+                                       },
+                               auto = {
+                                    image = "vehauto.png",            -- keep lower case !!!}
+                                    autoids = true,
+                                      },
+                               trailer = {
+                                    image = "vehtrailer.png",            -- keep lower case !!!}
+                                    autoids = false,
+                                      },
+                           },
             objecttypes = {
                         phone = {
                               launch="phone",

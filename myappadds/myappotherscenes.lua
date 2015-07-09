@@ -392,6 +392,7 @@ local otherscenes = {
 
                            functionname = {
                                        getdocuments= "getdocsforpolicy",
+                                       getvehicles = "getvehsforpolicy",
                                          },
 
                             backtext = "<",
@@ -507,7 +508,24 @@ local otherscenes = {
                                                 },},
                                 
                                 },
-
+                            displayautoid = {title = "Document", 
+                                              pic="web.png",
+                                              text="Document",
+                                              backtext = "<",
+                                              --forwardtext = ">",
+                                              sceneinfo = { 
+                                                               htmlinfo = {url="",},     --- must supply
+                                                               scrollblockinfo = { },
+                                                             },
+                                              navigation = { composer = {
+                                                   id = "Document",
+                                                   lua="webview",
+                                                   time=250, 
+                                                   effect="slideLeft",
+                                                   effectback="slideRight",
+                                                },},
+                                
+                                },
                             navigation = { composer = {
                                          id = "poldetails",
                                          lua="policydetails",

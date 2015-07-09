@@ -254,10 +254,13 @@ function scene:show( event )
                          -- Lob image ?
                          -------------------------------------------------
                          local lob = string.lower( (polcurrentterm.policyLOB or "default") )
-                         local lobimage  =  myApp.lobimages[lob]
-                         if lobimage == nil then
-                            lobimage  =  myApp.lobimages.default
+                         local lobimage = nil
+                         if myApp.lobinfo[lob]  then
+                            lobimage = myApp.lobinfo[lob].image
+                         else
+                            lobimage = myApp.lobinfo["default"].image
                          end
+                         if lobimage == nil then lobimage  =  myApp.lobinfo["default"].image end
                          if lobimage then
                              local myIcon = display.newImageRect(myApp.imgfld .. lobimage,  sbi.iconwidth , sbi.iconheight )
                              common.fitImage( myIcon,   sbi.iconwidth   )
