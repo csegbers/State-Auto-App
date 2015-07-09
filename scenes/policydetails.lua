@@ -28,6 +28,9 @@ local myName
 local myAddress
 local itemGrp
 
+local polcurrentterm
+local polgroup
+
 ------------------------------------------------------
 -- Row is rendered
 ------------------------------------------------------
@@ -199,7 +202,7 @@ function scene:show( event )
              -----------------------------------------
              -- polgroup will point to the primary policy info in the global cache for this policy
              -----------------------------------------
-             local polgroup = myApp.authentication.policies[sceneparams.policynumber]
+             polgroup = myApp.authentication.policies[sceneparams.policynumber]
        
              -----------------------------
              -- should have atleast that 1 term
@@ -207,7 +210,7 @@ function scene:show( event )
              if #polgroup.policyTerms > 0 then
                  local col = 1
                  local row = 1
-                 local polcurrentterm = polgroup.policyTerms[1]    -- should be the current term as the rest service sorrted and we instered in order
+                 polcurrentterm = polgroup.policyTerms[1]    -- should be the current term as the rest service sorrted and we instered in order
                 
                  print ("policy" .. sceneparams.policynumber .. polcurrentterm.policyInsuredName)
                 --groupsPerRow   -- not really used on this screen
@@ -511,6 +514,7 @@ function scene:show( event )
                                                  
                                     -----------------------------------
                                     -- results will come back with policyterm as aheader group
+                                    -- they will be in effdate desc order
                                     -----------------------------------
                                     for i = 1, #e.response.result do
                                         local resgroup = e.response.result[i][1]
