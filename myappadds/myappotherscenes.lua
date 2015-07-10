@@ -424,7 +424,7 @@ local otherscenes = {
 
                             tableheight=280,
                             row={
-                                       height=60,
+                                       height=50,
                                        rowColor = { 1, 1, 1 },
                                        lineColor = { 220/255 },
                                        textfontsize = 12,

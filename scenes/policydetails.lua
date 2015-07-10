@@ -63,7 +63,7 @@ local  onRowRender = function ( event )
                        textline2 = (params.docdescription or "")
                    elseif params.rowtype == "vehinfo"  then
                        textline1 = params.vehyear .. "  " .. params.vehmake ..  " " .. params.vehmodel
-                       textline2 = params.vehvin
+                       textline2 = "Vin: " .. params.vehvin
                    else
                        textline1 = "Unknown"
                        textline2 = "Unknown"
@@ -100,7 +100,7 @@ local  onRowRender = function ( event )
                     if rowimage then
                          row.myIcon = display.newImageRect(myApp.imgfld .. rowimage,  sceneinfo.row.iconwidth , sceneinfo.row.iconheight )
                          common.fitImage( row.myIcon,  sceneinfo.row.iconwidth   )
-                         row.myIcon.y = sceneinfo.row.height / 2 - 5
+                         row.myIcon.y = sceneinfo.row.height / 2 
                          row.myIcon.x = sceneinfo.row.iconwidth/2 + sceneinfo.edge
                          row:insert( row.myIcon )
                     end
@@ -489,10 +489,10 @@ function scene:show( event )
                                     print ("doc group " .. (docgroup.docdescription or ""))
                                     
                                     myList:insertRow{
-                                        rowHeight = 50,
+                                        rowHeight = sceneinfo.row.height,
                                         isCategory = false,
-                                        rowColor = myApp.locate.row.rowColor,
-                                        lineColor = myApp.locate.row.lineColor,
+                                        rowColor = sceneinfo.row.rowColor,
+                                        lineColor = sceneinfo.row.lineColor,
 
                                         params = {
                                                      id = docgroup.objectId,
@@ -530,10 +530,10 @@ function scene:show( event )
 
                                             
                                             myList:insertRow{
-                                                rowHeight = 50,
+                                                rowHeight = sceneinfo.row.height,
                                                 isCategory = false,
-                                                rowColor = myApp.locate.row.rowColor,
-                                                lineColor = myApp.locate.row.lineColor,
+                                                rowColor = sceneinfo.row.rowColor,
+                                                lineColor = sceneinfo.row.lineColor,
 
                                                 params = {
                                                              id = vehgroup.objectId,
