@@ -62,7 +62,7 @@ local  onRowRender = function ( event )
                        textline1 = (common.dateDisplayFromIso(params.docdate ) or "")
                        textline2 = (params.docdescription or "")
                    elseif params.rowtype == "vehinfo"  then
-                       textline1 = params.vehyear .. "  " .. params.vehmake ..  " " .. params.vehmodel
+                       textline1 = ((params.vehyear or "").. "  " .. (params.vehmake or "") ..  " " .. (params.vehmodel or ""))
                        textline2 = "Vin: " .. params.vehvin
                    else
                        textline1 = "Unknown"
@@ -137,11 +137,19 @@ local onRowTouch = function( event )
               if params.rowtype == "docimages" then
                   print ("doc file " .. params.docfileurl)
                   local doclaunch =  myApp.otherscenes.policydetails.displaydocument
-                  doclaunch.navigation.composer.id =  params.id 
+                  doclaunch.navigation.composer.id =  sceneid .. params.id       --- keeps uniuq. If log out / in will ensure thius screen is refreshed since the sceneid is carried forward from a rando sequence
                   doclaunch.sceneinfo.htmlinfo.url =  params.docfileurl 
                   doclaunch.title =  (params.docdescription or "")
                   doclaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
                   myApp.showSubScreen({instructions=doclaunch}) 
+              elseif   params.rowtype == "vehinfo" then
+                  print ("veh file " .. params.vehvin)
+                  local vehlaunch =  myApp.otherscenes.policydetails.displayautoid
+                  vehlaunch.navigation.composer.id =  sceneid .. params.id      --- this is the actual object id. WIll be different for each veh and same veh different per term so truly uniqe
+                  vehlaunch.title =  ((params.vehyear or "").. "  " .. (params.vehmake or "") ..  " " .. (params.vehmodel or ""))
+                  vehlaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                  myApp.showSubScreen({instructions=vehlaunch}) 
+
               end
 
         end
