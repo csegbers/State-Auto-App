@@ -130,13 +130,15 @@ function scene:show( event )
                                       print (veh.objectId )
                                       if veh.objectId == sceneparams.objectId then
                                           polcurrentveh = veh
-                                          break
                                       end
+                                      if polcurrentveh  then break end
                                    end  -- for ptv = 1, #polcurrentterm.vehicles  do
                                 end -- #polcurrentterm.vehicles > 0 
                              end   -- have a term 
-                        end -- loop thru policyVehs  (term)
+                             if polcurrentveh  then break end
+                        end -- loop thru policyVehs  (term)   for kv,iv in pairs(polgroup.policyVehs) do
                      end --if polgroup.policyVehs
+                     if polcurrentveh  then break end
              end  -- loop thru policies    
 
 
@@ -147,36 +149,105 @@ function scene:show( event )
                print ("we have vehicle " .. polcurrentveh.objectId .. " " .. polcurrentveh.vehvin .. " " .. polcurrentterm.policynumber)
                print ("we have vehicle for agency " .. (polagency[agencymapping.name] or ""))
 
-
+                 local idwidth = myApp.sceneHeight-sceneinfo.edge * 2    -- since we rotate 90 degrees use height for the width
+                 local idheight = myApp.sceneWidth-sceneinfo.edge * 2    -- since we rotate 90 degrees use height for the width
                  
                  -------------------------------------------------
                  -- Background
                  -------------------------------------------------
-                 local myRoundedRect = display.newRoundedRect(50, 100 ,200,  150, 1 )
+                 local myRoundedRect = display.newRect(0, 0 ,idwidth,  idheight, 1 )
                  myRoundedRect:setFillColor(sceneinfo.groupbackground.r,sceneinfo.groupbackground.g,sceneinfo.groupbackground.b,sceneinfo.groupbackground.a )
                  itemGrp:insert(myRoundedRect)
 
                  -------------------------------------------------
-                 -- Header Background
+                 --  image ?
                  -------------------------------------------------
 
-                 local myRoundedTop = display.newRoundedRect(50, 100 ,200,  50, 1 )
-                 --local headcolor = sceneinfo.groupheader
-                 --myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
-                 myRoundedTop:setFillColor(sceneinfo.groupheader)
-                 itemGrp:insert(myRoundedTop)
-                 
+                 local myIcon = display.newImageRect(myApp.imgfld .. sceneinfo.groupicon,  sceneinfo.iconwidth , sceneinfo.iconheight )
+                 common.fitImage( myIcon,   sceneinfo.iconwidth   )
+                 myIcon.x = 0 - idwidth/2 + myIcon.width/2 + sceneinfo.inneredge
+                 myIcon.y = 0 - idheight/2 + myIcon.height/2 + sceneinfo.inneredge
+                 itemGrp:insert(myIcon)
+ 
+
+                 local AddText = function (txtparms)
+
+                         local myText = display.newText( {text=(txtparms.text or ""), x=0, y=0  ,font= myApp.fontBold, fontSize=txtparms.fontsize ,align="left" })
+             
+                         myText:setFillColor( txtparms.textcolor.r,txtparms.textcolor.g,txtparms.textcolor.b,txtparms.textcolor.a )
+                         myText.anchorX = 0
+                         myText.anchorY = 0
+                         myText.x=  txtparms.x
+                         myText.y=  txtparms.y
+                         itemGrp:insert(myText)   
+                         return myText           
+                 end
+
                  -------------------------------------------------
-                 -- Header text
+                 -- here we go
                  -------------------------------------------------
-                 local myText = display.newText(  (polcurrentveh.vehvin or ""), 0, 90,  myApp.fontBold, sceneinfo.headerfontsize )
-                 myText:setFillColor( sceneinfo.headercolor.r,sceneinfo.headercolor.g,sceneinfo.headercolor.b,sceneinfo.headercolor.a )
-                 myText.anchorX = 0
-                 myText.x= 20
-                 itemGrp:insert(myText)
+
+                 local starty = 0 - idheight/2 + 5
+
+                 -----------------------
+                 -- state name
+                 -----------------------
+                 local sttext = AddText({text=polcurrentterm.policystatename, fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= 0 - idwidth/2 + myIcon.width + 20, y =  starty})
+                 AddText({text="(STATE)" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= sttext.x, y =  sttext.y + sttext.height + sceneinfo.inneredge})
+ 
+                 -----------------------
+                 -- group name and standard text
+                 -----------------------               
+                 local insgrptext = AddText({text=polcurrentterm.policyinsurancegroup, fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= 0, y =  starty})
+                 insgrptext.x = idwidth/2 - insgrptext.width - sceneinfo.edge
+
+                 starty = starty + insgrptext.height + sceneinfo.inneredge
+                 local idtext = AddText({text=sceneinfo.autoidtext, fontsize=sceneinfo.headerfontsizelarge, textcolor=sceneinfo.headercolor, x= 0, y =  starty})
+                 idtext.x = idwidth/2 - idtext.width - sceneinfo.edge  
 
 
-itemGrp:rotate( 90 )
+
+
+                 local leftedge = sceneinfo.edge*2
+                 -----------------------
+                 -- naic company
+                 -----------------------    
+                 starty = starty + idtext.height + sceneinfo.edge        
+                 local naictext = AddText({text="NAIC NUMBER" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= 0-idwidth/2 +  leftedge , y =  starty})
+                 local companytext = AddText({text="COMPANY" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= 0-idwidth/5, y =  starty})
+
+                 starty = starty + naictext.height + sceneinfo.inneredge         
+                 local naicvalue = AddText({text=polcurrentterm.policynaic ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= naictext.x, y =  starty})
+                 local companyvalue = AddText({text=polcurrentterm.policycompanyname ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= companytext.x, y =  starty})
+
+                 -----------------------
+                 -- policy
+                 -----------------------    
+                 starty = starty + companyvalue.height + sceneinfo.edge        
+                 local polnumtext = AddText({text="POLICY NUMBER" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= 0-idwidth/2 +  leftedge, y =  starty})
+                 local efftext = AddText({text="EFFECTIVE DATE" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= 0-idwidth/8, y =  starty})
+                 local exptext = AddText({text="EXPIRATION DATE" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= idwidth/5, y =  starty})
+
+                 starty = starty + polnumtext.height + sceneinfo.inneredge         
+                 local polnumvalue = AddText({text=polcurrentterm.policynumber ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= polnumtext.x, y =  starty})
+                 local effvalue = AddText({text=common.dateDisplayFromIso(polcurrentterm.effdate ) ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= efftext.x, y =  starty})
+                 local expvalue = AddText({text=common.dateDisplayFromIso(polcurrentterm.expdate ) ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= exptext.x, y =  starty})
+
+
+                 -----------------------
+                 -- vehicle
+                 -----------------------    
+                 starty = starty + expvalue.height + sceneinfo.edge         
+                 local yeartext = AddText({text="YEAR" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= 0-idwidth/2 +  leftedge, y =  starty})
+                 local maketext = AddText({text="MAKE/MODEL" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= 0-idwidth/3, y =  starty})
+                 local vintext = AddText({text="VEHICLE IDENTIFICATION NUMBER" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= idwidth/11, y =  starty})
+
+                 starty = starty + yeartext.height + sceneinfo.inneredge         
+                 local yearvalue = AddText({text=polcurrentveh.vehyear ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= yeartext.x, y =  starty})
+                 local makevalue = AddText({text=(polcurrentveh.vehmake .. " "  .. polcurrentveh.vehmodel),fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= maketext.x, y =  starty})
+                 local vinvalue = AddText({text=polcurrentveh.vehvin,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= vintext.x, y =  starty})
+
+                 itemGrp:rotate( 90 )
 
 
 

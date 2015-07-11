@@ -538,57 +538,18 @@ local otherscenes = {
 
           autoid = {  
                             groupicon = "sagroup.png",
-
-
+                            inneredge=1,
+                            edge=5,
+                            headercolor = { r=1/255, g=1/255, b=1/255, a=1 }, 
+                            headerfontsize = 15, 
+                            headerfontsizelarge = 17, 
+                            headerfontsizesmall = 9, 
+                            autoidtext = "INSURANCE IDENTIFICATION CARD",
                             backtext = "<",
-  
-                            edge=10,
-
-
-
-                            groupwidth = 240,
-                            groupmaxwidth = 320,     -- we will allow to grow to fit better if there is extra edging. This would be max however
-                            groupheight = 110,
-                            groupheaderheight = 30,
-                            groupbetween = 10,
+                            iconwidth = 50,    -- can be overidden in item
+                            iconheight = 50,   -- can be overidden in item
                             groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
                             
-                            iconwidth = 60,    -- can be overidden in item
-                            iconheight = 60,   -- can be overidden in item
-                            headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
-                           -- groupheader = { r=15/255, g=50/255, b=170/255, a=1 },
-                            groupheader = {
-                                      type = 'gradient',
-                                      color1 = { 189/255, 203/255, 220/255, 1 }, 
-                                      color2 = { 89/255, 116/255, 152/255, 1 },
-                                      direction = "down"
-                               },
-                            headerfontsize = 15,  
-                            textbottomedge =12  ,
-                            textalignx = 70, 
-
-
-                            nametextcolor = { r=140/255, g=130/255, b=30/255, a=1 },   
-                            nametextfontsize=16   ,
-
-                            balancelabelcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
-                            balancelabelfontsize=12 ,       
-                            balancelabellabel = "Balance",
-
-                            balancetextcolor = { r=50/255, g=130/255, b=60/255, a=1 },   
-                            balancetextfontsize=12  ,       
-
-                            policytextcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
-                            policytextfontsize=12   ,       
-                            policytextlabel = "Policy Number: ",
-
-                            termtextcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
-                            termtextfontsize=12   ,       
- 
-                            termtextlabel = "Coverage From: ",
-
-                            shape="roundedRect",
-
 
 
                         },                 

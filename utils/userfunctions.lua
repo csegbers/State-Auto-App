@@ -4,6 +4,29 @@
 local myApp = require( "myapp" ) 
 local parse = require( myApp.utilsfld .. "mod_parse" ) 
 
+function myApp.fncCopyPolicyTerm  (inrec,outrec )
+
+    outrec.policynumber = inrec.policyNumber
+    outrec.policymod = inrec.policyMod
+    outrec.effdate = inrec.effDate.iso
+    outrec.expdate = inrec.expDate.iso
+    outrec.objectId = inrec.objectId
+    outrec.policyaddress = inrec.policyAddress
+    outrec.policycity = inrec.policyCity
+    outrec.policycompanyname = inrec.policyCompanyName
+    outrec.policyinsurancegroup = inrec.policyInsuranceGroup
+    outrec.policyinsuredname = inrec.policyInsuredName
+    outrec.policylob = inrec.policyLOB
+    outrec.policynaic = inrec.policyNaic
+    outrec.policypostalcode = inrec.policyPostalCode
+    outrec.policystate = inrec.policyState
+    outrec.policystatename = inrec.policyStateName
+    outrec.policytype = inrec.policyType
+    outrec.policydue = inrec.policyDue
+    outrec.agencycode = inrec.agencyCode
+    outrec.due = inrec.policyDue
+
+end
  
 function myApp.fncUserUpdatePolicies ()
 
@@ -38,7 +61,10 @@ function myApp.fncUserUpdatePolicies ()
                         if #resgroup.policyTerms[1] > 0 then
                             myApp.authentication.agencycode = resgroup.policyTerms[1][1].agencyCode or ""
                             for pt = 1, #resgroup.policyTerms[1]  do
-                                table.insert (myApp.authentication.policies[resgroup["policyNumber"]].policyTerms, pt, resgroup.policyTerms[1][pt])
+                                local termgroup = {} 
+                                myApp.fncCopyPolicyTerm (resgroup.policyTerms[1][pt] ,termgroup)                       
+                                --table.insert (myApp.authentication.policies[resgroup["policyNumber"]].policyTerms, pt, resgroup.policyTerms[1][pt])
+                                table.insert (myApp.authentication.policies[resgroup["policyNumber"]].policyTerms, pt, termgroup)
                             end
                        end
                     end

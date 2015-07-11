@@ -143,13 +143,25 @@ local onRowTouch = function( event )
                   doclaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
                   myApp.showSubScreen({instructions=doclaunch}) 
               elseif   params.rowtype == "vehinfo" then
-                  print ("veh file " .. params.vehvin)
-                  local vehlaunch =  myApp.otherscenes.policydetails.displayautoid
-                  vehlaunch.navigation.composer.id =  sceneid .. params.id      --- this is the actual object id. WIll be different for each veh and same veh different per term so truly uniqe
-                  vehlaunch.objectId = params.id 
-                  vehlaunch.title =  ((params.vehyear or "").. "  " .. (params.vehmake or "") ..  " " .. (params.vehmodel or ""))
-                  vehlaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
-                  myApp.showSubScreen({instructions=vehlaunch}) 
+                  ----------------------------
+                  -- does the vehicle type support autoids ?
+                  ----------------------------
+                  local vehtypetable =  myApp[params.rowtype][string.lower( (params.rowobject or "default") )]  
+                  local doautoids = false
+                  if vehtypetable then
+                      doautoids = (vehtypetable.autoids or false)
+                  else
+                      doautoids = (myApp[params.rowtype].default.autoids or false)
+                  end
+                  if doautoids then
+                      print ("veh file " .. params.vehvin)
+                      local vehlaunch =  myApp.otherscenes.policydetails.displayautoid
+                      vehlaunch.navigation.composer.id =  sceneid .. params.id      --- this is the actual object id. WIll be different for each veh and same veh different per term so truly uniqe
+                      vehlaunch.objectId = params.id 
+                      vehlaunch.title =  ((params.vehyear or "").. "  " .. (params.vehmake or "") ..  " " .. (params.vehmodel or ""))
+                      vehlaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
+                      myApp.showSubScreen({instructions=vehlaunch}) 
+                  end
 
               end
 
@@ -238,7 +250,7 @@ function scene:show( event )
                  local row = 1
                  polcurrentterm = polgroup.policyTerms[1]    -- should be the current term as the rest service sorrted and we instered in order
                 
-                 print ("policy" .. sceneparams.policynumber .. polcurrentterm.policyInsuredName)
+                 print ("policy" .. sceneparams.policynumber .. polcurrentterm.policyinsuredname)
                 --groupsPerRow   -- not really used on this screen
 
                  local groupheight = sceneinfo.groupheight
@@ -305,7 +317,7 @@ function scene:show( event )
                  -------------------------------------------------
                  -- Header text
                  -------------------------------------------------
-                 local myText = display.newText( sceneinfo.policytextlabel .. (polcurrentterm.policyNumber or ""), 0, startYother,  myApp.fontBold, sceneinfo.headerfontsize )
+                 local myText = display.newText( sceneinfo.policytextlabel .. (polcurrentterm.policynumber or ""), 0, startYother,  myApp.fontBold, sceneinfo.headerfontsize )
                  myText:setFillColor( sceneinfo.headercolor.r,sceneinfo.headercolor.g,sceneinfo.headercolor.b,sceneinfo.headercolor.a )
                  myText.anchorX = 0
                  myText.x= textalignx
@@ -315,7 +327,7 @@ function scene:show( event )
                  -- Lob image ?
                  -------------------------------------------------
 
-                 local lob = string.lower( (polcurrentterm.policyLOB or "default") )
+                 local lob = string.lower( (polcurrentterm.policylob or "default") )
                  local lobimage = nil
                  if myApp.lobinfo[lob]  then
                     lobimage = myApp.lobinfo[lob].image
@@ -335,7 +347,7 @@ function scene:show( event )
                  -------------------------------------------------
                  -- Insured Name
                  -------------------------------------------------
-                 local myName = display.newText( {text=(polcurrentterm.policyInsuredName or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sceneinfo.nametextfontsize,align="left" })
+                 local myName = display.newText( {text=(polcurrentterm.policyinsuredname or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sceneinfo.nametextfontsize,align="left" })
                  myName:setFillColor( sceneinfo.nametextcolor.r,sceneinfo.nametextcolor.g,sceneinfo.nametextcolor.b,sceneinfo.nametextcolor.a )
                  myName.anchorX = 0
                  myName.anchorY = 0
@@ -356,7 +368,7 @@ function scene:show( event )
                  -------------------------------------------------
                  -- Balance
                  -------------------------------------------------
-                 local myBalanceText = display.newText( {text=string.format("%6.2f",(polcurrentterm.policyDue or "") ) , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sceneinfo.balancetextfontsize })
+                 local myBalanceText = display.newText( {text=string.format("%6.2f",(polcurrentterm.policydue or "") ) , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sceneinfo.balancetextfontsize })
                  myBalanceText:setFillColor( sceneinfo.balancetextcolor.r,sceneinfo.balancetextcolor.g,sceneinfo.balancetextcolor.b,sceneinfo.balancetextcolor.a )
                  myBalanceText.x=myBalanceLabel.x
                  myBalanceText.y=myBalanceLabel.y + myBalanceLabel.height  
@@ -366,7 +378,7 @@ function scene:show( event )
                  -- -- POlicy Number 
                  -- -------------------------------------------------
                  
-                 -- local myPolicy = display.newText( {text=sceneinfo.policytextlabel .. (polcurrentterm.policyNumber or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sceneinfo.policytextfontsize,align="left" })
+                 -- local myPolicy = display.newText( {text=sceneinfo.policytextlabel .. (polcurrentterm.policynumber or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sceneinfo.policytextfontsize,align="left" })
                  -- myPolicy:setFillColor( sceneinfo.policytextcolor.r,sceneinfo.policytextcolor.g,sceneinfo.policytextcolor.b,sceneinfo.policytextcolor.a )
                  -- myPolicy.anchorX = 0
                  -- myPolicy.anchorY = 0.5
@@ -378,8 +390,8 @@ function scene:show( event )
                  -------------------------------------------------
                  -- Terms
                  -------------------------------------------------
-                 local effdate = common.dateDisplayFromIso(polcurrentterm.effDate.iso)
-                 local expdate = common.dateDisplayFromIso(polcurrentterm.expDate.iso)
+                 local effdate = common.dateDisplayFromIso(polcurrentterm.effdate )
+                 local expdate = common.dateDisplayFromIso(polcurrentterm.expdate )
                  
                  local myTerm = display.newText( {text=sceneinfo.termtextlabel .. (effdate or "") .. " To " .. (expdate or "") , x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sceneinfo.termtextfontsize,align="left" })
                  myTerm:setFillColor( sceneinfo.termtextcolor.r,sceneinfo.termtextcolor.g,sceneinfo.termtextcolor.b,sceneinfo.termtextcolor.a )
@@ -407,8 +419,8 @@ function scene:show( event )
                         onRelease = function() 
                                       local parentinfo =  sceneparams 
                                       local paylaunch =  myApp.otherscenes.policydetails.makepaymentinfo
-                                      paylaunch.navigation.composer.id = (polcurrentterm.policyNumber or "")
-                                      paylaunch.title = "Pay: " .. (polcurrentterm.policyNumber or "")
+                                      paylaunch.navigation.composer.id = (polcurrentterm.policynumber or "")
+                                      paylaunch.title = "Pay: " .. (polcurrentterm.policynumber or "")
                                       paylaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
                                       myApp.showSubScreen({instructions=paylaunch}) 
 
@@ -568,6 +580,7 @@ function scene:show( event )
 
  
                   end
+ 
 
                  ----------------------------------
                  -- do we have docs or atleast attempted to get them for this policy  ?
@@ -584,7 +597,7 @@ function scene:show( event )
                          native.setActivityIndicator( true ) 
                          parse:run(myApp.otherscenes.policydetails.functionname.getdocuments,
                             {
-                             ["policyNumber"] = (polcurrentterm.policyNumber or ""),
+                             ["policyNumber"] = (polcurrentterm.policynumber or ""),
                              },
                              ------------------------------------------------------------
                              -- Callback inline function
@@ -607,10 +620,11 @@ function scene:show( event )
                                             polgroup.policyDocs[termkey] = {}   -- so we can sort
                                             
                                             local termdocgroup = polgroup.policyDocs[termkey]      -- so we can sort
-                                            termdocgroup.policynumber = resgroup.policyNumber
-                                            termdocgroup.policymod = resgroup.policyMod
-                                            termdocgroup.effdate = resgroup.effDate.iso
-                                            termdocgroup.expdate = resgroup.expDate.iso
+                                            myApp.fncCopyPolicyTerm (resgroup,termdocgroup)
+                                            -- termdocgroup.policynumber = resgroup.policyNumber
+                                            -- termdocgroup.policymod = resgroup.policyMod
+                                            -- termdocgroup.effdate = resgroup.effDate.iso
+                                            -- termdocgroup.expdate = resgroup.expDate.iso
                                             termdocgroup.documents = {}     -- will contain collection of docs for this term
 
                                             -------------------------------------
@@ -637,13 +651,13 @@ function scene:show( event )
                                        -- get vehicles ?
                                        ------------------------------------
                                        local getvehs = false
-                                       local infotbl = myApp.lobinfo[string.lower( (polcurrentterm.policyLOB or "default") )]
+                                       local infotbl = myApp.lobinfo[string.lower( (polcurrentterm.policylob or "default") )]
                                        if infotbl then getvehs = (infotbl.vehicles or false) end
                                        if getvehs then
                                              print ("getting vehicles ")
                                              parse:run(myApp.otherscenes.policydetails.functionname.getvehicles,
                                                     {
-                                                     ["policyNumber"] = (polcurrentterm.policyNumber or ""),
+                                                     ["policyNumber"] = (polcurrentterm.policynumber or ""),
                                                      },
                                                      ------------------------------------------------------------
                                                      -- Callback inline function
@@ -660,10 +674,25 @@ function scene:show( event )
                                                                         polgroup.policyVehs[termkey] = {}   -- so we can sort
                                                                         
                                                                         local termvehgroup = polgroup.policyVehs[termkey]      -- so we can sort
-                                                                        termvehgroup.policynumber = resgroup.policyNumber
-                                                                        termvehgroup.policymod = resgroup.policyMod
-                                                                        termvehgroup.effdate = resgroup.effDate.iso
-                                                                        termvehgroup.expdate = resgroup.expDate.iso
+                                                                        myApp.fncCopyPolicyTerm (resgroup,termvehgroup)
+                                                                        -- termvehgroup.policynumber = resgroup.policyNumber
+                                                                        -- termvehgroup.policymod = resgroup.policyMod
+                                                                        -- termvehgroup.effdate = resgroup.effDate.iso
+                                                                        -- termvehgroup.expdate = resgroup.expDate.iso
+                                                                        -- termvehgroup.objectId = resgroup.objectId
+                                                                        -- termvehgroup.policyaddress = resgroup.policyAddress
+                                                                        -- termvehgroup.policycity = resgroup.policyCity
+                                                                        -- termvehgroup.policycompanycame = resgroup.policyCompanyName
+                                                                        -- termvehgroup.policyinsurancegroup = resgroup.policyInsuranceGroup
+                                                                        -- termvehgroup.policyinsuredname = resgroup.policyInsuredName
+                                                                        -- termvehgroup.policylob = resgroup.policyLOB
+                                                                        -- termvehgroup.policynaic = resgroup.policyNaic
+                                                                        -- termvehgroup.policypostalcode = resgroup.policyPostalCode
+                                                                        -- termvehgroup.policystate = resgroup.policyState
+                                                                        -- termvehgroup.policystatename = resgroup.policyStateName
+                                                                        -- termvehgroup.policytype = resgroup.policyType
+                                                                        -- termvehgroup.policydue = resgroup.policyDue
+                                                                        -- termvehgroup.agencycode = resgroup.agencyCode
                                                                         termvehgroup.vehicles = {}     -- will contain collection of docs for this term
                                                                         --print (termvehgroup.policynumber)
 

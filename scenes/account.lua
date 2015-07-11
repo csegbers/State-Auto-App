@@ -193,7 +193,7 @@ function scene:show( event )
                     if #polgroup.policyTerms > 0 then
                         local polcurrentterm = polgroup.policyTerms[1]    -- should be the current term as the rest service sorrted and we instered in order
                         
-                        print ("account page item " .. k .. polcurrentterm.policyInsuredName)
+                        print ("account page item " .. k .. polcurrentterm.policyinsuredname)
      
                          --------------------------------------
                          -- need to start a new row ?
@@ -220,7 +220,7 @@ function scene:show( event )
                          ---------------------------------------------
                          local itemGrp = display.newGroup(  )
                          itemGrp.id = k
-                         itemGrp.title = (polcurrentterm.policyType or k)
+                         itemGrp.title = (polcurrentterm.policytype or k)
                          local startX = cellworkingGroupWidth*(col-1) + leftY + cellgroupwidth/2
                          local startY = (groupheight/2 +sbi.groupbetween*row) + (row-1)* groupheight
                          
@@ -244,7 +244,7 @@ function scene:show( event )
                          -------------------------------------------------
                          -- Header text
                          -------------------------------------------------
-                         local myText = display.newText( (polcurrentterm.policyType or ""), 0, startYother,  myApp.fontBold, sbi.headerfontsize )
+                         local myText = display.newText( (polcurrentterm.policytype or ""), 0, startYother,  myApp.fontBold, sbi.headerfontsize )
                          myText:setFillColor( sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b,sbi.headercolor.a )
                          myText.anchorX = 0
                          myText.x=sbi.textalignx
@@ -253,7 +253,7 @@ function scene:show( event )
                          -------------------------------------------------
                          -- Lob image ?
                          -------------------------------------------------
-                         local lob = string.lower( (polcurrentterm.policyLOB or "default") )
+                         local lob = string.lower( (polcurrentterm.policylob or "default") )
                          local lobimage = nil
                          if myApp.lobinfo[lob]  then
                             lobimage = myApp.lobinfo[lob].image
@@ -275,7 +275,7 @@ function scene:show( event )
                          -- Insured Name
                          -------------------------------------------------
                          
-                         local myName = display.newText( {text=(polcurrentterm.policyInsuredName or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.nametextfontsize,align="left" })
+                         local myName = display.newText( {text=(polcurrentterm.policyinsuredname or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.nametextfontsize,align="left" })
                          myName:setFillColor( sbi.nametextcolor.r,sbi.nametextcolor.g,sbi.nametextcolor.b,sbi.nametextcolor.a )
                          myName.anchorX = 0
                          myName.anchorY = 0
@@ -298,7 +298,7 @@ function scene:show( event )
                          -- Balance
                          -------------------------------------------------
                           
-                         local myBalanceText = display.newText( {text=string.format("%6.2f",(polcurrentterm.policyDue or "") ) , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sbi.balancetextfontsize })
+                         local myBalanceText = display.newText( {text=string.format("%6.2f",(polcurrentterm.policydue or "") ) , x=0, y=0, height=0,font= myApp.fontBold, fontSize=sbi.balancetextfontsize })
                          myBalanceText:setFillColor( sbi.balancetextcolor.r,sbi.balancetextcolor.g,sbi.balancetextcolor.b,sbi.balancetextcolor.a )
                          myBalanceText.x=myBalanceLabel.x
                          myBalanceText.y=myBalanceLabel.y + myBalanceLabel.height  
@@ -308,7 +308,7 @@ function scene:show( event )
                          -- POlicy Number 
                          -------------------------------------------------
                          
-                         local myPolicy = display.newText( {text=sbi.policytextlabel .. (polcurrentterm.policyNumber or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.policytextfontsize,align="left" })
+                         local myPolicy = display.newText( {text=sbi.policytextlabel .. (polcurrentterm.policynumber or ""), x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.policytextfontsize,align="left" })
                          myPolicy:setFillColor( sbi.policytextcolor.r,sbi.policytextcolor.g,sbi.policytextcolor.b,sbi.policytextcolor.a )
                          myPolicy.anchorX = 0
                          myPolicy.anchorY = 0.5
@@ -320,8 +320,8 @@ function scene:show( event )
                          -------------------------------------------------
                          -- Terms
                          -------------------------------------------------
-                         local effdate = common.dateDisplayFromIso(polcurrentterm.effDate.iso)
-                         local expdate = common.dateDisplayFromIso(polcurrentterm.expDate.iso)
+                         local effdate = common.dateDisplayFromIso(polcurrentterm.effdate)
+                         local expdate = common.dateDisplayFromIso(polcurrentterm.expdate)
                          
                          local myTerm = display.newText( {text=sbi.termtextlabel .. (effdate or "") .. " To " .. (expdate or "") , x=0, y=0, height=0,width=textwidth,font= myApp.fontBold, fontSize=sbi.termtextfontsize,align="left" })
                          myTerm:setFillColor( sbi.termtextcolor.r,sbi.termtextcolor.g,sbi.termtextcolor.b,sbi.termtextcolor.a )

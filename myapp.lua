@@ -80,6 +80,7 @@ local M = {
                               },
                           pumbr = {
                                    image = "lobpumbr.png",
+                                   vehicles = true,
                               },
                            },
             docimages = {
