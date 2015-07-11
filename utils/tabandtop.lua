@@ -612,6 +612,17 @@ end
 -- system.openURL("comgooglemaps://?saddr=lat,lng&daddr=xxx&directionsmode=transit")
 
 
+--------------------------------------
+-- orientation changed ?
+---------------------------------------
+function myApp.onOrientationChange( event )
+    local currentOrientation = event.type
+    print( "Current orientation: " .. currentOrientation )
+    pcall(function() composer.getScene( composer.getSceneName( "current" ) ):orientationchange(event) end)
+    pcall(function() composer.getScene( composer.getSceneName( "overlay" ) ):orientationchange(event) end)
+
+end
+Runtime:addEventListener( "orientation", myApp.onOrientationChange )
 
 ------------------------------------------------------
 print ("tabandtop: OUT")

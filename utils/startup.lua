@@ -224,6 +224,7 @@ function  myApp.evtlogmeout( event )
 end
 Runtime:addEventListener( "logmeout", myApp.evtlogmeout  )
 
+
 function  myApp.getCurrentLocation( event )
         --local getGPS   -- forward reference
         local parms = event or {}
@@ -439,5 +440,6 @@ end
 
 --myApp.updateGPS()
 Runtime:addEventListener( "system", myApp.onSystemEvent )
+
 
 

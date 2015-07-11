@@ -29,7 +29,44 @@ local polcurrentveh
 local polgroup
 local polagency
 local agencymapping = myApp.mappings.objects["Agency"].mapping
+local idwidth  
+local idheight 
+ 
 
+
+
+-- "portrait"
+-- "landscapeLeft"
+-- "portraitUpsideDown"
+-- "landscapeRight"
+-- "faceUp"
+-- "faceDown"
+
+local  setorientation = function (  )
+   local sor = system.orientation
+   local currot = itemGrp.rotation 
+   print ("rotaion " .. currot)
+   ---------------
+   -- default to portrait
+   --
+   -- note: known bug if rotate to upside down that is fine butthen going lanscapfe from that causes it to be upside down
+   -- have to rotatet back to regular porttrrait
+   ----------------
+   local portscale = idheight / idwidth     --- this is initail setup for landscape so width and height are reveresed
+   local rotate = 0
+   if sor ==  "portraitUpsideDown"  then
+   elseif  sor ==  "landscapeLeft"  then
+      portscale = 1
+      rotate = -90
+   elseif  sor ==  "landscapeRight"  then
+      portscale = 1
+      rotate = 90
+   end
+                    --itemGrp:rotate( 90 )
+    transition.to( itemGrp, { xScale=portscale, yScale=portscale, rotation=rotate, time=300 } )
+
+   --itemGrp.rotation = rotate
+end
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -53,6 +90,7 @@ function scene:show( event )
     -- Will Show
     ----------------------------------
     if ( phase == "will" ) then   
+       
         ----------------------------
         -- sceneparams at this point contains prior
         -- KEEP IT THAT WAY !!!!!
@@ -149,8 +187,8 @@ function scene:show( event )
                print ("we have vehicle " .. polcurrentveh.objectId .. " " .. polcurrentveh.vehvin .. " " .. polcurrentterm.policynumber)
                print ("we have vehicle for agency " .. (polagency[agencymapping.name] or ""))
 
-                 local idwidth = myApp.sceneHeight-sceneinfo.edge * 2    -- since we rotate 90 degrees use height for the width
-                 local idheight = myApp.sceneWidth-sceneinfo.edge * 2    -- since we rotate 90 degrees use height for the width
+                 idwidth = myApp.sceneHeight-sceneinfo.edge * 2    -- since we rotate 90 degrees use height for the width
+                 idheight = myApp.sceneWidth-sceneinfo.edge * 2    -- since we rotate 90 degrees use height for the width
                  
                  -------------------------------------------------
                  -- Background
@@ -247,24 +285,41 @@ function scene:show( event )
                  local makevalue = AddText({text=(polcurrentveh.vehmake .. " "  .. polcurrentveh.vehmodel),fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= maketext.x, y =  starty})
                  local vinvalue = AddText({text=polcurrentveh.vehvin,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= vintext.x, y =  starty})
 
-                 itemGrp:rotate( 90 )
+
+                 -----------------------
+                 -- Agency  
+                 -----------------------    
+                 starty = starty + vinvalue.height + sceneinfo.edge * 3        
+                 local agencytext = AddText({text="AGENCY / COMPANY ISSUING CARD" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= 0-idwidth/2 +  leftedge, y =  starty})
+
+                 starty = starty + agencytext.height + sceneinfo.inneredge         
+                 local agencyvalue = AddText({text=polagency.agencyName ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= agencytext.x, y =  starty})
+                 starty = starty + agencyvalue.height + sceneinfo.inneredge         
+                 local addressvalue = AddText({text=polagency.agencyAddress ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= agencytext.x, y =  starty})
+                 starty = starty + addressvalue.height + sceneinfo.inneredge         
+                 local cityvalue = AddText({text=polagency.agencyCity .. ", " .. polagency.agencyState .. "  " .. polagency.agencyZip,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= agencytext.x, y =  starty})
+                 starty = starty + cityvalue.height + sceneinfo.inneredge         
+                 local phonevalue = AddText({text=common.phoneformat(polagency.agencyPhone),fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= agencytext.x, y =  starty})
+
+                 -----------------------
+                 --  Insured
+                 -----------------------    
+                 starty = agencytext.y 
+                 local insuredtext = AddText({text="INSURED" ,fontsize=sceneinfo.headerfontsizesmall, textcolor=sceneinfo.headercolor, x= 0 +  leftedge, y =  starty})
+
+                 starty = starty + insuredtext.height + sceneinfo.inneredge         
+                 local insuredvalue = AddText({text=polcurrentterm.policyinsuredname ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= insuredtext.x, y =  starty})
+                 starty = starty + insuredvalue.height + sceneinfo.inneredge         
+                 local insaddressvalue = AddText({text=polcurrentterm.policyaddress ,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= insuredtext.x, y =  starty})
+                 starty = starty + insaddressvalue.height + sceneinfo.inneredge         
+                 local inscityvalue = AddText({text=polcurrentterm.policycity .. ", " .. polcurrentterm.policystate .. "  " .. polcurrentterm.policypostalcode,fontsize=sceneinfo.headerfontsize, textcolor=sceneinfo.headercolor, x= insuredtext.x, y =  starty})
 
 
+            end          
+            container:insert(itemGrp)
 
-            end
-
-
-
-
-
-
-
-
-             container:insert(itemGrp)
-
- 
         end
-
+        setorientation()   -- always do in case orientation chagned and we weere already here for this vehicle object
     ----------------------------------
     -- Did Show
     ----------------------------------
@@ -304,6 +359,10 @@ end
 ---------------------------------------------------
 function scene:morebutton( parms )
 
+end
+
+function scene:orientationchange( event )
+   setorientation()
 end
 
 scene:addEventListener( "create", scene )
