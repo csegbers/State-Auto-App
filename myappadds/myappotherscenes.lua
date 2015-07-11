@@ -513,6 +513,7 @@ local otherscenes = {
                                               text="Auto Id",
                                               backtext = "<",
                                               --forwardtext = ">",
+                                              objectId = nil,     -- must be set by launcher. Will be the unique veh id. Notthe vin
                                               sceneinfo = { 
                                                                htmlinfo = { },     --- must supply
                                                                scrollblockinfo = { },
@@ -536,6 +537,8 @@ local otherscenes = {
                         },     
 
           autoid = {  
+                            groupicon = "sagroup.png",
+
 
                             backtext = "<",
   

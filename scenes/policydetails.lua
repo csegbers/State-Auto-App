@@ -146,6 +146,7 @@ local onRowTouch = function( event )
                   print ("veh file " .. params.vehvin)
                   local vehlaunch =  myApp.otherscenes.policydetails.displayautoid
                   vehlaunch.navigation.composer.id =  sceneid .. params.id      --- this is the actual object id. WIll be different for each veh and same veh different per term so truly uniqe
+                  vehlaunch.objectId = params.id 
                   vehlaunch.title =  ((params.vehyear or "").. "  " .. (params.vehmake or "") ..  " " .. (params.vehmodel or ""))
                   vehlaunch.callBack = function() myApp.showSubScreen({instructions=parentinfo,effectback="slideRight"}) end
                   myApp.showSubScreen({instructions=vehlaunch}) 

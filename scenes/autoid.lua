@@ -24,6 +24,12 @@ local justcreated
 local container
 local itemGrp
 
+local polcurrentterm
+local polcurrentveh
+local polgroup
+local polagency
+local agencymapping = myApp.mappings.objects["Agency"].mapping
+
 
 ------------------------------------------------------
 -- Called first time. May not be called again if we dont recyle
@@ -91,6 +97,92 @@ function scene:show( event )
 
              itemGrp = display.newGroup(  )
              local startX = 0
+
+
+             ----------------------------------
+             -- loop thru all policiies terms and vehciles to find the object
+             -- do this so you can use this scene from anywhere so long as you have that uniqe object we will find the policy / term
+             ----------------------------------
+             polcurrentterm = nil
+             polcurrentveh = nil
+             polgroup = nil
+             polagency = myApp.authentication.agencies
+
+             -------------------------
+             -- loop thru policies
+             -------------------------
+             for k,v in pairs(myApp.authentication.policies) do 
+                    polgroup = myApp.authentication.policies[k]
+                    ------------------------------
+                    -- vehicle groups policy terms on this policy ?
+                    ------------------------------
+                     if polgroup.policyVehs then
+
+                        for kv,iv in pairs(polgroup.policyVehs) do
+                             polcurrentterm = polgroup.policyVehs[kv]
+                             if polcurrentterm  then 
+                               ------------------------------
+                               -- loop thru actual vehicles on the term
+                               ------------------------------
+                                if #polcurrentterm.vehicles > 0 then
+                                   for ptv = 1, #polcurrentterm.vehicles  do
+                                      local veh = polcurrentterm.vehicles[ptv]
+                                      print (veh.objectId )
+                                      if veh.objectId == sceneparams.objectId then
+                                          polcurrentveh = veh
+                                          break
+                                      end
+                                   end  -- for ptv = 1, #polcurrentterm.vehicles  do
+                                end -- #polcurrentterm.vehicles > 0 
+                             end   -- have a term 
+                        end -- loop thru policyVehs  (term)
+                     end --if polgroup.policyVehs
+             end  -- loop thru policies    
+
+
+            ----------------------------------
+            -- at this point we should have the specific information for the policy / term and vehicle and agency
+            ----------------------------------
+            if polcurrentveh and polagency then       
+               print ("we have vehicle " .. polcurrentveh.objectId .. " " .. polcurrentveh.vehvin .. " " .. polcurrentterm.policynumber)
+               print ("we have vehicle for agency " .. (polagency[agencymapping.name] or ""))
+
+
+                 
+                 -------------------------------------------------
+                 -- Background
+                 -------------------------------------------------
+                 local myRoundedRect = display.newRoundedRect(50, 100 ,200,  150, 1 )
+                 myRoundedRect:setFillColor(sceneinfo.groupbackground.r,sceneinfo.groupbackground.g,sceneinfo.groupbackground.b,sceneinfo.groupbackground.a )
+                 itemGrp:insert(myRoundedRect)
+
+                 -------------------------------------------------
+                 -- Header Background
+                 -------------------------------------------------
+
+                 local myRoundedTop = display.newRoundedRect(50, 100 ,200,  50, 1 )
+                 --local headcolor = sceneinfo.groupheader
+                 --myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
+                 myRoundedTop:setFillColor(sceneinfo.groupheader)
+                 itemGrp:insert(myRoundedTop)
+                 
+                 -------------------------------------------------
+                 -- Header text
+                 -------------------------------------------------
+                 local myText = display.newText(  (polcurrentveh.vehvin or ""), 0, 90,  myApp.fontBold, sceneinfo.headerfontsize )
+                 myText:setFillColor( sceneinfo.headercolor.r,sceneinfo.headercolor.g,sceneinfo.headercolor.b,sceneinfo.headercolor.a )
+                 myText.anchorX = 0
+                 myText.x= 20
+                 itemGrp:insert(myText)
+
+
+itemGrp:rotate( 90 )
+
+
+
+            end
+
+
 
 
 
