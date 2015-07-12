@@ -7,6 +7,9 @@ local parse = require( myApp.utilsfld .. "mod_parse" )
 local dbmodule = require( myApp.utilsfld ..  "dbmodule")  
 require( myApp.utilsfld .. "dbfunctions" ) 
 require( myApp.utilsfld .. "userfunctions" ) 
+local json = require("json")
+
+--print (require("json").encode(myApp.contactus))
 
 
 function print_r ( t )  
@@ -114,7 +117,14 @@ parse.showJSON = myApp.debugMode -- output the raw JSON response in the console
 --parse.dispatcher:addEventListener( "parseRequest", onParseResponse )
 parse:appOpened(function (e) print ("return from appOpened") print (e.requestType)   end )
 --parse:getObject("Agency","9ez6Z2tcaC", function(e) if not e.error then print ("BBBBAAACCCK " .. e.response.agencyName) end end )
-parse:getConfig( function(e) if not e.error then myApp.appName = e.response.params.appName print ("ZZZZZZBBBBAAACCCK " .. e.response.params.appName) end end )
+parse:getConfig( 
+     function(e) 
+          if not e.error then 
+             myApp.appName = e.response.params.appName 
+             myApp.extras = json.decode(json.encode(e.response.params.appExtras ))
+             print ("back from extras")
+          end 
+      end )
 --parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from home logevent") print (e.requestType)   end )
 
 

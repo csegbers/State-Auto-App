@@ -72,7 +72,7 @@ local moreinfo = {
                                    isCategory = true,
                                       },
 
-                               bb3 = {
+                               bb31 = {
                                           title = "Contact State Auto", 
                                           pic="truck.png",
                                           backtext = "<",
@@ -82,6 +82,17 @@ local moreinfo = {
                                              },
                                           navigation = { composer = { id = "contactus",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
                                       },
+                               bb32 = {
+                                          title = "Extras", 
+                                          pic="truck.png",
+                                          backtext = "<",
+                                          sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { object="extras" , navigate = "subscene"},
+                                             },
+                                          navigation = { composer = { id = "extras",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
+                                      },
+ 
                                bb4 = {title = "Help", 
                                            pic="truck.png",
                                            text="Flat tire, out of gas ? We can help",

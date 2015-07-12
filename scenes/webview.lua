@@ -44,8 +44,10 @@ function scene:show( event )
             local function webListener( event )
                 if event.type == "loaded" or event.type == "timeout"  and pagewasloaded == false then
                     pagewasloaded = true
-                    webView.isVisible = true
-                    webView:removeEventListener( "urlRequest", webListener)
+                    if webView then
+                       webView.isVisible = true
+                       webView:removeEventListener( "urlRequest", webListener)
+                    end
                     native.setActivityIndicator( false )
                     if  event.type == "timeout"  then
                         native.showAlert( myApp.appName ,myApp.webview.timeoutmessage ,{"ok"}) 
@@ -69,8 +71,26 @@ function scene:show( event )
                 if string.sub(url, 1, 4):upper() ~= "HTTP" then  url = "http://" .. url end
                 native.setActivityIndicator( true )
                 webView:request( url )
-            else
+            elseif  sceneparams.sceneinfo.htmlinfo.htmlfile then
                 webView:request( myApp.htmlfld .. sceneparams.sceneinfo.htmlinfo.htmlfile , sceneparams.sceneinfo.htmlinfo.dir )
+            elseif sceneparams.sceneinfo.htmlinfo.youtubeid then
+
+                     local temphtml = "youtube.html"
+                     local temphtmlpath  = system.pathForFile( temphtml, system.TemporaryDirectory )
+                     local fh, errStr = io.open( temphtmlpath, "w" )
+ 
+                     if fh then
+                        print( "Created file" )
+                        fh:write("<!DOCTYPE html><html><body>")
+                        fh:write([[<iframe id="ytplayer" type="text/html" width="]] ..  myApp.sceneWidth .. [[" height="]] .. myApp.sceneHeight .. [[" src="http://www.youtube.com/embed/]] .. sceneparams.sceneinfo.htmlinfo.youtubeid  .. [[?rel=0&autoplay=1" allowfullscreen frameborder="0"/>]])
+                        fh:write("</body></html>")
+                        io.close( fh )
+                     else
+                         print( "Create file failed!" )
+                    end
+
+                    webView:request( temphtml , system.TemporaryDirectory )
+
             end
             
     end	

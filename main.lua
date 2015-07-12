@@ -37,6 +37,9 @@ stage:insert( myApp.TitleGroup )              -- the top title area
 stage:insert( myApp.tabBar )                  -- tabbar at bottom
 stage:insert( myApp.transContainer )          -- a container we turn on and off if they select more.select
                                               -- this makes the slid out main area still somewhat appear but receive taps
+
+
+                                              
 ---------------------------------------------------
 --  Splash and launch first page
 ----------------------------------------------------

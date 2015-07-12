@@ -29,6 +29,28 @@ local contactus = {
                                navigation = { search = { q="Towing" },},
                                       
                                   },
+
+
+                               bb5 = {title = "video", 
+                                           pic="video.png",
+                                           text="Flat tire, out of gas ? We can help",
+                                           backtext = "<",
+
+                                          sceneinfo = { 
+                                                htmlinfo = {
+                                                    youtubeid="6EKIB8vhki8" ,
+                                                },
+                                               scrollblockinfo = { },
+                                             },
+                                          navigation = { composer = {
+                                               id = "term",
+                                               lua="webview",
+                                               time=250, 
+                                               effect="slideLeft",
+                                               effectback="slideRight",
+                                            },},
+                                         },
+
                           dss = {title = "State Auto Web", 
                               pic="web.png",
                               text="Sample web page",
