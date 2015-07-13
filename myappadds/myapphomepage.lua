@@ -25,7 +25,7 @@ local homepage = {
             textbottomedge =12   ,           
             items = {
                         alocate = {
-                             title = "Locate an Agent", 
+                             title = "Locate An Agent", 
                               
                              pic="trustedchoice.png",
                              originaliconwidth = 196,
@@ -55,7 +55,7 @@ local homepage = {
                          broasast = {title = "Certified Repair Shops", 
                                      pic="qsg.png",
                                       
-                                     text="Locate certified repair shops nearby or from an address",
+                                     text="Locate certified repair shops nearby",
                                      backtext = "<",
                                      sceneinfo = { 
                                              locateinfo = {
@@ -74,7 +74,7 @@ local homepage = {
                                          effectback="slideRight",
                                       },},
                                    },
-                         bsemer = {title = "Emergency" , pic="emergency.png",text="Click here for location services and to dial 911" ,
+                         csemer = {title = "Emergency" , pic="emergency.png",text="Click here for location services and to dial 911" ,
                                      backtext = "<",
                                     
                                      groupheader = { r=255/255, g=0/255, b=0/255, a=1 },
@@ -88,13 +88,14 @@ local homepage = {
 
                                       
                                   },
-                          ccc = {title = "Towing Services", pic="towing.png",text="Locate nearby towing services" ,
+                          dcc = {title = "Roadside Assistance", pic="towing.png",text="Locate nearby towing services" ,
+                               groupheader = { r=40/255, g=90/255, b=40/255, a=1 },
                                navigation = { search = { q="Towing" },},
                                       
                                   },
-                          dss = {title = "State Auto Web", 
+                          ess = {title = "State Auto Website", 
                               pic="web.png",
-                              text="Sample web page",
+                              text="Go to State Auto's website",
                               backtext = "<",
                               forwardtext = ">",
                              sceneinfo = { 
@@ -110,40 +111,41 @@ local homepage = {
                                 },},
                                 
                                 },
-                            dtt= {title = "CNN Launch separate", 
-                              pic="web.png",
-                              text="Sample web page",
-                              backtext = "<",
-                              navigation = { systemurl = {
-                                   url="http://www.cnn.com/"
-                                },},
+                            -- dtt= {title = "CNN Launch separate", 
+                            --   pic="web.png",
+                            --   text="Sample web page",
+                            --   backtext = "<",
+                            --   navigation = { systemurl = {
+                            --        url="http://www.cnn.com/"
+                            --     },},
                                       
-                                },
-                          eb44 = {title = "Nearby gas stations", pic="gas.png",text="locate nearby gas stations" ,
+                            --     },
+                          fb44 = {title = "Nearby Gas Stations", pic="gas.png",text="Locate nearby gas stations" ,
+                              groupheader = { r=40/255, g=90/255, b=40/255, a=1 },
                                navigation = { search = { q="Gas Station" },},
                                       
                                   },
-                           ec3t = {title = "Directions to segbers", pic="map.png",text="Get directions to segber shouse" ,showonlyindebugMode=true,
-                               navigation = { directions = { address="12293 Mallard Pond Ct Pickerington Ohio 43147" },},
+                           -- ec3t = {title = "Directions to segbers", pic="map.png",text="Get directions to segber shouse" ,showonlyindebugMode=true,
+                           --     navigation = { directions = { address="12293 Mallard Pond Ct Pickerington Ohio 43147" },},
                                       
-                                  },
-                           et3t = {title = "Phone Call", pic="phone.png",text="Flat tire, out of gas ? We can help" ,
-                               navigation = { systemurl = { url="tel:614-915-9769"},},
+                           --        },
+                           -- et3t = {title = "Phone Call", pic="phone.png",text="Flat tire, out of gas ? We can help" ,
+                           --     navigation = { systemurl = { url="tel:614-915-9769"},},
                                       
-                                  },
-                           ey3t = {title = "Text", pic="sms.png",text="send a text" ,
-                               navigation = { popup = { type="sms",options= {to="614-915-9769"},},},
+                           --        },
+                           -- ey3t = {title = "Text", pic="sms.png",text="send a text" ,
+                           --     navigation = { popup = { type="sms",options= {to="614-915-9769"},},},
                                       
-                                  },
-                         fttt = {title = "Mail", pic="email.png",text="Flat tire, out of gas ? We can help", 
-                               navigation = { popup = { type="mail", options= {to="nobody@mycompany.com", subject="hi there"},},},
-                                 },
+                           --        },
+                         -- fttt = {title = "Mail", pic="email.png",text="Flat tire, out of gas ? We can help", 
+                         --       navigation = { popup = { type="mail", options= {to="nobody@mycompany.com", subject="hi there"},},},
+                         --         },
                          zzz= {
                                           title = "Contact State Auto", 
-                                          pic="truck.png",
+                                          pic="saicon-down.png",
                                           doublewide = true,
                                           backtext = "<",
-                                           text="Contact for help",
+                                           text="Contact State Auto",
                                           
                                           sceneinfo = { 
                                                htmlinfo = {},

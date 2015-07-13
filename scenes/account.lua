@@ -118,8 +118,8 @@ function scene:show( event )
                                  policynumber = rowitem,
                                  navigation = { 
                                        composer = {
-                                                      -- this id setting this way we will rerun if different than prior request either miles or lat.lng etc...
-                                                      -- we include this scene id plus the row id which is policy number
+                                                      -- this id setting this way we will rerun if different than prior request ...
+                                                      -- we include this scene id plus the row id which is policy number for account
                                                       -- the reason is if they log out / in this sceene id is random thus we make sure we start fresh
                                                      id = sceneid .. rowitem,  
                                                      lua=policysceneinfo.navigation.composer.lua ,
