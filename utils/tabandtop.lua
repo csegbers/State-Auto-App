@@ -503,8 +503,14 @@ function myApp.navigationCommon(parms)
                   local url = v.navigation.systemurl.url
 
                   local function goUrl()
+
                       if dothenavigation then 
-                         system.openURL(url) 
+                         local launchsuccess = system.openURL(url) 
+                         if ( launchsuccess == false ) then   
+                            if v.navigation.systemurl.urlfallback then
+                               system.openURL(v.navigation.systemurl.urlfallback )  
+                            end
+                         end
                       end
                   end
                   -----------------------------------
@@ -556,8 +562,23 @@ function myApp.navigationCommon(parms)
                            if v.navigation.popup then
                               native.showPopup( v.navigation.popup.type, v.navigation.popup.options )
                            else
+                               ------------------------------
+                               -- execute some code
+                               ------------------------------
                                if  v.navigation.execute then
                                    v.navigation.execute.method()
+                               else
+                                   ------------------------------
+                                   -- Launch another app
+                                   ------------------------------
+                                   if v.navigation.app then
+                                         local launchsuccess = system.openURL(v.navigation.app.url) 
+                                         if ( launchsuccess == false ) then   
+                                            if v.navigation.app.urlfallback then
+                                               system.openURL(v.navigation.app.urlfallback )  
+                                            end
+                                         end
+                                   end
                                end
                            end   -- v.navigation.popup
                        end  -- v.navigation.search 
@@ -568,6 +589,7 @@ function myApp.navigationCommon(parms)
 
 
 end
+
 
 function myApp.navigationSearch(parms)
        local v = parms

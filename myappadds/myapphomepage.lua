@@ -24,7 +24,7 @@ local homepage = {
             textfontsize=12   ,       
             textbottomedge =12   ,           
             items = {
-                        alocate = {
+                        aaaaa = {
                              title = "Locate An Agent", 
                               
                              pic="trustedchoice.png",
@@ -52,7 +52,7 @@ local homepage = {
                                          effectback="slideRight",
                                       },},
                                  },
-                         broasast = {title = "Certified Repair Shops", 
+                         bbbbb = {title = "Certified Repair Shops", 
                                      pic="qsg.png",
                                       
                                      text="Locate certified repair shops nearby",
@@ -74,7 +74,7 @@ local homepage = {
                                          effectback="slideRight",
                                       },},
                                    },
-                         csemer = {title = "Emergency" , pic="emergency.png",text="Click here for location services and to dial 911" ,
+                         ccccc = {title = "Emergency" , pic="emergency.png",text="Click here for location services and to dial 911" ,
                                      backtext = "<",
                                     
                                      groupheader = { r=255/255, g=0/255, b=0/255, a=1 },
@@ -88,12 +88,7 @@ local homepage = {
 
                                       
                                   },
-                          dcc = {title = "Roadside Assistance", pic="towing.png",text="Locate nearby towing services" ,
-                               groupheader = { r=40/255, g=90/255, b=40/255, a=1 },
-                               navigation = { search = { q="Towing" },},
-                                      
-                                  },
-                          ess = {title = "State Auto Website", 
+                          ddddd = {title = "State Auto Website", 
                               pic="web.png",
                               text="Go to State Auto's website",
                               backtext = "<",
@@ -120,11 +115,18 @@ local homepage = {
                             --     },},
                                       
                             --     },
-                          fb44 = {title = "Nearby Gas Stations", pic="gas.png",text="Locate nearby gas stations" ,
-                              groupheader = { r=40/255, g=90/255, b=40/255, a=1 },
-                               navigation = { search = { q="Gas Station" },},
+
+                          -- eeeee = {title = "Roadside Assistance", pic="towing.png",text="Locate nearby towing services" ,
+                          --      groupheader = { r=40/255, g=90/255, b=40/255, a=1 },
+                          --      navigation = { search = { q="Towing" },},
                                       
-                                  },
+                          --         },
+
+                          -- fffff = {title = "Nearby Gas Stations", pic="gas.png",text="Locate nearby gas stations" ,
+                          --     groupheader = { r=40/255, g=90/255, b=40/255, a=1 },
+                          --      navigation = { search = { q="Gas Station" },},
+                                      
+                                  -- },
                            -- ec3t = {title = "Directions to segbers", pic="map.png",text="Get directions to segber shouse" ,showonlyindebugMode=true,
                            --     navigation = { directions = { address="12293 Mallard Pond Ct Pickerington Ohio 43147" },},
                                       
@@ -140,7 +142,7 @@ local homepage = {
                          -- fttt = {title = "Mail", pic="email.png",text="Flat tire, out of gas ? We can help", 
                          --       navigation = { popup = { type="mail", options= {to="nobody@mycompany.com", subject="hi there"},},},
                          --         },
-                         zzz= {
+                         ggggg= {
                                           title = "Contact State Auto", 
                                           pic="saicon-down.png",
                                           doublewide = true,

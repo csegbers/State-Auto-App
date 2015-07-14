@@ -50,27 +50,14 @@ local contactus = {
                                --                 effectback="slideRight",
                                --              },},
                                --           },
-
-                          dss = {title = "State Auto Web", 
-                              pic="web.png",
-                              text="State Auto main website",
-                              backtext = "<",
-                              forwardtext = ">",
-
-                             sceneinfo = { 
-                                  htmlinfo = {     url="http://www.stateauto.com/" , },
-                                 scrollblockinfo = { },
-                                             },
-                              navigation = { composer = {
-                                   id = "stateautoweb",
-                                   lua="webview",
-                                   time=250, 
-                                   effect="slideLeft",
-                                   effectback="slideRight",
-                                },},
-                                
+                     aaa = {title = "Call State Auto", pic="phone.png",text="State Auto Main Phone Line" ,
+                             doublewide=true,
+                             textfontsize=15   , 
+                             navigation = { systemurl = { url="tel:614-464-5000"},},
+                                    
                                 },
-                            dsu = {title = "Live Chat", 
+
+                      bbb = {title = "Live Chat", 
                               pic="livechat.png",
                               text="Chat live with a State Auto representative",
                               backtext = "<",
@@ -89,6 +76,63 @@ local contactus = {
                                 },},
                                 
                                 },
+                      ccc = {title = "Billing Questions", pic="billing.png",text="Call for billing questions" ,
+                               navigation = { systemurl = { url="tel:800-444-9950"},},
+                                      
+                                  },
+
+
+                     ddd = {title = "Report A Claim", pic="claim.png",text="Call The 24 Hour Claim Contact Center" ,
+                               --doublewide=true,
+                               groupheader = { r=1/255, g=1/255, b=1/255, a=1 },
+                               navigation = { systemurl = { url="tel:800-766-1853"},},
+                                      
+                                  },
+                    eee = {title = "Report A Glass Claim", pic="claimglass.png",text="For Auto Glass Only Claims" ,
+                               groupheader = { r=1/255, g=1/255, b=1/255, a=1 },
+                               navigation = { systemurl = { url="tel:888-504-4527"},},
+                                      
+                                  },
+                       fff = {title = "Report Fraud", pic="fraud.png",text="Anonomously call to report fraud" ,
+                               groupheader = { r=1/255, g=1/255, b=1/255, a=1 },
+                               navigation = { systemurl = { url="tel:888-999-8037"},},
+                                      
+                                  },
+                     ggg = {
+                                  title = "Social Media", 
+                                  --doublewide=true,
+                                  pic="socialmedia.png",
+                                  text="State Auto On Social Media",
+                                  iconwidth = 90,      -- height will be scaled appropriately
+                                  groupheader = { r=90/255, g=50/255, b=90/255, a=1 },
+                                  backtext = "<",
+                                  sceneinfo = { 
+                                       htmlinfo = {},
+                                       scrollblockinfo = { object="social" , navigate = "subscene"},
+                                     },
+                                  navigation = { composer = { id = "social",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
+                              },   
+
+                       hhh = {title = "State Auto Web", 
+                              pic="web.png",
+                              text="State Auto Main Website",
+                              backtext = "<",
+                              forwardtext = ">",
+
+                             sceneinfo = { 
+                                  htmlinfo = {     url="http://www.stateauto.com/" , },
+                                 scrollblockinfo = { },
+                                             },
+                              navigation = { composer = {
+                                   id = "stateautoweb",
+                                   lua="webview",
+                                   time=250, 
+                                   effect="slideLeft",
+                                   effectback="slideRight",
+                                },},
+                                
+                                },
+
                             -- dtt= {title = "CNN Launch separate", 
                             --   pic="web.png",
                             --   text="Sample web page",
@@ -98,41 +142,25 @@ local contactus = {
                             --     },},
                                       
                             --     },
-                              ea3t = {title = "Billing Questions", pic="billing.png",text="Call The 24 Hour Claim Contact Center" ,
-                               navigation = { systemurl = { url="tel:800-444-9950"},},
-                                      
-                                  },
-                          et3t = {title = "Report A Claim", pic="claim.png",text="Call The 24 Hour Claim Contact Center" ,
-                               navigation = { systemurl = { url="tel:800-766-1853"},},
-                                      
-                                  },
-                          ft3t = {title = "Report A Glass Claim", pic="claimglass.png",text="For Auto Glass Only Claims" ,
-                               navigation = { systemurl = { url="tel:888-504-4527"},},
-                                      
-                                  },
-                         gt3t = {title = "Report Fraud", pic="fraud.png",text="Anonomously call to report fraud" ,
-                               navigation = { systemurl = { url="tel:888-999-8037"},},
-                                      
-                                  },
+
+
                           -- eb44 = {title = "Nearby gas stations", pic="gas.png",text="Locate nearby gas stations" ,
                           --      navigation = { search = { q="Gas Station" },},
                                       
                           --         },
-                           h3t = {title = "Directions - State Auto", pic="map.png",text="Get Directions To The State Auto Home Office" ,
-                               navigation = { directions = { address="518 E Broad St Columbus Ohio 43215" },},
-                                      
-                                  },
-                           it3t = {title = "Call State Auto", pic="phone.png",text="State Auto Main Phone Number" ,
-                               navigation = { systemurl = { url="tel:614-464-5000"},},
-                                      
-                                  },
-                           jy3t = {title = "Text", pic="sms.png",text="Text State Auto your question" ,
+                         iii = {title = "Email State Auto", pic="email.png",text="Email State Auto your question", 
+                               navigation = { popup = { type="mail", options= {to="webmaster@stateauto.com", subject="General Question"},},},
+                                 },
+
+                          jjj= {title = "Text", pic="sms.png",text="Text State Auto your question" ,
                                navigation = { popup = { type="sms",options= {to="614-464-5000"},},},
                                       
                                   },
-                         kttt = {title = "Email State Auto", pic="email.png",text="Email State Auto your question", 
-                               navigation = { popup = { type="mail", options= {to="webmaster@stateauto.com", subject="General Question"},},},
-                                 },
+
+                          kkk = {title = "Directions - State Auto", pic="map.png",text="Get Directions To The State Auto Home Office" ,
+                               navigation = { directions = { address="518 E Broad St Columbus Ohio 43215" },},
+                                      
+                                  },
                      },   --items
             }
       

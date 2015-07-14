@@ -127,8 +127,6 @@ parse:getConfig(
       end )
 --parse:logEvent( "MyCustomEvent", { ["x"] = "modparse" ,["y"] = "ccc"}, function (e) print ("return from home logevent") print (e.requestType)   end )
 
-
-
 ----------------------------------------
 -- Was the scene laucnhed as a main tabbar sceene ?
 ----------------------------------------

@@ -82,16 +82,7 @@ local moreinfo = {
                                              },
                                           navigation = { composer = { id = "contactus",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
                                       },
-                               bb32 = {
-                                          title = "Extras", 
-                                          pic="truck.png",
-                                          backtext = "<",
-                                          sceneinfo = { 
-                                               htmlinfo = {},
-                                               scrollblockinfo = { object="extras" , navigate = "subscene"},
-                                             },
-                                          navigation = { composer = { id = "extras",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
-                                      },
+
  
                                bb4 = {title = "Help", 
                                            pic="truck.png",
@@ -189,17 +180,34 @@ local moreinfo = {
                                      navigation = { composer = {
                                                otherscenes = "whereami",
                                             },},
+                                 },
+                                 zz3 = {
+                                          title = "Social Media", 
+                                          backtext = "<",
+                                          sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { object="social" , navigate = "subscene"},
+                                             },
+                                          navigation = { composer = { id = "social",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
+                                      },                                    
+                                   
+                                 zz4 = {
+                                          title = "Other Extras", 
+                                          backtext = "<",
+                                          sceneinfo = { 
+                                               htmlinfo = {},
+                                               scrollblockinfo = { object="extras" , navigate = "subscene"},
+                                             },
+                                          navigation = { composer = { id = "extras",lua="scrollblocks" ,time=250, effect="slideLeft" ,effectback="slideRight", },},
+                                      },
+                              -- zz5 = {title = "Home page"  ,
+                              --        backtext = "<",
+                              --        navigation = { tabbar = {
+                              --                  key = "ahome",
+                              --               },},
 
                                       
-                                  },
-                              zz2 = {title = "Home page"  ,
-                                     backtext = "<",
-                                     navigation = { tabbar = {
-                                               key = "ahome",
-                                            },},
-
-                                      
-                                  },
+                              --     },
                               },  --items
 
      }
