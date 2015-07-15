@@ -192,9 +192,19 @@ function scene:show( event )
 
                      local cellworkingGroupWidth = workingGroupWidth
                      local cellgroupwidth = groupwidth 
+                     local iconverticaladjust = 10
+                     local iconhorizontaladjust = 0
+                     local textwidthadjust = 0
+                     local textxadjust = 0
+                     local blnadjusttexty = false  
                      if v.doublewide then 
+                        iconverticaladjust = 0
                         cellworkingGroupWidth = cellworkingGroupWidth * 2  
                         cellgroupwidth = cellgroupwidth * 2 + sbi.groupbetween
+                        iconhorizontaladjust = cellgroupwidth / 3
+                        textwidthadjust =  cellgroupwidth   / 2   
+                        textxadjust =   textwidthadjust /2 - 15
+                        blnadjusttexty = true
                         --col = col + 1
                         if col == groupsPerRow then
                           row = row + 1
@@ -214,22 +224,55 @@ function scene:show( event )
                      -- Background
                      -------------------------------------------------
                      local myRoundedRect = display.newRoundedRect(startX, startY ,cellgroupwidth,  groupheight, 1 )
-                     myRoundedRect:setFillColor(sbi.groupbackground.r,sbi.groupbackground.g,sbi.groupbackground.b,sbi.groupbackground.a )
+                     local backcolor = v.groupbackground or sbi.groupbackground
+                     local backcolorstyle = v.groupbackgroundstyle or sbi.groupbackgroundstyle
+                     -----------------------------
+                     -- anything from sepfici item being used ? use it first
+                     -----------------------------
+                     if v.groupbackground or v.groupbackgroundstyle then
+                        if v.groupbackground then backcolorstyle = nil else backcolor = nil end
+                     end
+                     -------------------------------------
+                     -- style wins over regular color
+                     ---------------------------------
+                     if  backcolorstyle then
+                        myRoundedRect:setFillColor(backcolorstyle)
+                     else
+                        myRoundedRect:setFillColor(backcolor.r,backcolor.g,backcolor.b,backcolor.a )
+                     end
+                    -- myRoundedRect:setFillColor(sbi.groupbackground.r,sbi.groupbackground.g,sbi.groupbackground.b,sbi.groupbackground.a )
                      itemGrp:insert(myRoundedRect)
 
                      -------------------------------------------------
                      -- Header Background
                      -------------------------------------------------
                      local startYother = startY- groupheight/2 + sbi.groupbetween
-                     local myRoundedTop = display.newRoundedRect(startX, startYother ,cellgroupwidth, sbi.groupheaderheight, 1 )
+                     local groupheaderheight = v.groupheaderheight or sbi.groupheaderheight
+                     local myRoundedTop = display.newRoundedRect(startX, startYother ,cellgroupwidth, groupheaderheight, 1 )
                      local headcolor = v.groupheader or sbi.groupheader
-                     myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
+                     local headcolorstyle = v.groupheaderstyle or sbi.groupheaderstyle
+                     -----------------------------
+                     -- anything from sepfici item being used ? use it first
+                     -----------------------------
+                     if v.groupheader or v.groupheaderstyle then
+                        if v.groupheader then headcolorstyle = nil else headcolor = nil end
+                     end
+                     -------------------------------------
+                     -- style wins over regular color
+                     ---------------------------------
+                     if  headcolorstyle then
+                        myRoundedTop:setFillColor(headcolorstyle)
+                     else
+                        myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
+                     end
+
                      itemGrp:insert(myRoundedTop)
                      
                      -------------------------------------------------
                      -- Header text
                      -------------------------------------------------
-                     local myText = display.newText( (v.title or ""), startX, startYother,  myApp.fontBold, sbi.headerfontsize )
+                     local headerfontsize = v.headerfontsize or sbi.headerfontsize
+                     local myText = display.newText( (v.title or ""), startX, startYother,  myApp.fontBold, headerfontsize )
                      myText:setFillColor( sbi.headercolor.r,sbi.headercolor.g,sbi.headercolor.b,sbi.headercolor.a )
                      itemGrp:insert(myText)
 
@@ -239,17 +282,20 @@ function scene:show( event )
                      if v.pic then
                          local myIcon = display.newImageRect(myApp.imgfld .. v.pic, v.originaliconwidth or sbi.iconwidth ,v.originaliconheight or sbi.iconheight )
                          common.fitImage( myIcon, v.iconwidth or sbi.iconwidth   )
-                         myIcon.x = startX
-                         myIcon.y = startYother + itemGrp.height/2 - 10 --- sbi.iconwidth
+                         myIcon.x = startX - iconhorizontaladjust
+                         myIcon.y = startYother + itemGrp.height/2 - iconverticaladjust --- sbi.iconwidth
                          itemGrp:insert(myIcon)
                      end
 
                      -------------------------------------------------
                      -- Desc text
                      -------------------------------------------------
-                     
-                     local myDesc = display.newText( {text=(v.text or ""), x=startX, y=0, height=0,width=cellgroupwidth-5 ,font= myApp.fontBold, fontSize=sbi.textfontsize,align="center" })
-                     myDesc.y=startYother+groupheight - (myDesc.height/2) - sbi.textbottomedge
+                     local textfontsize = v.textfontsize or sbi.textfontsize
+                     local myDesc = display.newText( {text=(v.text or ""), x=startX +   textxadjust, y=0, height=0,width=cellgroupwidth-5 - textwidthadjust ,font= myApp.fontBold, fontSize= textfontsize,align="center" })
+                     myDesc.y=startYother+groupheight - (myDesc.height/2) - sbi.textbottomedge  
+                     if blnadjusttexty then
+                        myDesc.y=startYother + itemGrp.height/2
+                     end
                      myDesc:setFillColor( sbi.textcolor.r,sbi.textcolor.g,sbi.textcolor.b,sbi.textcolor.a )
                      itemGrp:insert(myDesc)
 
@@ -342,6 +388,17 @@ function scene:overlay( parms )
      -- end
 end
 
+
+---------------------------------------------------
+-- use if someone wants us to transition away
+-- for navigational appearnaces
+-- used from the more button
+---------------------------------------------------
+function scene:replaceself( parms )
+
+    transition.to(  container, {  time=parms.time,delta=true, x=parms.x  })
+    return true    -- return otherwise caller does not know we exist
+end
 ---------------------------------------------------
 -- use if someone wants us to transition away
 -- for navigational appearnaces

@@ -16,6 +16,7 @@ local homepage = {
             groupbetween = 10,
             groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
             groupheader = { r=25/255, g=75/255, b=150/255, a=1 },
+
             iconwidth = 60,    -- can be overidden in item
             iconheight = 60,   -- can be overidden in item
             headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
@@ -147,8 +148,22 @@ local homepage = {
                                           pic="saicon-down.png",
                                           doublewide = true,
                                           backtext = "<",
-                                           text="Contact State Auto",
-                                          
+                                           text="Contact Options For State Auto",
+                                           textfontsize=18   ,
+                                           groupheaderheight = 30, 
+                                           headerfontsize = 16,
+                                    groupheaderstyle = {
+                                      type = 'gradient',
+                                      color1 = { 189/255, 203/255, 220/255, 1 }, 
+                                      color2 = { 89/255, 116/255, 152/255, 1 },
+                                      direction = "down"
+                               },
+                                          groupbackgroundstyle = {
+                                      type = 'gradient',
+                                      color1 = { 189/255, 203/255, 220/255, 1 }, 
+                                      color2 = { 89/255, 116/255, 152/255, 1 },
+                                      direction = "down"
+                               },
                                           sceneinfo = { 
                                                htmlinfo = {},
                                                scrollblockinfo = { object="contactus" , navigate = "subscene"},

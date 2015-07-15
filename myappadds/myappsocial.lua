@@ -14,14 +14,20 @@ local social = {
             groupheight = 140,
             groupheaderheight = 30,
             groupbetween = 10,
-            groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
+            --groupbackground = { r=255/255, g=255/255, b=255/255, a=1 },
             groupheader = { r=90/255, g=50/255, b=90/255, a=1 },
+            groupbackgroundstyle = {
+                                      type = 'gradient',
+                                      color1 = { 250/255, 225/255, 250/255, 1 }, 
+                                      color2 = { 250/255, 250/255, 250/255, 1 },
+                                      direction = "down"
+                               },
             iconwidth = 60,    -- can be overidden in item
             iconheight = 60,   -- can be overidden in item
             headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
             headerfontsize = 16,  
             textcolor = { r=1/255, g=1/255, b=1/255, a=1 },   
-            textfontsize=15   ,       
+            textfontsize=18   ,       
             textbottomedge =12   ,           
             items = { 
 

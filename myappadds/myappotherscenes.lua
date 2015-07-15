@@ -412,7 +412,7 @@ local otherscenes = {
                             iconheight = 60,   -- can be overidden in item
                             headercolor = { r=255/255, g=255/255, b=255/255, a=1 },   
                            -- groupheader = { r=15/255, g=50/255, b=170/255, a=1 },
-                            groupheader = {
+                            groupheaderstyle = {
                                       type = 'gradient',
                                       color1 = { 189/255, 203/255, 220/255, 1 }, 
                                       color2 = { 89/255, 116/255, 152/255, 1 },

@@ -3,7 +3,7 @@
 -- Store variables used across the entire app 
 -------------------------------------------------------
 local M = { 
-            debugMode = false,
+            debugMode = true,
             appName = "State Auto Insured App" ,
             appNameSmall = "Insured App" ,
             tabMyAgentKey = "",     -- will be key of myagent if used

@@ -311,7 +311,7 @@ function scene:show( event )
                  local myRoundedTop = display.newRoundedRect(startX, startYother ,cellgroupwidth, sceneinfo.groupheaderheight, 1 )
                  --local headcolor = sceneinfo.groupheader
                  --myRoundedTop:setFillColor(headcolor.r,headcolor.g,headcolor.b,headcolor.a )
-                 myRoundedTop:setFillColor(sceneinfo.groupheader)
+                 myRoundedTop:setFillColor(sceneinfo.groupheaderstyle)
                  itemGrp:insert(myRoundedTop)
                  
                  -------------------------------------------------

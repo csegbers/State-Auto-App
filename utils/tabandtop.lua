@@ -314,7 +314,31 @@ function myApp.showScreen(parms)
                 -----------------------------------------------
                 if parms.effectback then effect = parms.effectback end
 
-                composer.gotoScene(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time, effect=effect, params = tnt})
+
+                local function fncgotoScene ( event )
+                   composer.gotoScene(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time, effect=effect, params = tnt})
+                end
+                 
+                --------------------------------------------
+                -- goto the new scene
+                --
+                -- If we are reusing a scene we want to simulate a clide off otherwise the scene simply gets replaced
+                --------------------------------------------
+                if ("scenes." .. tnt.navigation.composer.lua) == composer.getSceneName( "current" ) then
+                    local rc = false
+                    local samescenedelta = -1
+                    if effect =="slideRight" then samescenedelta = 1 end
+                    pcall(function() rc =  composer.getScene( composer.getSceneName( "current" ) ):replaceself({time=tnt.navigation.composer.time,x=myApp.sceneWidth* samescenedelta } ) end)
+                    if rc then 
+                        timer.performWithDelay(tnt.navigation.composer.time/2  , fncgotoScene )   -- flag no longer in overlay
+                    else
+                        fncgotoScene()
+                    end
+                else
+                    fncgotoScene()
+                end
+
+
           end })    -- callback funcyion
     end
     return true
@@ -368,25 +392,41 @@ function myApp.showSubScreenRegular(parms)
         --
         -- Back button
         --------------------------------------------   
-        if tnt.backtext then    
+        if tnt.defaultFile then
+           myApp.TitleGroup.backButton = widget.newButton {
+                defaultFile = tnt.defaultFile ,
+                overFile = tnt.overFile ,
+                onRelease = function() myApp.showScreenCallback ({callBack=tnt.callBack,phase="back"}) end,
+            }
+        else
                myApp.TitleGroup.backButton = widget.newButton {
-                    label = tnt.backtext ,
+                    label = (tnt.backtext or "<") ,
                     width =  myApp.tabs.tabbtnw,
                     labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
                     fontSize = 30,
                     font = myApp.fontBold,
                     onRelease = function() myApp.showScreenCallback ({callBack=tnt.callBack,phase="back"}) end,
                }
-
-        else
-            if tnt.defaultFile then
-               myApp.TitleGroup.backButton = widget.newButton {
-                    defaultFile = tnt.defaultFile ,
-                    overFile = tnt.overFile ,
-                    onRelease = function() myApp.showScreenCallback ({callBack=tnt.callBack,phase="back"}) end,
-                }
-            end
         end
+        -- if tnt.backtext then    
+        --        myApp.TitleGroup.backButton = widget.newButton {
+        --             label = tnt.backtext ,
+        --             width =  myApp.tabs.tabbtnw,
+        --             labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
+        --             fontSize = 30,
+        --             font = myApp.fontBold,
+        --             onRelease = function() myApp.showScreenCallback ({callBack=tnt.callBack,phase="back"}) end,
+        --        }
+
+        -- else
+        --     if tnt.defaultFile then
+        --        myApp.TitleGroup.backButton = widget.newButton {
+        --             defaultFile = tnt.defaultFile ,
+        --             overFile = tnt.overFile ,
+        --             onRelease = function() myApp.showScreenCallback ({callBack=tnt.callBack,phase="back"}) end,
+        --         }
+        --     end
+        -- end
         --------------------------------------------
         -- Create a widget (text only or icon) for the navigation ?
         --
@@ -416,7 +456,7 @@ function myApp.showSubScreenRegular(parms)
         myApp.TitleGroup:insert(myApp.TitleGroup.backButton)
 
         transition.to( myApp.TitleGroup.backButton, { time=myApp.tabs.transitiontime*2, x = myApp.titleBarEdge *2 , transition=easing.outQuint})
-
+ 
         if myApp.TitleGroup.forwardButton then
             myApp.TitleGroup.forwardButton.x = xbackbutton 
             myApp.TitleGroup.forwardButton.y = (myApp.titleBarHeight * 0.5 )  + myApp.tSbch  
@@ -425,11 +465,29 @@ function myApp.showSubScreenRegular(parms)
             transition.to( myApp.TitleGroup.forwardButton, { time=myApp.tabs.transitiontime*2, x = myApp.titleBarEdge *2 + myApp.tabs.tabbtnw, transition=easing.outQuint})
         end
 
+        local function fncgotoSubScene ( event )
+           composer.gotoScene(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time, effect=effect, params = tnt})
+        end
+
         --------------------------------------------
         -- goto the new scene
+        --
+        -- If we are reusing a scene we want to simulate a clide off otherwise the scene simply gets replaced
         --------------------------------------------
-        composer.gotoScene(myApp.scenesfld .. tnt.navigation.composer.lua, {time=tnt.navigation.composer.time, effect=effect, params = tnt})
- 
+        if ("scenes." .. tnt.navigation.composer.lua) == composer.getSceneName( "current" ) then
+            local rc = false
+            local samescenedelta = -1
+            if effect =="slideRight" then samescenedelta = 1 end
+            pcall(function() rc =  composer.getScene( composer.getSceneName( "current" ) ):replaceself({time=tnt.navigation.composer.time,x=myApp.sceneWidth* samescenedelta } ) end)
+            if rc then 
+                timer.performWithDelay(tnt.navigation.composer.time/2  , fncgotoSubScene )   -- flag no longer in overlay
+            else
+                fncgotoSubScene()
+            end
+        else
+            fncgotoSubScene()
+        end
+  
     return true
 end
 

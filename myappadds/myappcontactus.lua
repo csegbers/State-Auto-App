@@ -52,6 +52,15 @@ local contactus = {
                                --           },
                      aaa = {title = "Call State Auto", pic="phone.png",text="State Auto Main Phone Line" ,
                              doublewide=true, 
+                             textfontsize=18   ,   
+                             groupheaderheight = 30, 
+                              groupheaderstyle = {
+                                      type = 'gradient',
+                                      color1 = { 189/255, 203/255, 220/255, 1 }, 
+                                      color2 = { 89/255, 116/255, 152/255, 1 },
+                                      direction = "down"
+                               },
+                             headerfontsize = 16 ,
                              navigation = { systemurl = { url="tel:614-464-5000"},},
                                     
                                 },
