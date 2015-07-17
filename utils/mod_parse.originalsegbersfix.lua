@@ -1,3 +1,4 @@
+
 ---------------------------------
 -- segbers added stuff 
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -7,11 +8,14 @@
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ---------------------------------
 
+
 ---Parse module for Corona SDK
 -- @copyright develephant 2013-2015
 -- @author Chris Byerley
 -- @license MIT
--- @version 2.1.3
+-- @version 2.0.2
+-- @site coronium.io
+-- Generate docs with LDoc.
 local json = require("json")
 local url = require("socket.url")
 
@@ -38,9 +42,9 @@ local Parse =
   ERROR = "ERROR",
   EXPIRED = 101,
   OBJECT = "classes",
+  CONFIG = "config",       -- segbers
   USER = "users",
   LOGIN = "login",
-  CONFIG = "config",       -- segbers
   ANALYTICS = "events",
   INSTALLATION = "installations",
   CLOUD = "functions",
@@ -185,7 +189,7 @@ end
 ---Link a data object to another object.
 -- @string parseObjectType The Parse object type.
 -- @string parseObjectId The Parse object ID.
--- @string linkField The name of the Parse `Pointer` field.
+-- @string linkField The name the field to store the link.
 -- @string objTypeToLink The type of object that is being linked.
 -- @string parseObjIdToLink The object id of the object being linked.
 -- @func[opt] _callback The callback function.
@@ -242,7 +246,7 @@ end
 ---Create a relationship.
 -- @string objClass The object class name.
 -- @string objId The object ID.
--- @string objField The Parse `Relation` field.
+-- @string objField The object field.
 -- @tab objDataTable The data table to attach.
 -- @func[opt] _callback The callback function.
 -- @treturn int The network request ID.
@@ -892,163 +896,117 @@ function Parse:clearSessionToken()
   self.sessionToken = nil
 end
 
---======================================================================--
---== RESPONSE
---======================================================================--
-function Parse:_throwError( e )
-  local _callback = nil
-
-  for r=1, #self.requestQueue do
-    local req = self.requestQueue[ r ]
-    if req.requestId == e.req_id then
-      --Set up callback
-      _callback = req._callback
-      --Remove request
-      table.remove( self.requestQueue, r )
-      break
-    end
-  end
-
-  _callback( e )
-end
-
-function Parse:_debugOutput( e )
-
-  --== Show JSON flag
-  if self.showJSON then
-    print( e.response )
-  end
-  --== Show status flag
-  if self.showStatus then
-    if type( e.response ) == 'table' then
-      Parse:printTable( e.response )
-    else
-      print( e.response )
-    end
-  end
-  --== Show alert flag
-  if self.showAlert then
-    local msg = string.format( "Net Status: %d \n", e.status )
-    --check error
-    if e.response and e.response.code then
-      msg = msg .. string.format( "Parse Code: %d \n", e.response.code )
-      if e.response.error then
-        msg = msg .. string.format( "Error: %s", e.response.error )
-      end
-    else
-      msg = "Parse action was successful!"
-    end
-
-    native.showAlert( "Parsed!", msg, { "OK" } )
-  end
-end
-
+-- RESPONSE --
 function Parse:onResponse( event )
   if event.phase == "ended" then
   
-    --== Empty response event table
-    local e = 
-    {
-      name = "parseResponse",
-      requestId = 0,
-      requestType = "",
-      response = {},
-      results = {},
-      headers = {},
-      code = 0,
-      error = ""
-    }
+    local status = event.status
+    local requestId = event.requestId
+    
+    local response, decodedResponse
+    if status ~= -1 then
+      response = event.response
 
-    --== Grab some values
-    local net_error = event.isError
-    local status    = event.status
-    local response  = event.response
-    local req_id    = event.requestId
-    local headers   = event.responseHeaders
+      --local success, decodedResponse = pcall( json.decode, response )      -- segbers
+      local success                                                          -- segbers
+      success, decodedResponse = pcall( json.decode, response )              -- segbers 
+      if not success then
+        print( 'JSON decode error:', decodedResponse );
+      end
 
-    --== Do we have a network error?
-    if net_error then
-      e.req_id = req_id
-      e.error = "Network Error. Connected?"
-      e.code  = status
+      if self.showJSON then
+        print( event.response )
+      end
 
-      self:_throwError( e )
-      return
+      if self.showStatus then
+        if type( decodedResponse ) == 'table' then
+          Parse:printTable( decodedResponse )
+        else
+          print( decodedResponse )
+        end
+      end
+        
+      if self.showAlert then
+        local msg = "Net Status: " .. status .. "\n"
+        
+        if decodedResponse.code then
+          msg = msg .. "Parse Code: " .. decodedResponse.code .. "\n"
+          if decodedResponse.error then
+            msg = msg .. "Error: " .. decodedResponse.error
+          end
+        else
+          msg = "Parse action was successful."
+        end
+        
+        native.showAlert( "Parsed!", msg , { "OK" } )
+      end
     end
-
-    --== Check status for error
-    if status < 200 and status >= 400 then
-      e.req_id = req_id
-      e.error = "Bad Status"
-      e.code  = status
-
-      self:_throwError( e )
-      return
-    end
-
-    --== Convert JSON string response to table
-    local success, response = pcall( json.decode, response )
-
-    if not success then
-      e.req_id = req_id
-      e.error = response
-      e.code = -99
-
-      Parse:_throwError( e )
-      return
-    end
-
-    --Add incoming headers
-    e.headers = headers
-
-    --== Find request
-    local req_type  = Parse.NIL
+    
+    --find request
+    local requestType = Parse.NIL
     local _callback = nil
 
     for r=1, #self.requestQueue do
-      local req = self.requestQueue[ r ]
-      if req.requestId == req_id then
-        --Add request type, id to event obj
-        e.requestType = req.requestType
-        e.requestId = req.requestId
-        --Set up callback
-        _callback = req._callback
-        --Remove request
+      local request = self.requestQueue[ r ]
+      if request.requestId == requestId then
+        requestType = request.requestType
+        _callback = request._callback
         table.remove( self.requestQueue, r )
         break
       end
     end
 
-    --== Check for response
-    if response then
-      e.response = response
+    --broadcast response
+    local e = nil
+    if status == -1 then --timed out
+      e = {
+        name = "parseResponse",
+        requestId = requestId,
+        requestType = requestType,
+        response = nil,
+        code = -1,
+        error = "The request timed out.",
+      }
+    elseif status >= 200 and status < 400 then
+      e = {
+        name = "parseResponse",
+        requestId = requestId,
+        requestType = requestType,
+        response = decodedResponse,
+        code = nil,
+        error = nil,
+      }
+
+      --V 1.64 fix by Alexander Sheety
+      if decodedResponse then
+        if decodedResponse.results ~= nil then
+          e.results = decodedResponse.results
+        end
+        if decodedResponse.sessionToken then
+          self.sessionToken = decodedResponse.sessionToken
+        end
+      end
+
+    elseif status >= 400 then  -- error
+      e = {
+        name = "parseResponse",
+        requestId = requestId,
+        requestType = self.ERROR,
+        response = nil,
+        code = decodedResponse.code,
+        error = decodedResponse.error, 
+      }
     end
-
-    --== Check for session token
-    if response and response.sessionToken then
-      self.sessionToken = response.sessionToken
-    end
-
-    --== Check for multiple results
-    if response and response.results then
-      e.results = response.results
-    end
-
-    --== Debug output
-    self:_debugOutput( e )
-
-    --== Send Response
-    if e.requestId then
+    
+    --broadcast it
+    if e ~= nil then
       if _callback then
         _callback( e )
-      else --use global
+      else --use global event
         self.dispatcher:dispatchEvent( e )
       end
     end
 
---======================================================================--
---== Progress event - uploading
---======================================================================--
   elseif event.phase == "progress" then --files
 
     local status = event.status or nil
