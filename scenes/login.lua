@@ -133,11 +133,11 @@ function scene:show( event )
                                                               inputemail,  
                                                               function(event)
                                                                    native.setActivityIndicator( false )
-                                                                   if not event.error then
+                                                                   if (event.response.error or "" ) == "" then 
                                                                       native.showAlert( sceneinfo.btnforgotmessage.successtitle, sceneinfo.btnforgotmessage.successmessage, { "Okay" } )
                                                                    -- stay here becuase they most likely will get the email and need to login again  
                                                                    else
-                                                                      native.showAlert( sceneinfo.btnforgotmessage.failuretitle, event.error, { "Okay" } )
+                                                                      native.showAlert( sceneinfo.btnforgotmessage.failuretitle, (event.response.error or "Unknown"), { "Okay" } )
                                                                    end
                                                               end    --- return function from parse
                                                              )   -- end of parse
@@ -171,14 +171,14 @@ function scene:show( event )
                                                               userDataTable,  
                                                               function(event)
                                                                    native.setActivityIndicator( false )
-                                                                   if not event.error then
+                                                                   if (event.response.error or "" ) == "" then 
                                                                      myApp.fncPutUD("email",inputemail)
                                                                      myApp.fncUserLogInfo(event.response)
                                                                      native.showAlert( sceneinfo.btncreatemessage.successtitle, sceneinfo.btncreatemessage.successmessage, { "Okay" } )
                                                                      --timer.performWithDelay(10,function () myApp.hideOverlay({callback=nill}) end) 
                                                                      -- stay here becuase they most likely will get the email and need to login again  
                                                                    else
-                                                                     native.showAlert( sceneinfo.btncreatemessage.failuretitle, event.error, { "Okay" } )
+                                                                     native.showAlert( sceneinfo.btncreatemessage.failuretitle, (event.response.error or "Unknown"), { "Okay" } )
                                                                    end
                                                               end    --- return function from parse
                                                              )   -- end of parse
@@ -248,11 +248,13 @@ function scene:show( event )
                                                 native.setActivityIndicator( true )
                                                 local userDataTable = { ["username"] = inputemail, ["password"] = inputpwd }
                                                 parse:clearSessionToken ()
+                                                print ('about to login"')
                                                 parse:loginUser( 
                                                                   userDataTable,  
                                                                   function(event)
                                                                        native.setActivityIndicator( false )
-                                                                       if not event.error then
+                                                                       print ("login info " .. (event.response.error or "") )
+                                                                       if  (event.response.error or "")   == "" then 
                                                                           myApp.fncPutUD("email",inputemail)
                                                                           myApp.fncUserLogInfo(event.response)
                                                                           if myApp.authentication.emailVerified == false then
@@ -269,7 +271,7 @@ function scene:show( event )
                                                                          
                                                                          -- stay here becuase they most likely will get the email and need to login again  
                                                                        else
-                                                                          native.showAlert( sceneinfo.btnloginmessage.failuretitle, event.error, { "Okay" },function() btnpushed = false  end )
+                                                                          native.showAlert( sceneinfo.btnloginmessage.failuretitle, (event.response.error or "Unknown"), { "Okay" },function() btnpushed = false  end )
                                                                        end
                                                                        
                                                                   end    --- return function from parse

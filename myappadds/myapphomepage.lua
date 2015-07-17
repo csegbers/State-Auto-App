@@ -107,12 +107,12 @@ local homepage = {
                                 },},
                                 
                                 },
-                            -- dtt= {title = "CNN Launch separate", 
+                            -- dtt= {title = "Get A Quote", 
                             --   pic="web.png",
-                            --   text="Sample web page",
+                            --   text="Get A Quote For Your Personal Insurance",
                             --   backtext = "<",
                             --   navigation = { systemurl = {
-                            --        url="http://www.cnn.com/"
+                            --        url="https://www.trustedchoice.com/find-an-agent/personal/"
                             --     },},
                                       
                             --     },

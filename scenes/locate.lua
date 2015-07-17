@@ -323,8 +323,8 @@ function scene:show( event )
                    -- Callback inline function
                    ------------------------------------------------------------
                    function(e) 
-                     
-                      if not e.error then  
+                      print ("Back from search " .. (e.response.error or "" ))
+                      if (e.response.error or "" ) == "" then  
                          
                           if myApp.locate.animation then
                              transition.to(  myList, { time=myApp.locate.animationtime, y = curmyListy , transition=easing.outQuint})
@@ -364,6 +364,7 @@ function scene:show( event )
                           end
                       else
                         native.setActivityIndicator( false ) 
+                         print ("Back from search with erropr " .. e.response.error)
                        --buildMap()     no need to do. Nothing to mark
                       end  -- end of error check
                   end )  -- end of parse call

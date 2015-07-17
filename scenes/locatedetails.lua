@@ -528,7 +528,7 @@ function scene:show( event )
                        -- Callback inline function
                        ------------------------------------------------------------
                        function(e) 
-                          if not e.error then  
+                          if (e.response.error or "" ) == "" then 
                               
                               if #e.response.result > 0 then
                                   BuildTheScene(e.response.result[1])

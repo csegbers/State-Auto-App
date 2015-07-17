@@ -4,7 +4,7 @@
 -------------------------------------------------------
 local M = { 
             debugMode = true,
-            appName = "State Auto Insured App" ,
+            appName = "The State Auto Insured App" ,
             appNameSmall = "Insured App" ,
             tabMyAgentKey = "",     -- will be key of myagent if used
             tabMyAccountKey = "",     -- will be key of myaccount if used

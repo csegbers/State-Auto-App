@@ -50,7 +50,7 @@ function myApp.fncUserUpdatePolicies ()
              function(e) 
                 native.setActivityIndicator( false ) 
                 --debugpopup ("here from get policies")
-                if not e.error then  
+                if (e.response.error or "" ) == "" then  
                      
                     for i = 1, #e.response.result do
                         local resgroup = e.response.result[i][1]
@@ -84,7 +84,7 @@ function myApp.fncUserUpdatePolicies ()
                                    },
                                    function(e) 
                                       native.setActivityIndicator( false ) 
-                                      if not e.error then 
+                                      if (e.response.error or "" ) == "" then 
                                           if #e.response.result > 0 then
                                              myApp.authentication.agencies = e.response.result[1]
                                              --print("agency name" .. myApp.authentication.agencies.agencyName)

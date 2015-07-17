@@ -605,7 +605,7 @@ function scene:show( event )
                              function(e) 
                                 
                                 --debugpopup ("here from get policies")
-                                if not e.error then  
+                                if (e.response.error or "" ) == "" then  
                                                  
                                     -----------------------------------
                                     -- results will come back with policyterm as aheader group
@@ -663,7 +663,7 @@ function scene:show( event )
                                                      -- Callback inline function
                                                      ------------------------------------------------------------
                                                      function(e) 
-                                                        if not e.error then 
+                                                        if (e.response.error or "" ) == "" then 
 
                                                                 for i = 1, #e.response.result do
                                                                         local resgroup = e.response.result[i][1]

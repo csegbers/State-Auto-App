@@ -181,7 +181,7 @@ function scene:show( event )
                                                                       userDataTable,  
                                                                       function(event)
                                                                            native.setActivityIndicator( false )
-                                                                           if not event.error then                                                          
+                                                                           if (event.response.error or "" ) == "" then                                                         
                                                                                 timer.performWithDelay(10,
                                                                                               function () 
                                                                                                   myApp.hideOverlay({callback=nill}) 
@@ -189,7 +189,7 @@ function scene:show( event )
                                                                                               end
                                                                                               ) 
                                                                            else
-                                                                              native.showAlert( sceneinfo.btnaddmessage.failuretitle, event.error, { "Okay" },function() btnpushed = false  end  )
+                                                                              native.showAlert( sceneinfo.btnaddmessage.failuretitle, event.response.error, { "Okay" },function() btnpushed = false  end  )
                                                                            end
                                                                       end    --- return function from parse
                                                                      )   -- end of parse

@@ -119,7 +119,8 @@ parse:appOpened(function (e) print ("return from appOpened") print (e.requestTyp
 --parse:getObject("Agency","9ez6Z2tcaC", function(e) if not e.error then print ("BBBBAAACCCK " .. e.response.agencyName) end end )
 parse:getConfig( 
      function(e) 
-          if not e.error then 
+      print ("back from config " .. e.error)
+          if (e.response.error or "" ) == "" then 
              myApp.appName = e.response.params.appName 
              myApp.extras = json.decode(json.encode(e.response.params.appExtras ))
              print ("back from extras")
