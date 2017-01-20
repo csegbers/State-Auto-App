@@ -1,6 +1,7 @@
 if string.sub(system.getInfo("model"),1,4) == "iPad" then
     application = 
     {
+    
         content =
         {
             width = 360,
