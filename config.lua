@@ -1,5 +1,5 @@
 if string.sub(system.getInfo("model"),1,4) == "iPad" then
-    application = 
+    application  = 
     {
         content =
         {
