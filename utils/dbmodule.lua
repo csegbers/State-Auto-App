@@ -2,6 +2,10 @@
 local M = {}
 
 --================================================
+--== This is a generic module can be used for different apps
+--================================================
+
+--================================================
 --== DB Load
 --================================================
 local fncDBLoadGeneric = function(dbref,parms,insertdef)

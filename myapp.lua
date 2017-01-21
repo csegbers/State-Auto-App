@@ -4,6 +4,7 @@
 -------------------------------------------------------
 local M = { 
             debugMode = true,
+            justLaunched = true,
             appName = "The State Auto Insured App" ,
             appNameSmall = "Insured App" ,
             tabMyAgentKey = "",     -- will be key of myagent if used
@@ -42,6 +43,9 @@ local M = {
             databasename= "insapp.db",
             hashkey = "aXaLwATgS3lPh848glLpugq5sqcHi8T2jfDQeWz1",
 
+            ------------------------------
+            -- other stuff
+            ------------------------------ 
             theme = "widget_theme_ios7",
             font =  "HelveticaNeue-Light",
             fontBold = "HelveticaNeue",

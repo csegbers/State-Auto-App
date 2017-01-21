@@ -21,7 +21,7 @@ settings =
             CFBundleDisplayName = "State Auto Insured App",
             CFBundleName = "SA Insured App",
             MinimumOSVersion = "6.0",
-            CFBundleIconFile = "Icon.png",
+            
             CFBundleIconFiles = {
                 "Icon.png", 
                 "Icon@2x.png", 
@@ -48,9 +48,7 @@ settings =
          "portait", "portraitUpsideDown", 
       },
    },
-   androidPermissions = {
-         "android.permission.INTERNET",
-        },
+
    android =
    {
         coronaWindowMovesWhenKeyboardAppears = true,

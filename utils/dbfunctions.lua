@@ -8,6 +8,7 @@ require( "sqlite3" )
 
 -------------------------------------------------------
 -- Database intiation
+-- If db doesnt exist it will be created
 -------------------------------------------------------
 local retsta,reterr
 myApp.mydb.dbname = myApp.databasename
@@ -21,6 +22,11 @@ function myApp.fncGetHash (value)
   return crypto.hmac( crypto.sha256, value, myApp.hashkey )
 end
 
+-------------------------------------------------------
+-- Get a user default
+-- If we already have from the db record use the 
+-- value from the in memory table
+-------------------------------------------------------
 function myApp.fncGetUD (infld)
 
    local parms = myApp.mydb.dbconfig.dbschema.UD
@@ -39,6 +45,11 @@ function myApp.fncGetUD (infld)
    return (lCC[tf].value or "")
 end
 
+-------------------------------------------------------
+-- Save a user default
+-- If we dont have an in memory item yet, grab from db record
+-- mark as dirty so it gets saved to the db when we exit
+-------------------------------------------------------
 function myApp.fncPutUD (infld,value)
    local parms = myApp.mydb.dbconfig.dbschema.UD
    local tf = parms.fields[infld].name

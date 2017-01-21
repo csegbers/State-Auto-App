@@ -5,7 +5,7 @@
 local myApp = require( "myapp" ) 
 local parse = require( myApp.utilsfld .. "mod_parse" )
 local dbmodule = require( myApp.utilsfld ..  "dbmodule")  
-require( myApp.utilsfld .. "dbfunctions" ) 
+require( myApp.utilsfld .. "dbfunctions" )     -- will do the actual db load
 require( myApp.utilsfld .. "userfunctions" ) 
 local json = require("json")
 
@@ -60,7 +60,6 @@ function print(...)
         --end
     end
 end
-
 
 -------------------------------------------------------
 -- pop up messgae
