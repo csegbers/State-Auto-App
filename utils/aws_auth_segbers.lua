@@ -72,7 +72,7 @@ end
 -- required for testing
 function _M.set_iso_date(self, microtime)
   local mt = microtime
-  mt = os.time({year=2015, month=08, day=30, hour=08, min=36,  sec=00})     --'2015-08-30T12:36:00Z')
+  mt = os.time({year=2012, month=02, day=15, hour=18, min=03,  sec=00})     --'2015-08-30T12:36:00Z')
   iso_date = os.date('!%Y%m%d', mt)
   iso_tz   = os.date('!%Y%m%dT%H%M%SZ', mt)
   print (iso_date)
@@ -81,10 +81,13 @@ end
 -- get signing key
 -- https://docs.aws.amazon.com/general/latest/gr/sigv4-calculate-signature.html
 function _M.get_signing_key(self)
-  local  k_date    = crypto.hmac(crypto.sha256,'AWS4' .. aws_secret, iso_date,true)    -- true for binary
-  local  k_region  = crypto.hmac(crypto.sha256,k_date, aws_region,true)
-  local  k_service = crypto.hmac(crypto.sha256,k_region, aws_service,true)
-  local  k_signing = self:str_to_hex(crypto.hmac(crypto.sha256,k_service, aws_request,true))
+  local  k_date    = crypto.hmac(crypto.sha256, iso_date,'AWS4' .. aws_secret )    -- true for binary
+  local  k_region  = crypto.hmac(crypto.sha256, aws_region,crypto.hmac(crypto.sha256, iso_date,'AWS4' .. aws_secret,true ) )
+  local  k_service = crypto.hmac(crypto.sha256, aws_service,k_region )
+  local  k_signing =   crypto.hmac(crypto.sha256, aws_request,k_service  )
+
+   
+
 
 
   print ("*******************")
@@ -95,6 +98,13 @@ function _M.get_signing_key(self)
             print ("*******************")
 
   print (k_signing)
+   print (iso_date)
+    print (k_date)
+     print (k_region)
+      print (k_service)
+
+
+
     print ("*******************")
     print ("*******************")
       print ("*******signing key end ******")
@@ -150,7 +160,7 @@ function _M.get_canonical_request(self)
   print ("***************CANICAL*************")
   print ("***************CANICAL*************")
   print ("***************CANICAL*************")
-  return self:get_sha256_digest(canonical_request)
+  return string.lower(self:get_sha256_digest(canonical_request))
 end
 -- get string
 function _M.get_string_to_sign(self)
@@ -172,7 +182,16 @@ function _M.get_signature(self)
   local  signing_key = self:get_signing_key()
   local  string_to_sign = self:get_string_to_sign()
   --return self:str_to_hex(crypto.hmac(crypto.sha256,signing_key, string_to_sign))
-  local signat =  crypto.hmac(crypto.sha256,signing_key, string_to_sign)   -- will convert to hext
+
+--string_to_sign = "AWS4-HMAC-SHA256" .. "\n"  
+--string_to_sign = string_to_sign .. "20150830T123600Z" .. "\n"  
+--string_to_sign = string_to_sign .. "20150830/us-east-1/service/aws4_request" .. "\n" 
+--string_to_sign = string_to_sign .. "816cd5b414d056048ba4f7c5386d6e0533120fb1fcfa93762cf0fc39e2cf19e0"  
+
+
+
+ local signat =   crypto.hmac(crypto.sha256, crypto.hmac(crypto.sha256,crypto.hmac(crypto.sha256,crypto.hmac(crypto.sha256,crypto.hmac(crypto.sha256,'AWS4' .. aws_secret, iso_date,true), aws_region,true), aws_service,true), aws_request,true ), string_to_sign)   -- will convert to hex
+-- local signat =   crypto.hmac(crypto.sha256, signing_key, string_to_sign)   -- will convert to hex
   print ("***************signature*************")
 print ("***************signature*************")
 print ("***************signature*************")

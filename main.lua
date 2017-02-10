@@ -9,17 +9,17 @@ require( myApp.utilsfld .. "common" )
 local aws_auth = require( myApp.utilsfld .. "aws_auth_segbers" )  
   
 local config = {
-  aws_host       = "example.amazonaws.com",
-  aws_key        = "AKIDEXAMPLE",
+  aws_host       = "cognito-idp.us-east-1.amazonaws.com",
+  aws_key        = "AKIAIVUK4YGZHWSBJRSA",
   aws_secret     = "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
   aws_region     = "us-east-1",
-  aws_service    = "service",
+  aws_service    = "iam",
   aws_request    = 'aws4_request',
-  content_type   = "application/x-www-form-urlencoded",
-  request_method = "GET",
-  request_querystr = "Param1=value1&Param2=value2" ,  -- always in asc order !!! empty string if nothing
+  content_type   = "application/x-amz-json-1.1",
+  request_method = "POST",
+  request_querystr = "" ,  -- always in asc order !!! empty string if nothing
   request_path   = "/",    -- "/" if nothing
-  request_body   =  ""--{ hello="world" } -- table of all request params
+  request_body   =  '{"AuthFlow": "ADMIN_NO_SRP_AUTH","AuthParameters": {"USERNAME": "dsegbers","PASSWORD": "crau22DDVV@22"},"UserPoolId": "us-east-1_I55vFoOtI","ClientId": "1br0l7moqel6h915ceimtohsju"}"--{ hello="world" }' -- table of all request params
 }
 
 local aws = aws_auth:new(config)
