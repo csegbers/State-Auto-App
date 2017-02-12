@@ -21,6 +21,7 @@ local config = {
   request_body   =  '{"AuthFlow": "ADMIN_NO_SRP_AUTH", "AuthParameters":{"USERNAME":"junk@segbers.com","PASSWORD":"xxxx"},"UserPoolId":"us-east-1_I55vFoOtI","ClientId":"1br0l7moqel6h915ceimtohsju"}'  --{ hello="world" }' -- table of all request params
 }
 
+
 local aws = aws_auth:new(config)
 -- get the generated authorization header
 -- eg: AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20150830/us-east-1/iam/aws4_request,

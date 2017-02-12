@@ -11,7 +11,7 @@ local config = {
   request_method = "GET",
   request_querystr = "Param1=value1&Param2=value2" ,  -- always in asc order !!! empty string if nothing
   request_path   = "/",    -- "/" if nothing 20150830T123600Z
-  iso_date       = os.time({year=2015, month=08, day=30, hour=08, min=36,  sec=00}),   -- comment out in run. Only used for debug
+  iso_date       = os.time({year=2015, month=08, day=30, hour=08, min=36,  sec=00}),   -- comment out in run. Only used for debug remeber iso time so set hour 4 hours early
   request_body   =  ""
 } --]]
 --local aws = aws_auth:new(config)
