@@ -39,7 +39,7 @@ function _M.new(self, config)
   req_method  = config.request_method or "POST"
   req_path    = config.request_path   or "/"
   req_querystr= config.request_querystr or ''
-  req_body    = config.request_body
+  req_body    = config.request_body or ""
   -- set default time
   self:set_iso_date(config.iso_date or os.time())
   return setmetatable(_M, mt)
@@ -119,10 +119,18 @@ end
 
 function _M.get_signed_request_body(self)
   local params = req_body
+      print ("***************requbody*************")
+  print ("***************requbody*************")
+  print ("***************requbody*************")
+
   if type(req_body) == 'table' then
     --table.sort(params)    -- do we need to sort ?
     params = json.encode(params)
   end
+  print (params)
+        print ("***************requbody*************")
+  print ("***************requbody*************")
+  print ("***************requbody*************")  
   local digest = self:get_sha256_digest(params or '')
   return string.lower(digest) -- hash must be in lowercase hex string
 end
